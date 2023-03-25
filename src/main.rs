@@ -19,7 +19,7 @@ fn main() {
     println!("\nstart parsing parser_test_csv");
     let result = parser.program();
 
-    let program = build::build_program(&*result.expect("Parse Error"));
+    let program = build::build_program(&result.expect("Parse Error"));
 
     typecheck::typecheck_program(&program).expect("Type Error");
 

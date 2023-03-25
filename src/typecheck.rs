@@ -2,25 +2,13 @@ use crate::ast::*;
 
 fn typecheck_decl(decl: &Decl) -> Result<(), String> {
     match decl {
-        Decl::DeclFun {
-            annotations,
-            name,
-            param_decls,
-            return_type,
-            throws_type,
-            local_decls,
-            return_expr,
-        } => Ok(()),
-        Decl::DeclTypeAlias { name, type_ } => todo!(),
+        Decl::DeclFun { .. } => Ok(()),
+        Decl::DeclTypeAlias { name: _, type_: _ } => todo!(),
     }
 }
 
 pub fn typecheck_program(program: &Program) -> Result<(), String> {
     match program {
-        Program::AProgram {
-            language_decl,
-            extensions,
-            decls,
-        } => decls.iter().map(typecheck_decl).collect(),
+        Program::AProgram { decls, .. } => decls.iter().try_for_each(typecheck_decl),
     }
 }
