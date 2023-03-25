@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use antlr_rust::parser_rule_context::BaseParserRuleContext;
 
 use crate::{
@@ -8,11 +10,21 @@ use crate::{
     },
 };
 
+fn build_expr_box(expr: &Option<Rc<ExprContextAll>>) -> Box<Expr> {
+    Box::new(build_expr(expr.as_ref().unwrap()))
+}
+
+fn token_name<'a>(
+    token: &'a Option<<antlr_rust::token_factory::CommonTokenFactory as antlr_rust::token_factory::TokenFactory>::Tok>,
+) -> std::borrow::Cow<'a, str> {
+    std::borrow::Cow::Borrowed(&token.as_ref().unwrap().text)
+}
+
 fn build_param_decl<'input>(
     ctx: &BaseParserRuleContext<'input, ParamDeclContextExt<'input>>,
 ) -> ParamDecl {
     return ParamDecl {
-        name: ctx.name.as_ref().unwrap().to_string(),
+        name: token_name(&ctx.name).to_string(),
         type_: build_type(ctx.paramType.as_ref().unwrap()),
     };
 }
@@ -24,23 +36,19 @@ fn build_expr(ctx: &ExprContextAll) -> Expr {
         ExprContextAll::ConstTrueContext(_) => Expr::ConstTrue,
         ExprContextAll::ConstFalseContext(_) => Expr::ConstFalse,
         ExprContextAll::IfContext(ctx) => Expr::If(
-            Box::new(build_expr(ctx.condition.as_ref().unwrap())),
-            Box::new(build_expr(ctx.thenExpr.as_ref().unwrap())),
-            Box::new(build_expr(ctx.elseExpr.as_ref().unwrap())),
+            build_expr_box(&ctx.condition),
+            build_expr_box(&ctx.thenExpr),
+            build_expr_box(&ctx.elseExpr),
         ),
 
-        ExprContextAll::SuccContext(ctx) => {
-            Expr::Succ(Box::new(build_expr(ctx.n.as_ref().unwrap())))
-        }
+        ExprContextAll::SuccContext(ctx) => Expr::Succ(build_expr_box(&ctx.n)),
         ExprContextAll::NatRecContext(ctx) => Expr::NatRec(
-            Box::new(build_expr(ctx.n.as_ref().unwrap())),
-            Box::new(build_expr(ctx.initial.as_ref().unwrap())),
-            Box::new(build_expr(ctx.step.as_ref().unwrap())),
+            build_expr_box(&ctx.n),
+            build_expr_box(&ctx.initial),
+            build_expr_box(&ctx.step),
         ),
-        ExprContextAll::ConstIntContext(ctx) => {
-            Expr::ConstInt(ctx.n.as_ref().unwrap().text.parse().unwrap())
-        }
-        ExprContextAll::VarContext(ctx) => Expr::Var(ctx.name.as_ref().unwrap().to_string()),
+        ExprContextAll::ConstIntContext(ctx) => Expr::ConstInt(token_name(&ctx.n).parse().unwrap()),
+        ExprContextAll::VarContext(ctx) => Expr::Var(token_name(&ctx.name).to_string()),
     }
 }
 
@@ -62,12 +70,12 @@ fn build_type(ctx: &StellatypeContextAll) -> Type {
 fn build_decl(ctx: &DeclContextAll) -> Decl {
     match ctx {
         DeclContextAll::DeclTypeAliasContext(ctx) => Decl::DeclTypeAlias {
-            name: ctx.name.as_ref().unwrap().text.to_string(),
+            name: token_name(&ctx.name).to_string(),
             type_: build_type(ctx.atype.as_ref().unwrap()),
         },
         DeclContextAll::DeclFunContext(ctx) => Decl::DeclFun {
             annotations: Vec::new(), // TODO: convert annotations
-            name: ctx.name.as_ref().unwrap().to_string(),
+            name: token_name(&ctx.name).to_string(),
             param_decls: ctx
                 .paramDecls
                 .iter()
