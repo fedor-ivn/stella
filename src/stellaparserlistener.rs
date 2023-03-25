@@ -115,18 +115,6 @@ fn enter_paramDecl(&mut self, _ctx: &ParamDeclContext<'input>) { }
  */
 fn exit_paramDecl(&mut self, _ctx: &ParamDeclContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code If}
- * labeled alternative in {@link stellaParser#expr}.
- * @param ctx the parse tree
- */
-fn enter_If(&mut self, _ctx: &IfContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code If}
- * labeled alternative in {@link stellaParser#expr}.
- * @param ctx the parse tree
- */
-fn exit_If(&mut self, _ctx: &IfContext<'input>) { }
-/**
  * Enter a parse tree produced by the {@code ConstTrue}
  * labeled alternative in {@link stellaParser#expr}.
  * @param ctx the parse tree
@@ -138,30 +126,6 @@ fn enter_ConstTrue(&mut self, _ctx: &ConstTrueContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_ConstTrue(&mut self, _ctx: &ConstTrueContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code ConstFalse}
- * labeled alternative in {@link stellaParser#expr}.
- * @param ctx the parse tree
- */
-fn enter_ConstFalse(&mut self, _ctx: &ConstFalseContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code ConstFalse}
- * labeled alternative in {@link stellaParser#expr}.
- * @param ctx the parse tree
- */
-fn exit_ConstFalse(&mut self, _ctx: &ConstFalseContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code ConstInt}
- * labeled alternative in {@link stellaParser#expr}.
- * @param ctx the parse tree
- */
-fn enter_ConstInt(&mut self, _ctx: &ConstIntContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code ConstInt}
- * labeled alternative in {@link stellaParser#expr}.
- * @param ctx the parse tree
- */
-fn exit_ConstInt(&mut self, _ctx: &ConstIntContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code Succ}
  * labeled alternative in {@link stellaParser#expr}.
@@ -175,6 +139,18 @@ fn enter_Succ(&mut self, _ctx: &SuccContext<'input>) { }
  */
 fn exit_Succ(&mut self, _ctx: &SuccContext<'input>) { }
 /**
+ * Enter a parse tree produced by the {@code Var}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn enter_Var(&mut self, _ctx: &VarContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code Var}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn exit_Var(&mut self, _ctx: &VarContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code NatRec}
  * labeled alternative in {@link stellaParser#expr}.
  * @param ctx the parse tree
@@ -187,17 +163,65 @@ fn enter_NatRec(&mut self, _ctx: &NatRecContext<'input>) { }
  */
 fn exit_NatRec(&mut self, _ctx: &NatRecContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code Var}
+ * Enter a parse tree produced by the {@code ConstFalse}
  * labeled alternative in {@link stellaParser#expr}.
  * @param ctx the parse tree
  */
-fn enter_Var(&mut self, _ctx: &VarContext<'input>) { }
+fn enter_ConstFalse(&mut self, _ctx: &ConstFalseContext<'input>) { }
 /**
- * Exit a parse tree produced by the {@code Var}
+ * Exit a parse tree produced by the {@code ConstFalse}
  * labeled alternative in {@link stellaParser#expr}.
  * @param ctx the parse tree
  */
-fn exit_Var(&mut self, _ctx: &VarContext<'input>) { }
+fn exit_ConstFalse(&mut self, _ctx: &ConstFalseContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code Abstraction}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn enter_Abstraction(&mut self, _ctx: &AbstractionContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code Abstraction}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn exit_Abstraction(&mut self, _ctx: &AbstractionContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code If}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn enter_If(&mut self, _ctx: &IfContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code If}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn exit_If(&mut self, _ctx: &IfContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code ConstInt}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn enter_ConstInt(&mut self, _ctx: &ConstIntContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code ConstInt}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn exit_ConstInt(&mut self, _ctx: &ConstIntContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code Application}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn enter_Application(&mut self, _ctx: &ApplicationContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code Application}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn exit_Application(&mut self, _ctx: &ApplicationContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code TypeBool}
  * labeled alternative in {@link stellaParser#stellatype}.

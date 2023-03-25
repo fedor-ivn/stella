@@ -35,7 +35,12 @@ expr:
 	| n = INTEGER														# ConstInt
 	| 'succ' '(' n = expr ')'											# Succ
 	| 'Nat::rec' '(' n = expr ',' initial = expr ',' step = expr ')'	# NatRec
-	| name = StellaIdent												# Var;
+	| name = StellaIdent												# Var
+	| 'fn' '('  (
+		paramDecls += paramDecl (',' paramDecls += paramDecl)*
+	)?  ')' '{' 'return' returnExpr=expr '}' # Abstraction
+	| fun=expr '(' (args+=expr (',' args+=expr)*)? ')' # Application
+	;
 
 stellatype:
 	'Bool'	# TypeBool

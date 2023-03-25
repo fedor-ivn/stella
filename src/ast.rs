@@ -42,6 +42,7 @@ pub struct ParamDecl {
 pub enum Expr {
     If(Box<Expr>, Box<Expr>, Box<Expr>),
     Abstraction(Vec<ParamDecl>, Box<Expr>),
+    Application(Box<Expr>, Vec<Expr>, Box<Expr>),
     Succ(Box<Expr>),
     NatRec(Box<Expr>, Box<Expr>, Box<Expr>),
     ConstTrue,

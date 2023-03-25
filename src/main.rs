@@ -91,7 +91,7 @@ fn main() {
     // typecheck::typecheck_expr(&program).expect("Type Error");
 
     // Evaluate the program with the given expression as input
-    println!("\n Evaluating...");
+    println!("\nEvaluating...");
     let _result = eval::evaluate_program(&program, &expr);
 
     println!("Done!");

@@ -31,6 +31,7 @@ fn build_param_decl<'input>(
 
 pub fn build_expr(ctx: &ExprContextAll) -> Expr {
     match ctx {
+        // TODO: return error to the caller
         ExprContextAll::Error(_) => todo!(),
 
         ExprContextAll::ConstTrueContext(_) => Expr::ConstTrue,
@@ -49,6 +50,18 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
         ),
         ExprContextAll::ConstIntContext(ctx) => Expr::ConstInt(token_name(&ctx.n).parse().unwrap()),
         ExprContextAll::VarContext(ctx) => Expr::Var(token_name(&ctx.name).to_string()),
+        ExprContextAll::AbstractionContext(ctx) => Expr::Abstraction(
+            ctx.paramDecls
+                .iter()
+                .map(|param_decl| build_param_decl(param_decl))
+                .collect(),
+            build_expr_box(&ctx.returnExpr),
+        ),
+        ExprContextAll::ApplicationContext(ctx) => Expr::Application(
+            build_expr_box(&ctx.fun),
+            ctx.args.iter().map(|expr| build_expr(expr)).collect(),
+            build_expr_box(&ctx.expr),
+        ),
     }
 }
 
