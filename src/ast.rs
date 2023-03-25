@@ -1,19 +1,17 @@
 pub type ExtensionName = String;
 
-pub enum Program {
-    AProgram {
-        language_decl: LanguageDecl,
-        extensions: Vec<Extension>,
-        decls: Vec<Decl>,
-    },
+pub struct Program {
+    pub language_decl: LanguageDecl,
+    pub extensions: Vec<Extension>,
+    pub decls: Vec<Decl>,
 }
 
 pub enum LanguageDecl {
     LanguageCore,
 }
 
-pub enum Extension {
-    AnExtension { extension_names: Vec<ExtensionName> },
+pub struct Extension {
+    pub extension_names: Vec<ExtensionName>,
 }
 
 pub enum Decl {
@@ -36,8 +34,9 @@ pub enum Annotation {
     InlineAnnotation,
 }
 
-pub enum ParamDecl {
-    AParamDecl { name: String, type_: Type },
+pub struct ParamDecl {
+    pub name: String,
+    pub type_: Type,
 }
 
 pub enum Expr {
@@ -52,7 +51,7 @@ pub enum Expr {
 }
 
 pub enum Type {
-    TypeFun(Vec<Type>, Box<Type>),
-    TypeBool,
-    TypeNat,
+    Fun(Vec<Type>, Box<Type>),
+    Bool,
+    Nat,
 }

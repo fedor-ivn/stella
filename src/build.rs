@@ -11,13 +11,13 @@ use crate::{
 fn build_param_decl<'input>(
     ctx: &BaseParserRuleContext<'input, ParamDeclContextExt<'input>>,
 ) -> ParamDecl {
-    return ParamDecl::AParamDecl {
+    return ParamDecl {
         name: ctx.name.as_ref().unwrap().to_string(),
         type_: build_type(ctx.paramType.as_ref().unwrap()),
     };
 }
 
-fn build_expr<'input>(ctx: &ExprContextAll<'input>) -> Expr {
+fn build_expr(ctx: &ExprContextAll) -> Expr {
     match ctx {
         ExprContextAll::Error(_) => todo!(),
 
@@ -44,10 +44,10 @@ fn build_expr<'input>(ctx: &ExprContextAll<'input>) -> Expr {
     }
 }
 
-fn build_type<'input>(ctx: &StellatypeContextAll<'input>) -> Type {
+fn build_type(ctx: &StellatypeContextAll) -> Type {
     match ctx {
-        StellatypeContextAll::TypeBoolContext(_) => Type::TypeBool,
-        StellatypeContextAll::TypeFunContext(ctx) => Type::TypeFun(
+        StellatypeContextAll::TypeBoolContext(_) => Type::Bool,
+        StellatypeContextAll::TypeFunContext(ctx) => Type::Fun(
             ctx.paramTypes
                 .iter()
                 .map(|type_| build_type(type_))
@@ -55,11 +55,11 @@ fn build_type<'input>(ctx: &StellatypeContextAll<'input>) -> Type {
             Box::new(build_type(ctx.returnType.as_ref().unwrap())),
         ),
         StellatypeContextAll::Error(_) => todo!(),
-        StellatypeContextAll::TypeNatContext(_) => Type::TypeNat,
+        StellatypeContextAll::TypeNatContext(_) => Type::Nat,
     }
 }
 
-fn build_decl<'input>(ctx: &DeclContextAll<'input>) -> Decl {
+fn build_decl(ctx: &DeclContextAll) -> Decl {
     match ctx {
         DeclContextAll::DeclTypeAliasContext(ctx) => Decl::DeclTypeAlias {
             name: ctx.name.as_ref().unwrap().text.to_string(),
@@ -85,7 +85,7 @@ fn build_decl<'input>(ctx: &DeclContextAll<'input>) -> Decl {
 pub fn build_program<'input>(
     ctx: &BaseParserRuleContext<'input, ProgramContextExt<'input>>,
 ) -> Program {
-    Program::AProgram {
+    Program {
         language_decl: LanguageDecl::LanguageCore, // TODO: language decl
         extensions: Vec::new(),                    // TODO: extensions
         decls: ctx.decls.iter().map(|decl| build_decl(decl)).collect(),
