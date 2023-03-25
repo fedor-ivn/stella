@@ -29,7 +29,7 @@ fn build_param_decl<'input>(
     };
 }
 
-fn build_expr(ctx: &ExprContextAll) -> Expr {
+pub fn build_expr(ctx: &ExprContextAll) -> Expr {
     match ctx {
         ExprContextAll::Error(_) => todo!(),
 
