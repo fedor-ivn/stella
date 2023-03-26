@@ -38,8 +38,9 @@ expr:
 	| name = StellaIdent												# Var
 	| 'fn' '('  (
 		paramDecls += paramDecl (',' paramDecls += paramDecl)*
-	)?  ')' '{' 'return' returnExpr=expr '}' # Abstraction
+	)?  ')' '{' 'return' returnExpr=expr ';' '}' # Abstraction
 	| fun=expr '(' (args+=expr (',' args+=expr)*)? ')' # Application
+    | '(' expr_=expr ')' # ExprParens
 	;
 
 stellatype:
@@ -47,4 +48,5 @@ stellatype:
 	| 'Nat'	# TypeNat
 	| 'fn' '(' (
 		paramTypes += stellatype (',' paramTypes += stellatype)*
-	)? ')' '->' returnType = stellatype # TypeFun;
+	)? ')' '->' returnType = stellatype # TypeFun
+    | '(' type_ = stellatype ')' # TypeParens;

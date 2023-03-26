@@ -151,6 +151,18 @@ fn enter_Var(&mut self, _ctx: &VarContext<'input>) { }
  */
 fn exit_Var(&mut self, _ctx: &VarContext<'input>) { }
 /**
+ * Enter a parse tree produced by the {@code ExprParens}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn enter_ExprParens(&mut self, _ctx: &ExprParensContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code ExprParens}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn exit_ExprParens(&mut self, _ctx: &ExprParensContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code NatRec}
  * labeled alternative in {@link stellaParser#expr}.
  * @param ctx the parse tree
@@ -258,6 +270,18 @@ fn enter_TypeFun(&mut self, _ctx: &TypeFunContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_TypeFun(&mut self, _ctx: &TypeFunContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code TypeParens}
+ * labeled alternative in {@link stellaParser#stellatype}.
+ * @param ctx the parse tree
+ */
+fn enter_TypeParens(&mut self, _ctx: &TypeParensContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code TypeParens}
+ * labeled alternative in {@link stellaParser#stellatype}.
+ * @param ctx the parse tree
+ */
+fn exit_TypeParens(&mut self, _ctx: &TypeParensContext<'input>) { }
 
 }
 

@@ -62,6 +62,7 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
             ctx.args.iter().map(|expr| build_expr(expr)).collect(),
             build_expr_box(&ctx.expr),
         ),
+        ExprContextAll::ExprParensContext(ctx) => build_expr(ctx.expr_.as_ref().unwrap()),
     }
 }
 
@@ -77,6 +78,7 @@ fn build_type(ctx: &StellatypeContextAll) -> Type {
         ),
         StellatypeContextAll::Error(_) => todo!(),
         StellatypeContextAll::TypeNatContext(_) => Type::Nat,
+        StellatypeContextAll::TypeParensContext(ctx) => build_type(ctx.type_.as_ref().unwrap()),
     }
 }
 
