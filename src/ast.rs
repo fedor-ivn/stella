@@ -2,20 +2,24 @@
 
 pub type ExtensionName = String;
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct Program {
     pub language_decl: LanguageDecl,
     pub extensions: Vec<Extension>,
     pub decls: Vec<Decl>,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub enum LanguageDecl {
     LanguageCore,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct Extension {
     pub extension_names: Vec<ExtensionName>,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub enum Decl {
     DeclFun {
         annotations: Vec<Annotation>,
@@ -32,25 +36,30 @@ pub enum Decl {
     },
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub enum Annotation {
     InlineAnnotation,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct ParamDecl {
     pub name: String,
     pub type_: Type,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct Binding {
     name: String,
     expr: Expr,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct MatchCase {
     pattern: Pattern,
     expr: Expr,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub enum Expr {
     DotRecord(Box<Expr>, String),
     DotTuple(Box<Expr>, usize),
@@ -110,16 +119,19 @@ pub enum Expr {
     Sequence(Box<Expr>, Option<Box<Expr>>),
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct RecordFieldType {
     label: String,
     type_: Type,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct VariantFieldType {
     label: String,
     type_: Option<Type>,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub enum Type {
     Bool,
     Nat,
@@ -138,16 +150,19 @@ pub enum Type {
     Var(String),
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct PatternBinding {
     pattern: Pattern,
     rhs: Expr,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct LabelledPattern {
     label: String,
     pattern: Pattern,
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub enum Pattern {
     Variant(String, Option<Box<Pattern>>),
     Inl(Box<Pattern>),
