@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 antlr-rust = { git = "https://github.com/rrevenantt/antlr4rust.git" }
 clap = { version = "4.1.13", features = ["derive"] }
+thiserror = "1.0.56"

@@ -71,32 +71,39 @@ fn main() {
     println!("\nParsing the program...");
     let program = parse_program(&input_program).expect("Parse Error");
 
-    typecheck::typecheck_program(&program).expect("Type Error");
+    dbg!(&program);
 
-    println!("\nProgram looks fine!");
-
-    // Parse input expression
-    let input_expr = match &args.program {
-        None => return,
-        Some(_) => {
-            // Read the input for the program from stdin
-            println!("Waiting for the input for the program:");
-            let mut data = String::new();
-            std::io::stdin()
-                .read_to_string(&mut data)
-                .expect("IO Error");
-            data
+    match typecheck::typecheck_program(&program) {
+        Ok(_) => {
+            println!("\nProgram looks fine!");
+            std::process::exit(0);
         }
-    };
+        Err(err) => {
+            println!("Type Error: {}", err);
+            std::process::exit(1);
+        }
+    }
 
-    println!("\nParsing input expression...");
-    let expr = parse_expr(&input_expr).expect("Parse Error");
+    // todo: implement
+    // // Parse input expression
+    // let input_expr = match &args.program {
+    //     None => return,
+    //     Some(_) => {
+    //         // Read the input for the program from stdin
+    //         println!("Waiting for the input for the program:");
+    //         let input_data: std::io::Result<String> = std::io::stdin().lines().collect();
+    //         input_data.expect("IO Error")
+    //     }
+    // };
 
-    // typecheck::typecheck_expr(&program).expect("Type Error");
+    // println!("\nParsing input expression...");
+    // let expr = parse_expr(&input_expr).expect("Parse Error");
 
-    // Evaluate the program with the given expression as input
-    println!("\nEvaluating...");
-    let _result = eval::evaluate_program(&program, &expr);
+    // // typecheck::typecheck_expr(&program).expect("Type Error");
 
-    println!("Done!");
+    // // Evaluate the program with the given expression as input
+    // println!("\nEvaluating...");
+    // let _result = eval::evaluate_program(&program, &expr);
+
+    // println!("Done!");
 }

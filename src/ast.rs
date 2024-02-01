@@ -63,27 +63,27 @@ pub struct MatchCase {
 pub enum Expr {
     DotRecord(Box<Expr>, String),
     DotTuple(Box<Expr>, usize),
-    ConstTrue,
-    ConstFalse,
+    ConstTrue, // <- .
+    ConstFalse, // <- .
     ConstUnit,
-    ConstInt(isize),
+    ConstInt(isize), // <- .
     ConstMemory(String),
-    Var(String),
+    Var(String), // <- .
     Inl(Box<Expr>),
     Inr(Box<Expr>),
     Cons(Box<Expr>, Box<Expr>),
     ListHead(Box<Expr>),
     ListIsEmpty(Box<Expr>),
     ListTail(Box<Expr>),
-    Succ(Box<Expr>),
+    Succ(Box<Expr>), // <- .
     LogicalNot(Box<Expr>),
     NatPred(Box<Expr>),
-    NatIsZero(Box<Expr>),
+    NatIsZero(Box<Expr>), // <- .
     Fix(Box<Expr>),
-    NatRec(Box<Expr>, Box<Expr>, Box<Expr>),
+    NatRec(Box<Expr>, Box<Expr>, Box<Expr>), // <-
     Fold(Type, Box<Expr>),
     Unfold(Type, Box<Expr>),
-    Application(Box<Expr>, Vec<Expr>),
+    Application(Box<Expr>, Vec<Expr>), // <-
     TypeApplication(Box<Expr>, Type),
     Multiply(Box<Expr>, Box<Expr>),
     Divide(Box<Expr>, Box<Expr>),
@@ -92,7 +92,7 @@ pub enum Expr {
     Subtract(Box<Expr>, Box<Expr>),
     LogicalOr(Box<Expr>, Box<Expr>),
     TypeAscription(Box<Expr>, Type),
-    Abstraction(Vec<ParamDecl>, Box<Expr>),
+    Abstraction(Vec<ParamDecl>, Box<Expr>), // <-
     TypeAbstraction(Vec<String>, Box<Expr>),
     Tuple(Vec<Expr>),
     Record(Vec<Binding>),
@@ -113,10 +113,10 @@ pub enum Expr {
     Throw(Box<Expr>),
     TryCatch(Box<Expr>, Pattern, Box<Expr>),
     TryWith(Box<Expr>, Box<Expr>),
-    If(Box<Expr>, Box<Expr>, Box<Expr>),
+    If(Box<Expr>, Box<Expr>, Box<Expr>), // <- .
     Let(Vec<PatternBinding>, Box<Expr>),
     LetRec(Vec<PatternBinding>, Box<Expr>),
-    Sequence(Box<Expr>, Option<Box<Expr>>),
+    Sequence(Box<Expr>, Option<Box<Expr>>), // <-
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
