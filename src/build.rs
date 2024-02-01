@@ -5,8 +5,8 @@ use antlr_rust::parser_rule_context::BaseParserRuleContext;
 use crate::{
     ast::*,
     stellaparser::{
-        DeclContextAll, ExprContextAll, ParamDeclContextExt, ProgramContextExt,
-        StellatypeContextAll,
+        DeclContextAll, ExprContextAll, ExtensionContextAll, ParamDeclContextExt,
+        ProgramContextExt, StellatypeContextAll,
     },
 };
 
@@ -247,12 +247,29 @@ fn build_decl(ctx: &DeclContextAll) -> Decl {
     }
 }
 
+fn build_extension(ctx: &ExtensionContextAll) -> Extension {
+    match ctx {
+        ExtensionContextAll::Error(_) => todo!(),
+        ExtensionContextAll::AnExtensionContext(ctx) => Extension {
+            extension_names: ctx
+                .extensionNames
+                .iter()
+                .map(|x| (*x.text).to_owned())
+                .collect(),
+        },
+    }
+}
+
 pub fn build_program<'input>(
     ctx: &BaseParserRuleContext<'input, ProgramContextExt<'input>>,
 ) -> Program {
     Program {
         language_decl: LanguageDecl::LanguageCore, // TODO: language decl
-        extensions: Vec::new(),                    // TODO: extensions
+        extensions: ctx
+            .extensions
+            .iter()
+            .map(|extension| build_extension(extension))
+            .collect(),
         decls: ctx.decls.iter().map(|decl| build_decl(decl)).collect(),
     }
 }
