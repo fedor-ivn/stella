@@ -127,34 +127,14 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
             Ok(*return_.clone())
         }
         Expr::NatRec(n, z, s) => {
-            let n = infer(n, context)?;
-            if n != Type::Nat {
-                return Err(TypeError::UnexpectedTypeForExpression {
-                    expected: Type::Nat,
-                    actual: n,
-                });
-            }
-
             let z = infer(z, context)?;
-            let s = infer(s, context)?;
-
-            let expected = Type::Fun(
+            let fun = Type::Fun(
                 vec![Type::Nat],
                 Box::new(Type::Fun(vec![z.clone()], Box::new(z.clone()))),
             );
-
-            match (&expected, &s) {
-                (_, _) if expected == s => Ok(z),
-                (Type::Fun(_, _), Type::Fun(_, _)) => Err(TypeError::UnexpectedTypeForExpression {
-                    expected,
-                    actual: s,
-                }),
-                (_, Type::Fun(_, _)) => Err(TypeError::UnexpectedLambda { expected: s }),
-                _ => Err(TypeError::UnexpectedTypeForExpression {
-                    expected,
-                    actual: s,
-                }),
-            }
+            match_type(&fun, s, context)?;
+            match_type(&Type::Nat, n, context)?;
+            Ok(z)
         }
         _ => todo!("Oops... This is interesting `expr_type`"),
     }
@@ -224,17 +204,14 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             dbg!("blalba2");
             Ok(())
         }
-        (Expr::NatRec(n, z, s), expected) => {
+        (Expr::NatRec(n, z, s), _) => {
+            match_type(&Type::Nat, n, context)?;
+            let z = infer(z, context)?;
             let fun = Type::Fun(
                 vec![Type::Nat],
-                Box::new(Type::Fun(
-                    vec![expected.clone()],
-                    Box::new(expected.clone()),
-                )),
+                Box::new(Type::Fun(vec![z.clone()], Box::new(z.clone()))),
             );
-            match_type(&fun, s, context)?;
-            match_type(&Type::Nat, n, context)?;
-            match_type(expected, z, context)
+            match_type(&fun, s, context)
         }
         (Expr::Abstraction(_, _), expected) => Err(TypeError::UnexpectedLambda {
             expected: expected.clone(),
