@@ -13,8 +13,14 @@ pub enum TypeError {
     UnexpectedLambda { expected: Type },
     #[error("[ERROR_NOT_A_FUNCTION] not a function (found {actual:?})")]
     NotAFunction { actual: Type },
+    #[error("([ERROR_INCORRECT_NUMBER_OF_ARGUMENTS] incorrect number of arguments (expected {expected:?}, found {actual:?})")]
+    IncorrectNumberOfArguments { expected: usize, actual: usize },
+    #[error("[ERROR_UNEXPECTED_NUMBER_OF_PARAMETERS_IN_LAMBDA] unexpected number of parameters in lambda (expected {expected:?}, found {actual:?})")]
+    UnexpectedNumberOfParametersInLambda { expected: usize, actual: usize },
     #[error("[ERROR_UNDEFINED_VARIABLE] undefined variable `{0}`")]
     UndefinedVariable(String),
+    #[error("[ERROR_INCORRECT_ARITY_OF_MAIN] incorrect arity of `main` function")]
+    IncorrectArityOfMain,
     #[error("[ERROR_MISSING_MAIN] missing `main` function")]
     MissingMain,
 }
@@ -49,6 +55,52 @@ impl Context {
             .for_each(|param_decl| new_context.add(&param_decl.name, param_decl.type_.clone()));
         new_context
     }
+
+    fn add_decl(&mut self, decl: &Decl) {
+        match decl {
+            Decl::DeclFun {
+                return_type: None, ..
+            } => {
+                todo!("Functions returning `Unit` are not implemented yet")
+            }
+            Decl::DeclFun {
+                name,
+                return_type: Some(type_),
+                param_decls,
+                ..
+            } => {
+                let type_ = type_.clone();
+                let fun = Type::Fun(
+                    param_decls
+                        .iter()
+                        .map(|param_decl| param_decl.type_.clone())
+                        .collect(),
+                    Box::new(type_),
+                );
+                self.add(&name, fun);
+            }
+            Decl::DeclTypeAlias { .. } => {
+                todo!("Type aliases are not implemented yet")
+            }
+        }
+    }
+}
+
+fn typecheck_params(
+    params: &Vec<Type>,
+    args: &Vec<Expr>,
+    context: &Context,
+) -> Result<(), TypeError> {
+    if params.len() != args.len() {
+        return Err(TypeError::IncorrectNumberOfArguments {
+            expected: params.len(),
+            actual: args.len(),
+        });
+    }
+    params
+        .iter()
+        .zip(args)
+        .try_for_each(|(param, arg)| match_type(param, arg, context))
 }
 
 fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
@@ -120,10 +172,12 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
                 actual => return Err(TypeError::NotAFunction { actual }),
             };
 
-            params
-                .iter()
-                .zip(args)
-                .try_for_each(|(param, arg)| match_type(param, arg, context))?;
+            // params
+            //     .iter()
+            //     .zip(args)
+            //     .try_for_each(|(param, arg)| match_type(param, arg, context))?;
+
+            typecheck_params(&params, args, context)?;
             Ok(*return_.clone())
         }
         Expr::NatRec(n, z, s) => {
@@ -154,10 +208,10 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         (Expr::Var(name), expected) => {
             let actual = context.get(name)?;
             if actual != expected {
-                return Err(TypeError::UnexpectedTypeForExpression {
+                Err(TypeError::UnexpectedTypeForExpression {
                     expected: expected.clone(),
                     actual: actual.clone(),
-                });
+                })
             } else {
                 Ok(())
             }
@@ -173,6 +227,14 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             Type::Fun(expected_params, expected_return),
         ) => {
             let local_context = context.with_params(actual_params);
+
+            if expected_params.len() != actual_params.len() {
+                return Err(TypeError::UnexpectedNumberOfParametersInLambda {
+                    expected: actual_params.len(),
+                    actual: expected_params.len(),
+                });
+            }
+
             expected_params
                 .iter()
                 .zip(actual_params.iter())
@@ -190,10 +252,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                 actual => return Err(TypeError::NotAFunction { actual }),
             };
 
-            params
-                .iter()
-                .zip(args)
-                .try_for_each(|(param, arg)| match_type(param, arg, context))?;
+            typecheck_params(&params, args, context)?;
 
             if *return_ != *expected {
                 return Err(TypeError::UnexpectedTypeForExpression {
@@ -201,7 +260,6 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                     actual: *return_,
                 });
             }
-            dbg!("blalba2");
             Ok(())
         }
         (Expr::NatRec(n, z, s), _) => {
@@ -234,9 +292,14 @@ fn typecheck_decl(decl: &Decl, context: &Context) -> Result<(), TypeError> {
             return_type: Some(expected),
             return_expr,
             param_decls,
+            local_decls,
             ..
         } => {
-            let context = context.with_params(param_decls);
+            let mut context = context.with_params(param_decls);
+            for decl in local_decls {
+                typecheck_decl(decl, &context)?;
+                context.add_decl(decl);
+            }
             match_type(expected, return_expr, &context)?;
             Ok(())
         }
@@ -246,43 +309,11 @@ fn typecheck_decl(decl: &Decl, context: &Context) -> Result<(), TypeError> {
     }
 }
 
-fn create_global_context(program: &Program) -> Context {
-    let mut context = Context::new();
-
-    for decl in &program.decls {
-        match decl {
-            Decl::DeclFun {
-                return_type: None, ..
-            } => {
-                todo!("Functions returning `Unit` are not implemented yet")
-            }
-            Decl::DeclFun {
-                name,
-                return_type: Some(type_),
-                param_decls,
-                ..
-            } => {
-                let type_ = type_.clone();
-                let fun = Type::Fun(
-                    param_decls
-                        .iter()
-                        .map(|param_decl| param_decl.type_.clone())
-                        .collect(),
-                    Box::new(type_),
-                );
-                context.add(name, fun);
-            }
-            Decl::DeclTypeAlias { .. } => {
-                todo!("Type aliases are not implemented yet")
-            }
-        }
-    }
-
-    context
-}
-
 pub fn typecheck_program(program: &Program) -> Result<(), TypeError> {
-    let global_context = create_global_context(program);
+    let mut global_context = Context::new();
+    for decl in &program.decls {
+        global_context.add_decl(decl);
+    }
 
     program
         .decls
@@ -290,7 +321,8 @@ pub fn typecheck_program(program: &Program) -> Result<(), TypeError> {
         .try_for_each(|decl| typecheck_decl(decl, &global_context))?;
 
     match global_context.get("main") {
-        Ok(_) => Ok(()),
+        Ok(Type::Fun(params, _)) if params.len() == 1 => Ok(()),
+        Ok(_) => Err(TypeError::IncorrectArityOfMain),
         Err(_) => Err(TypeError::MissingMain),
     }
 }

@@ -9,6 +9,7 @@ mod stellalexer;
 mod stellaparser;
 mod stellaparserlistener;
 mod typecheck;
+mod extensions;
 
 #[derive(clap::Parser)]
 struct Args {
@@ -42,6 +43,7 @@ fn parse_program(input: &str) -> AntlrResult<ast::Program> {
     Ok(build::build_program(&program))
 }
 
+#[allow(dead_code)]
 fn parse_expr(input: &str) -> AntlrResult<ast::Expr> {
     let mut parser = create_parser(input);
     let expr = parser.expr()?;
@@ -72,6 +74,16 @@ fn main() {
     let program = parse_program(&input_program).expect("Parse Error");
 
     dbg!(&program);
+
+    match extensions::check_program(&program) {
+        Ok(_) => {
+            println!("\nExtensions look fine!");
+        }
+        Err(err) => {
+            println!("Extension Error: {}", err);
+            std::process::exit(1);
+        }
+    }
 
     match typecheck::typecheck_program(&program) {
         Ok(_) => {
