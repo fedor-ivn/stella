@@ -28,8 +28,7 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
     program
         .extensions
         .iter()
-        .map(|ext| ext.extension_names.as_slice())
-        .flatten()
+        .flat_map(|ext| ext.extension_names.as_slice())
         .try_fold(Extensions::default(), |mut extensions, name| {
             match name.as_str() {
                 "#natural-literals" => {
@@ -101,7 +100,7 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
 fn check_decl(decl: Decl, extensions: &Extensions) -> Result<(), ExtensionError> {
     match decl {
         Decl::DeclFun { local_decls, .. }
-            if local_decls.len() > 0 && !extensions.nested_function_declarations =>
+            if !local_decls.is_empty() && !extensions.nested_function_declarations =>
         {
             Err(ExtensionError::NestedFunctionDeclarationsNotEnabled)
         }

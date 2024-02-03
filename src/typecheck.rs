@@ -48,7 +48,7 @@ impl Context {
         }
     }
 
-    fn with_params(&self, param_decls: &Vec<ParamDecl>) -> Self {
+    fn with_params(&self, param_decls: &[ParamDecl]) -> Self {
         let mut new_context = self.clone();
         param_decls
             .iter()
