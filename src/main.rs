@@ -1,3 +1,5 @@
+use std::io::Read;
+
 use clap::Parser;
 
 mod ast;
@@ -53,17 +55,16 @@ fn main() {
 
     // Parse program
     let input_program = match &args.program {
-        Some(path) => {
-            // Read the program from file
-            let file = std::fs::File::open(path).expect("Failed to open the file");
-            let reader = std::io::BufReader::new(file);
-            std::io::read_to_string(reader).expect("Failed to read from file")
-        }
+        Some(path) => std::fs::read_to_string(path).expect("Failed to read from the file"),
         None => {
             // Read the program from stdin
             println!("Waiting for the program:");
-            let input_data: std::io::Result<String> = std::io::stdin().lines().collect();
-            input_data.expect("IO Error")
+
+            let mut program = String::new();
+            std::io::stdin()
+                .read_to_string(&mut program)
+                .expect("IO Error");
+            program
         }
     };
 
@@ -80,8 +81,11 @@ fn main() {
         Some(_) => {
             // Read the input for the program from stdin
             println!("Waiting for the input for the program:");
-            let input_data: std::io::Result<String> = std::io::stdin().lines().collect();
-            input_data.expect("IO Error")
+            let mut data = String::new();
+            std::io::stdin()
+                .read_to_string(&mut data)
+                .expect("IO Error");
+            data
         }
     };
 
