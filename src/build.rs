@@ -5,8 +5,9 @@ use antlr_rust::parser_rule_context::BaseParserRuleContext;
 use crate::{
     ast::*,
     stellaparser::{
-        DeclContextAll, ExprContextAll, ExtensionContextAll, ParamDeclContextExt,
-        PatternBindingContext, PatternContextAll, ProgramContextExt, StellatypeContextAll,
+        DeclContextAll, ExprContextAll, ExtensionContextAll, MatchContextAttrs,
+        ParamDeclContextExt, PatternBindingContext, PatternContextAll, ProgramContextExt,
+        StellatypeContextAll,
     },
 };
 
@@ -142,7 +143,16 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
                 .collect(),
         ),
         ExprContextAll::VariantContext(_) => todo!(),
-        ExprContextAll::MatchContext(_) => todo!(),
+        ExprContextAll::MatchContext(ctx) => Expr::Match(
+            build_expr_box(&ctx.expr()),
+            ctx.cases
+                .iter()
+                .map(|ctx| MatchCase {
+                    pattern: build_pattern(ctx.pattern_.as_ref().unwrap()),
+                    expr: build_expr(ctx.expr_.as_ref().unwrap()),
+                })
+                .collect(),
+        ),
         ExprContextAll::ListContext(ctx) => {
             Expr::List(ctx.exprs.iter().map(|x| build_expr(x)).collect())
         }
