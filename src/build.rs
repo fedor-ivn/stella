@@ -5,8 +5,9 @@ use antlr_rust::parser_rule_context::BaseParserRuleContext;
 use crate::{
     ast::*,
     stellaparser::{
-        DeclContextAll, ExprContextAll, ExtensionContextAll, ParamDeclContextExt,
-        ProgramContextExt, StellatypeContextAll,
+        DeclContextAll, ExprContextAll, ExtensionContextAll, MatchContextAttrs,
+        ParamDeclContextExt, PatternBindingContext, PatternContextAll, ProgramContextExt,
+        StellatypeContextAll,
     },
 };
 
@@ -132,9 +133,26 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
         ExprContextAll::TupleContext(ctx) => {
             Expr::Tuple(ctx.exprs.iter().map(|x| build_expr(x)).collect())
         }
-        ExprContextAll::RecordContext(_) => todo!(),
+        ExprContextAll::RecordContext(ctx) => Expr::Record(
+            ctx.bindings
+                .iter()
+                .map(|ctx| Binding {
+                    name: token_name(&ctx.name).into_owned(),
+                    expr: build_expr(&ctx.rhs.as_ref().unwrap()),
+                })
+                .collect(),
+        ),
         ExprContextAll::VariantContext(_) => todo!(),
-        ExprContextAll::MatchContext(_) => todo!(),
+        ExprContextAll::MatchContext(ctx) => Expr::Match(
+            build_expr_box(&ctx.expr()),
+            ctx.cases
+                .iter()
+                .map(|ctx| MatchCase {
+                    pattern: build_pattern(ctx.pattern_.as_ref().unwrap()),
+                    expr: build_expr(ctx.expr_.as_ref().unwrap()),
+                })
+                .collect(),
+        ),
         ExprContextAll::ListContext(ctx) => {
             Expr::List(ctx.exprs.iter().map(|x| build_expr(x)).collect())
         }
@@ -166,14 +184,83 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
             build_expr_box(&ctx.thenExpr),
             build_expr_box(&ctx.elseExpr),
         ),
-        ExprContextAll::LetContext(_) => todo!(),
-        ExprContextAll::LetRecContext(_) => todo!(),
+        ExprContextAll::LetContext(ctx) => Expr::Let(
+            ctx.patternBindings
+                .iter()
+                .map(|ctx| build_pattern_binding(ctx))
+                .collect(),
+            build_expr_box(&ctx.body),
+        ),
+        ExprContextAll::LetRecContext(ctx) => Expr::LetRec(
+            ctx.patternBindings
+                .iter()
+                .map(|ctx| build_pattern_binding(ctx))
+                .collect(),
+            build_expr_box(&ctx.body),
+        ),
         ExprContextAll::TypeAbstractionContext(_) => todo!(),
         ExprContextAll::ParenthesisedExprContext(ctx) => build_expr(ctx.expr_.as_ref().unwrap()),
         ExprContextAll::SequenceContext(ctx) => Expr::Sequence(
             build_expr_box(&ctx.expr1),
             ctx.expr2.as_ref().map(|x| Box::new(build_expr(&*x))),
         ),
+    }
+}
+
+fn build_pattern_binding(ctx: &PatternBindingContext<'_>) -> PatternBinding {
+    PatternBinding {
+        pattern: build_pattern(&ctx.pat.as_ref().unwrap()),
+        rhs: build_expr(&ctx.rhs.as_ref().unwrap()),
+    }
+}
+
+fn build_pattern_box(ctx: &Option<Rc<PatternContextAll<'_>>>) -> Box<Pattern> {
+    Box::new(build_pattern(&ctx.as_ref().unwrap()))
+}
+
+fn build_pattern(ctx: &PatternContextAll<'_>) -> Pattern {
+    match ctx {
+        PatternContextAll::Error(_) => todo!(),
+
+        PatternContextAll::PatternVariantContext(ctx) => Pattern::Variant(
+            token_name(&ctx.label).into_owned(),
+            ctx.pattern_.as_ref().map(|x| Box::new(build_pattern(x))),
+        ),
+        PatternContextAll::PatternInlContext(ctx) => Pattern::Inl(build_pattern_box(&ctx.pattern_)),
+        PatternContextAll::PatternInrContext(ctx) => Pattern::Inr(build_pattern_box(&ctx.pattern_)),
+        PatternContextAll::PatternTupleContext(ctx) => {
+            Pattern::Tuple(ctx.patterns.iter().map(|x| build_pattern(x)).collect())
+        }
+        PatternContextAll::PatternRecordContext(ctx) => Pattern::Record(
+            ctx.patterns
+                .iter()
+                .map(|ctx| LabelledPattern {
+                    label: token_name(&ctx.label).into_owned(),
+                    pattern: build_pattern(ctx.pattern_.as_ref().unwrap()),
+                })
+                .collect(),
+        ),
+        PatternContextAll::PatternConsContext(ctx) => {
+            Pattern::Cons(build_pattern_box(&ctx.head), build_pattern_box(&ctx.tail))
+        }
+        PatternContextAll::PatternListContext(ctx) => {
+            Pattern::List(ctx.patterns.iter().map(|x| build_pattern(x)).collect())
+        }
+        PatternContextAll::PatternFalseContext(_) => Pattern::False,
+        PatternContextAll::PatternTrueContext(_) => Pattern::True,
+        PatternContextAll::PatternUnitContext(_) => Pattern::Unit,
+        PatternContextAll::PatternIntContext(ctx) => {
+            Pattern::Int(token_name(&ctx.n).parse().unwrap())
+        }
+        PatternContextAll::PatternSuccContext(ctx) => {
+            Pattern::Succ(build_pattern_box(&ctx.pattern_))
+        }
+        PatternContextAll::PatternVarContext(ctx) => {
+            Pattern::Var(token_name(&ctx.name).into_owned())
+        }
+        PatternContextAll::ParenthesisedPatternContext(ctx) => {
+            build_pattern(&ctx.pattern_.as_ref().unwrap())
+        }
     }
 }
 
@@ -201,7 +288,15 @@ fn build_type(ctx: &StellatypeContextAll) -> Type {
         StellatypeContextAll::TypeTupleContext(ctx) => {
             Type::Tuple(ctx.types.iter().map(|x| build_type(x)).collect())
         }
-        StellatypeContextAll::TypeRecordContext(_) => todo!(),
+        StellatypeContextAll::TypeRecordContext(ctx) => Type::Record(
+            ctx.fieldTypes
+                .iter()
+                .map(|ctx| RecordFieldType {
+                    label: token_name(&ctx.label).into_owned(),
+                    type_: build_type(&ctx.type_.as_ref().unwrap()),
+                })
+                .collect(),
+        ),
         StellatypeContextAll::TypeVariantContext(_) => todo!(),
         StellatypeContextAll::TypeListContext(ctx) => {
             Type::List(ctx.types.iter().map(|x| build_type(x)).collect())
