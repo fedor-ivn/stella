@@ -49,14 +49,14 @@ pub struct ParamDecl {
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct Binding {
-    name: String,
-    expr: Expr,
+    pub name: String,
+    pub expr: Expr,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct MatchCase {
-    pattern: Pattern,
-    expr: Expr,
+    pub pattern: Pattern,
+    pub expr: Expr,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
@@ -121,14 +121,14 @@ pub enum Expr {
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct RecordFieldType {
-    label: String,
-    type_: Type,
+    pub label: String,
+    pub type_: Type,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct VariantFieldType {
-    label: String,
-    type_: Option<Type>,
+    pub label: String,
+    pub type_: Option<Type>,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
@@ -152,14 +152,14 @@ pub enum Type {
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct PatternBinding {
-    pattern: Pattern,
-    rhs: Expr,
+    pub pattern: Pattern,
+    pub rhs: Expr,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct LabelledPattern {
-    label: String,
-    pattern: Pattern,
+    pub label: String,
+    pub pattern: Pattern,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
@@ -168,7 +168,6 @@ pub enum Pattern {
     Inl(Box<Pattern>),
     Inr(Box<Pattern>),
     Tuple(Vec<Pattern>),
-    Labelled(Box<LabelledPattern>),
     Record(Vec<LabelledPattern>),
     List(Vec<Pattern>),
     Cons(Box<Pattern>, Box<Pattern>),
