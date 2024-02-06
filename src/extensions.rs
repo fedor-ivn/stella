@@ -12,6 +12,10 @@ pub enum ExtensionError {
     MultiParameterFunctionsNotEnabled,
     #[error("Nested function declarations not enabled. Consider adding `extend with #nested-function-declarations`.")]
     NestedFunctionDeclarationsNotEnabled,
+    #[error("Unit type not enabled. Consider adding `extend with #unit-type`.")]
+    UnitTypeNotEnabled,
+    #[error("Pairs not enabled. Consider adding `extend with #pairs`.")]
+    PairsNotEnabled,
     #[error("Unsupported extension: {0}")]
     UnsupportedExtension(String),
 }
@@ -22,6 +26,8 @@ struct Extensions {
     nullary_functions: bool,
     multi_parameter_functions: bool,
     nested_function_declarations: bool,
+    unit_type: bool,
+    pairs: bool,
 }
 
 fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
@@ -43,6 +49,12 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 "#nested-function-declarations" => {
                     extensions.nested_function_declarations = true;
                 }
+                "#unit-type" => {
+                    extensions.unit_type = true;
+                }
+                "#pairs" => {
+                    extensions.pairs = true;
+                }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };
             Ok(extensions)
@@ -58,6 +70,13 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
                 Ok(())
             } else {
                 Err(ExtensionError::NaturalLiteralsNotEnabled)
+            }
+        }
+        Expr::ConstUnit => {
+            if extensions.unit_type {
+                Ok(())
+            } else {
+                Err(ExtensionError::UnitTypeNotEnabled)
             }
         }
         Expr::Sequence(expr, None) => check_expr(expr, extensions),
@@ -89,6 +108,22 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
             check_expr(cond, extensions)?;
             check_expr(then, extensions)?;
             check_expr(else_, extensions)
+        }
+        Expr::Tuple(exprs) => {
+            if extensions.pairs && exprs.len() <= 2 {
+                exprs
+                    .iter()
+                    .try_for_each(|expr| check_expr(expr, extensions))
+            } else {
+                Err(ExtensionError::PairsNotEnabled)
+            }
+        }
+        Expr::DotTuple(expr, index) => {
+            if extensions.pairs && *index <= 2 {
+                check_expr(expr, extensions)
+            } else {
+                Err(ExtensionError::PairsNotEnabled)
+            }
         }
         expr => {
             dbg!(expr);

@@ -7,22 +7,54 @@ use crate::ast::*;
 pub enum TypeError {
     #[error("[ERROR_UNEXPECTED_TYPE_FOR_PARAMETER] unexpected type for parameter")]
     UnexpectedTypeForParameter,
+
     #[error("[ERROR_UNEXPECTED_TYPE_FOR_EXPRESSION] unexpected type for expression (expected {expected:?}, found {actual:?})")]
     UnexpectedTypeForExpression { expected: Type, actual: Type },
+
     #[error("[ERROR_UNEXPECTED_LAMBDA] unexpected lambda (expected {expected:?})")]
     UnexpectedLambda { expected: Type },
+
     #[error("[ERROR_NOT_A_FUNCTION] not a function (found {actual:?})")]
     NotAFunction { actual: Type },
+
     #[error("([ERROR_INCORRECT_NUMBER_OF_ARGUMENTS] incorrect number of arguments (expected {expected:?}, found {actual:?})")]
     IncorrectNumberOfArguments { expected: usize, actual: usize },
+
     #[error("[ERROR_UNEXPECTED_NUMBER_OF_PARAMETERS_IN_LAMBDA] unexpected number of parameters in lambda (expected {expected:?}, found {actual:?})")]
     UnexpectedNumberOfParametersInLambda { expected: usize, actual: usize },
+
     #[error("[ERROR_UNDEFINED_VARIABLE] undefined variable `{0}`")]
     UndefinedVariable(String),
+
     #[error("[ERROR_INCORRECT_ARITY_OF_MAIN] incorrect arity of `main` function")]
     IncorrectArityOfMain,
+
     #[error("[ERROR_MISSING_MAIN] missing `main` function")]
     MissingMain,
+
+    #[error("[ERROR_MISSING_RECORD_FIELDS] record is missing one or more of the expected fields")]
+    MissingRecordFields,
+
+    #[error("[ERROR_UNEXPECTED_RECORD_FIELDS] record has one or more unexpected fields")]
+    UnexpectedRecordFields,
+
+    #[error("[ERROR_UNEXPECTED_RECORD] unexpected record where an expression of a non-record type is expected")]
+    UnexpectedRecord,
+
+    #[error("[ERROR_NOT_A_RECORD] unexpected expression where a record is expected")]
+    NotARecord,
+
+    #[error("[ERROR_UNEXPECTED_TUPLE] unexpected tuple/pair where an expression of a non-tuple type is expected")]
+    UnexpectedTuple,
+
+    #[error("[ERROR_UNEXPECTED_TUPLE_LENGTH] unexpected tuple/pair length (expected {0:?}, found {1:?})")]
+    UnexpectedTupleLength(usize, usize),
+
+    #[error("[ERROR_TUPLE_INDEX_OUT_OF_BOUNDS] tuple/pair index out of bounds (expected {0:?}, found {1:?})")]
+    TupleIndexOutOfBounds(usize, usize),
+
+    #[error("[ERROR_NOT_A_TUPLE] unexpected expression where a tuple/pair is expected")]
+    NotATuple,
 }
 
 #[derive(Clone)]
@@ -107,7 +139,8 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
     match expr {
         Expr::ConstTrue => Ok(Type::Bool),
         Expr::ConstFalse => Ok(Type::Bool),
-        Expr::ConstInt(0) => Ok(Type::Nat),
+        Expr::ConstUnit => Ok(Type::Unit),
+        Expr::ConstInt(_) => Ok(Type::Nat),
         Expr::Sequence(expr, None) => infer(expr, context),
         Expr::Sequence(_, _) => {
             dbg!(expr);
@@ -158,6 +191,27 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
                 }),
             }
         }
+
+        Expr::Tuple(exprs) => Ok(Type::Tuple(
+            exprs
+                .iter()
+                .map(|expr| infer(expr, context))
+                .collect::<Result<_, _>>()?,
+        )),
+
+        Expr::DotTuple(expr, index) => {
+            let Type::Tuple(fields) = infer(&expr, context)? else {
+                dbg!(expr);
+                return Err(TypeError::NotATuple);
+            };
+
+            let field = fields.get(index - 1);
+            match field {
+                Some(field) => Ok(field.clone()),
+                None => Err(TypeError::TupleIndexOutOfBounds(fields.len(), *index)),
+            }
+        }
+
         Expr::Abstraction(params, return_) => {
             let local_context = context.with_params(params);
             let return_ = infer(return_, &local_context)?;
@@ -171,11 +225,6 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
                 Type::Fun(params, return_) => (params, return_),
                 actual => return Err(TypeError::NotAFunction { actual }),
             };
-
-            // params
-            //     .iter()
-            //     .zip(args)
-            //     .try_for_each(|(param, arg)| match_type(param, arg, context))?;
 
             typecheck_params(&params, args, context)?;
             Ok(*return_.clone())
@@ -197,7 +246,8 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
 fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), TypeError> {
     match (actual, expected) {
         (Expr::ConstTrue | Expr::ConstFalse, Type::Bool) => Ok(()),
-        (Expr::ConstInt(0), Type::Nat) => Ok(()),
+        (Expr::ConstUnit, Type::Unit) => Ok(()),
+        (Expr::ConstInt(_), Type::Nat) => Ok(()),
         (Expr::Sequence(actual, None), expected) => match_type(expected, actual, context),
         (Expr::Sequence(_, _), _) => {
             dbg!(actual);
@@ -222,6 +272,50 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             match_type(expected, else_, context)?;
             Ok(())
         }
+
+        (expr, Type::Tuple(expected)) => {
+            let Type::Tuple(fields) = infer(expr, context)? else {
+                dbg!(expr);
+                return Err(TypeError::NotATuple);
+            };
+            if fields.len() != expected.len() {
+                return Err(TypeError::UnexpectedTupleLength(
+                    expected.len(),
+                    fields.len(),
+                ));
+            }
+            fields
+                .iter()
+                .zip(expected)
+                .try_for_each(|(expr, expected)| {
+                    if *expr != *expected {
+                        return Err(TypeError::UnexpectedTypeForExpression {
+                            expected: expected.clone(),
+                            actual: expr.clone(),
+                        });
+                    }
+                    Ok(())
+                })
+        }
+
+        (Expr::Tuple(_), _) => Err(TypeError::UnexpectedTuple),
+        (Expr::DotTuple(expr, index), expected) => {
+            let Type::Tuple(fields) = infer(&expr, context)? else {
+                dbg!(expr);
+                return Err(TypeError::NotATuple);
+            };
+
+            let field = fields.get(index - 1);
+            match field {
+                Some(field) if field == expected => Ok(()),
+                Some(field) => Err(TypeError::UnexpectedTypeForExpression {
+                    expected: expected.clone(),
+                    actual: field.clone(),
+                }),
+                None => Err(TypeError::TupleIndexOutOfBounds(fields.len(), *index)),
+            }
+        }
+
         (
             Expr::Abstraction(actual_params, actual_return),
             Type::Fun(expected_params, expected_return),
@@ -246,6 +340,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                 })?;
             match_type(expected_return, actual_return, &local_context)
         }
+
         (Expr::Application(fun, args), expected) => {
             let (params, return_) = match infer(fun, context)? {
                 Type::Fun(params, return_) => (params, return_),
