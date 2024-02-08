@@ -16,6 +16,12 @@ pub enum ExtensionError {
     UnitTypeNotEnabled,
     #[error("Pairs not enabled. Consider adding `extend with #pairs`.")]
     PairsNotEnabled,
+    #[error("Tuples not enabled. Consider adding `extend with #tuples`.")]
+    TuplesNotEnabled,
+    #[error("Records not enabled. Consider adding `extend with #records`.")]
+    RecordsNotEnabled,
+    #[error("Let bindings not enabled. Consider adding `extend with #let-bindings`.")]
+    LetBindingsNotEnabled,
     #[error("Unsupported extension: {0}")]
     UnsupportedExtension(String),
 }
@@ -28,6 +34,8 @@ struct Extensions {
     nested_function_declarations: bool,
     unit_type: bool,
     pairs: bool,
+    tuples: bool,
+    let_bindings: bool,
 }
 
 fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
@@ -54,6 +62,12 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 }
                 "#pairs" => {
                     extensions.pairs = true;
+                }
+                "#tuples" => {
+                    extensions.tuples = true;
+                }
+                "#let-bindings" => {
+                    extensions.let_bindings = true;
                 }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };
@@ -124,6 +138,15 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
             } else {
                 Err(ExtensionError::PairsNotEnabled)
             }
+        }
+        Expr::Let(bindings, expr) => {
+            if !extensions.let_bindings {
+                return Err(ExtensionError::LetBindingsNotEnabled);
+            }
+            bindings
+                .iter()
+                .try_for_each(|binding| check_expr(&binding.rhs, extensions))?;
+            check_expr(expr, extensions)
         }
         expr => {
             dbg!(expr);

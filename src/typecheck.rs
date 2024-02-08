@@ -135,6 +135,23 @@ fn typecheck_params(
         .try_for_each(|(param, arg)| match_type(param, arg, context))
 }
 
+fn context_with_pattern_bindigs(
+    context: &Context,
+    pattern_bindigs: &Vec<PatternBinding>,
+) -> Result<Context, TypeError> {
+    let mut new_context = context.clone();
+    for binding in pattern_bindigs {
+        match &binding.pattern {
+            Pattern::Var(name) => {
+                let type_ = infer(&binding.rhs, &context)?;
+                new_context.add(name, type_);
+            }
+            _ => todo!("Oops... This is interesting `Let`"),
+        }
+    }
+    Ok(new_context)
+}
+
 fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
     match expr {
         Expr::ConstTrue => Ok(Type::Bool),
@@ -168,13 +185,7 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
         }
         Expr::Var(name) => context.get(name).cloned(),
         Expr::If(cond, then, else_) => {
-            let cond = infer(cond, context)?;
-            if cond != Type::Bool {
-                return Err(TypeError::UnexpectedTypeForExpression {
-                    expected: Type::Bool,
-                    actual: cond,
-                });
-            }
+            match_type(&Type::Bool, cond, context)?;
             let then = infer(then, context)?;
             let else_ = infer(else_, context)?;
 
@@ -198,7 +209,6 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
                 .map(|expr| infer(expr, context))
                 .collect::<Result<_, _>>()?,
         )),
-
         Expr::DotTuple(expr, index) => {
             let Type::Tuple(fields) = infer(&expr, context)? else {
                 dbg!(expr);
@@ -210,6 +220,11 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
                 Some(field) => Ok(field.clone()),
                 None => Err(TypeError::TupleIndexOutOfBounds(fields.len(), *index)),
             }
+        }
+
+        Expr::Let(bindings, expr) => {
+            let context = context_with_pattern_bindigs(context, bindings)?;
+            infer(expr, &context)
         }
 
         Expr::Abstraction(params, return_) => {
@@ -288,6 +303,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                 .iter()
                 .zip(expected)
                 .try_for_each(|(expr, expected)| {
+                    // todo: should we check here for tuple? and in other places?
                     if *expr != *expected {
                         return Err(TypeError::UnexpectedTypeForExpression {
                             expected: expected.clone(),
@@ -297,7 +313,6 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                     Ok(())
                 })
         }
-
         (Expr::Tuple(_), _) => Err(TypeError::UnexpectedTuple),
         (Expr::DotTuple(expr, index), expected) => {
             let Type::Tuple(fields) = infer(&expr, context)? else {
@@ -314,6 +329,11 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                 }),
                 None => Err(TypeError::TupleIndexOutOfBounds(fields.len(), *index)),
             }
+        }
+
+        (Expr::Let(bindings, expr), expected) => {
+            let context = context_with_pattern_bindigs(context, bindings)?;
+            match_type(expected, expr, &context)
         }
 
         (
@@ -357,22 +377,31 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             }
             Ok(())
         }
-        (Expr::NatRec(n, z, s), _) => {
+        (Expr::NatRec(n, z, s), expected) => {
             match_type(&Type::Nat, n, context)?;
-            let z = infer(z, context)?;
             let fun = Type::Fun(
                 vec![Type::Nat],
-                Box::new(Type::Fun(vec![z.clone()], Box::new(z.clone()))),
+                Box::new(Type::Fun(
+                    vec![expected.clone()],
+                    Box::new(expected.clone()),
+                )),
             );
+            match_type(expected, z, context)?;
             match_type(&fun, s, context)
         }
         (Expr::Abstraction(_, _), expected) => Err(TypeError::UnexpectedLambda {
             expected: expected.clone(),
         }),
-        _ => Err(TypeError::UnexpectedTypeForExpression {
-            expected: expected.clone(),
-            actual: infer(actual, context)?,
-        }),
+        (expr, _) => {
+            let actual = infer(expr, context)?;
+            match actual {
+                Type::Tuple(_) => return Err(TypeError::UnexpectedTuple),
+                _ => Err(TypeError::UnexpectedTypeForExpression {
+                    expected: expected.clone(),
+                    actual,
+                }),
+            }
+        }
     }
 }
 
