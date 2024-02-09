@@ -6,22 +6,31 @@ use crate::ast::*;
 pub enum ExtensionError {
     #[error("Natural literals not enabled. Consider adding `extend with #natural-literals`.")]
     NaturalLiteralsNotEnabled,
+
     #[error("Nullary functions not enabled. Consider adding `extend with #nullary-functions`.")]
     NullaryFunctionsNotEnabled,
+
     #[error("Multi-parameter functions not enabled. Consider adding `extend with #multiparameter-functions`.")]
     MultiParameterFunctionsNotEnabled,
+
     #[error("Nested function declarations not enabled. Consider adding `extend with #nested-function-declarations`.")]
     NestedFunctionDeclarationsNotEnabled,
+
     #[error("Unit type not enabled. Consider adding `extend with #unit-type`.")]
     UnitTypeNotEnabled,
+
     #[error("Pairs not enabled. Consider adding `extend with #pairs`.")]
     PairsNotEnabled,
+
     #[error("Tuples not enabled. Consider adding `extend with #tuples`.")]
     TuplesNotEnabled,
+
     #[error("Records not enabled. Consider adding `extend with #records`.")]
     RecordsNotEnabled,
+
     #[error("Let bindings not enabled. Consider adding `extend with #let-bindings`.")]
     LetBindingsNotEnabled,
+
     #[error("Unsupported extension: {0}")]
     UnsupportedExtension(String),
 }
@@ -35,6 +44,7 @@ struct Extensions {
     unit_type: bool,
     pairs: bool,
     tuples: bool,
+    records: bool,
     let_bindings: bool,
 }
 
@@ -65,6 +75,9 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 }
                 "#tuples" => {
                     extensions.tuples = true;
+                }
+                "#records" => {
+                    extensions.records = true;
                 }
                 "#let-bindings" => {
                     extensions.let_bindings = true;
@@ -124,20 +137,38 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
             check_expr(else_, extensions)
         }
         Expr::Tuple(exprs) => {
-            if extensions.pairs && exprs.len() <= 2 {
+            if extensions.pairs || extensions.tuples {
                 exprs
                     .iter()
                     .try_for_each(|expr| check_expr(expr, extensions))
-            } else {
+            } else if exprs.len() <= 2 {
                 Err(ExtensionError::PairsNotEnabled)
+            } else {
+                Err(ExtensionError::TuplesNotEnabled)
             }
         }
         Expr::DotTuple(expr, index) => {
-            if extensions.pairs && *index <= 2 {
+            if extensions.pairs || extensions.tuples {
                 check_expr(expr, extensions)
-            } else {
+            } else if *index <= 2 {
                 Err(ExtensionError::PairsNotEnabled)
+            } else {
+                Err(ExtensionError::TuplesNotEnabled)
             }
+        }
+        Expr::Record(bindings) => {
+            if !extensions.records {
+                return Err(ExtensionError::RecordsNotEnabled);
+            }
+            bindings
+                .iter()
+                .try_for_each(|binding| check_expr(&binding.expr, extensions))
+        }
+        Expr::DotRecord(expr, _) => {
+            if !extensions.records {
+                return Err(ExtensionError::RecordsNotEnabled);
+            }
+            check_expr(expr, extensions)
         }
         Expr::Let(bindings, expr) => {
             if !extensions.let_bindings {

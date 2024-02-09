@@ -38,8 +38,14 @@ pub enum TypeError {
     #[error("[ERROR_UNEXPECTED_RECORD_FIELDS] record has one or more unexpected fields")]
     UnexpectedRecordFields,
 
+    #[error("[ERROR_UNEXPECTED_FIELD_ACCESS] unexpected field access where an expression of a non-record type is expected")]
+    UnexpectedFieldAccess,
+
     #[error("[ERROR_UNEXPECTED_RECORD] unexpected record where an expression of a non-record type is expected")]
     UnexpectedRecord,
+
+    #[error("[ERROR_DUPLICATED_RECORD_FIELD] duplicated record field `{0}`")]
+    DuplicatedRecordField(String),
 
     #[error("[ERROR_NOT_A_RECORD] unexpected expression where a record is expected")]
     NotARecord,
@@ -135,6 +141,15 @@ fn typecheck_params(
         .try_for_each(|(param, arg)| match_type(param, arg, context))
 }
 
+fn check_record_fields(fields: &Vec<RecordFieldType>) -> Result<(), TypeError> {
+    fields.iter().try_for_each(|field| {
+        if fields.iter().filter(|f| f.label == field.label).count() > 1 {
+            return Err(TypeError::DuplicatedRecordField(field.label.clone()));
+        }
+        Ok(())
+    })
+}
+
 fn context_with_pattern_bindigs(
     context: &Context,
     pattern_bindigs: &Vec<PatternBinding>,
@@ -164,43 +179,19 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
             todo!("Oops... This is interesting `Sequence`")
         }
         Expr::Succ(expr) => {
-            let type_ = infer(expr, context)?;
-            if type_ != Type::Nat {
-                return Err(TypeError::UnexpectedTypeForExpression {
-                    expected: Type::Nat,
-                    actual: type_,
-                });
-            }
+            match_type(&Type::Nat, expr, context)?;
             Ok(Type::Nat)
         }
         Expr::NatIsZero(expr) => {
-            let type_ = infer(expr, context)?;
-            if type_ != Type::Nat {
-                return Err(TypeError::UnexpectedTypeForExpression {
-                    expected: Type::Nat,
-                    actual: type_,
-                });
-            }
+            match_type(&Type::Nat, expr, context)?;
             Ok(Type::Bool)
         }
         Expr::Var(name) => context.get(name).cloned(),
         Expr::If(cond, then, else_) => {
             match_type(&Type::Bool, cond, context)?;
             let then = infer(then, context)?;
-            let else_ = infer(else_, context)?;
-
-            match (&then, &else_) {
-                (_, _) if then == else_ => Ok(then),
-                (Type::Fun(_, _), Type::Fun(_, _)) => Err(TypeError::UnexpectedTypeForExpression {
-                    expected: then,
-                    actual: else_,
-                }),
-                (_, Type::Fun(_, _)) => Err(TypeError::UnexpectedLambda { expected: else_ }),
-                _ => Err(TypeError::UnexpectedTypeForExpression {
-                    expected: then,
-                    actual: else_,
-                }),
-            }
+            match_type(&then, else_, context)?;
+            Ok(then)
         }
 
         Expr::Tuple(exprs) => Ok(Type::Tuple(
@@ -220,6 +211,32 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
                 Some(field) => Ok(field.clone()),
                 None => Err(TypeError::TupleIndexOutOfBounds(fields.len(), *index)),
             }
+        }
+
+        Expr::Record(fields) => {
+            let fields = fields
+                .iter()
+                .map(|field| {
+                    Ok(RecordFieldType {
+                        label: field.name.clone(),
+                        type_: infer(&field.expr, context)?,
+                    })
+                })
+                .collect::<Result<_, _>>()?;
+            check_record_fields(&fields)?;
+            Ok(Type::Record(fields))
+        }
+        Expr::DotRecord(expr, name) => {
+            let Type::Record(fields) = infer(&expr, context)? else {
+                dbg!(expr);
+                return Err(TypeError::NotARecord);
+            };
+
+            let field = fields
+                .iter()
+                .find(|field| field.label == *name)
+                .ok_or(TypeError::UnexpectedFieldAccess)?;
+            Ok(field.type_.clone())
         }
 
         Expr::Let(bindings, expr) => {
@@ -288,30 +305,17 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             Ok(())
         }
 
-        (expr, Type::Tuple(expected)) => {
-            let Type::Tuple(fields) = infer(expr, context)? else {
-                dbg!(expr);
-                return Err(TypeError::NotATuple);
-            };
-            if fields.len() != expected.len() {
+        (Expr::Tuple(actual_fields), Type::Tuple(expected_fields)) => {
+            if actual_fields.len() != expected_fields.len() {
                 return Err(TypeError::UnexpectedTupleLength(
-                    expected.len(),
-                    fields.len(),
+                    expected_fields.len(),
+                    actual_fields.len(),
                 ));
             }
-            fields
+            actual_fields
                 .iter()
-                .zip(expected)
-                .try_for_each(|(expr, expected)| {
-                    // todo: should we check here for tuple? and in other places?
-                    if *expr != *expected {
-                        return Err(TypeError::UnexpectedTypeForExpression {
-                            expected: expected.clone(),
-                            actual: expr.clone(),
-                        });
-                    }
-                    Ok(())
-                })
+                .zip(expected_fields)
+                .try_for_each(|(expr, expected)| match_type(expected, expr, context))
         }
         (Expr::Tuple(_), _) => Err(TypeError::UnexpectedTuple),
         (Expr::DotTuple(expr, index), expected) => {
@@ -328,6 +332,46 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                     actual: field.clone(),
                 }),
                 None => Err(TypeError::TupleIndexOutOfBounds(fields.len(), *index)),
+            }
+        }
+
+        (Expr::Record(actual_fields), Type::Record(expected_fields)) => {
+            if actual_fields.len() != expected_fields.len() {
+                return Err(TypeError::UnexpectedRecordFields);
+            }
+            check_record_fields(expected_fields)?;
+            expected_fields.iter().try_for_each(|expected| {
+                let actual = actual_fields
+                    .iter()
+                    .find(|actual| actual.name == expected.label)
+                    .ok_or(TypeError::MissingRecordFields)?;
+                match_type(&expected.type_, &actual.expr, context)
+            })?;
+
+            // todo: надо или нет?
+            if expected_fields.is_empty() {
+                return Err(TypeError::MissingRecordFields);
+            }
+            Ok(())
+        }
+        (Expr::Record(_), _) => Err(TypeError::UnexpectedRecord),
+        (Expr::DotRecord(expr, name), expected) => {
+            let Type::Record(fields) = infer(&expr, context)? else {
+                dbg!(expr);
+                return Err(TypeError::NotARecord);
+            };
+
+            let field = fields
+                .iter()
+                .find(|field| field.label == *name)
+                .ok_or(TypeError::UnexpectedFieldAccess)?;
+            if expected != &field.type_ {
+                Err(TypeError::UnexpectedTypeForExpression {
+                    expected: expected.clone(),
+                    actual: field.type_.clone(),
+                })
+            } else {
+                Ok(())
             }
         }
 
@@ -394,13 +438,10 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         }),
         (expr, _) => {
             let actual = infer(expr, context)?;
-            match actual {
-                Type::Tuple(_) => return Err(TypeError::UnexpectedTuple),
-                _ => Err(TypeError::UnexpectedTypeForExpression {
-                    expected: expected.clone(),
-                    actual,
-                }),
-            }
+            Err(TypeError::UnexpectedTypeForExpression {
+                expected: expected.clone(),
+                actual,
+            })
         }
     }
 }
