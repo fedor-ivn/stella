@@ -61,6 +61,9 @@ pub enum TypeError {
 
     #[error("[ERROR_NOT_A_TUPLE] unexpected expression where a tuple/pair is expected")]
     NotATuple,
+
+    #[error("[ERROR_UNEXPECTED_PATTERN_FOR_TYPE] unexpected pattern for type")]
+    UnexpectedPatternForType,
 }
 
 #[derive(Clone)]
@@ -94,6 +97,52 @@ impl Context {
         new_context
     }
 
+    fn add_pattern(&mut self, pattern: &Pattern, type_: &Type) -> Result<(), TypeError> {
+        match (type_, pattern) {
+            (type_, Pattern::Var(name)) => {
+                self.add(name, type_.clone());
+                Ok(())
+            }
+            (Type::Tuple(actual_fields), Pattern::Tuple(pattern_fields)) => {
+                if actual_fields.len() != pattern_fields.len() {
+                    return Err(TypeError::UnexpectedPatternForType);
+                }
+                actual_fields
+                    .iter()
+                    .zip(pattern_fields)
+                    .try_for_each(|(type_, pattern)| self.add_pattern(pattern, type_))
+            }
+            (Type::Record(actual_fields), Pattern::Record(pattern_fields)) => {
+                actual_fields.iter().try_for_each(|field| {
+                    let pattern = pattern_fields
+                        .iter()
+                        .find(|pattern| pattern.label == field.label)
+                        .ok_or(TypeError::UnexpectedPatternForType)?;
+                    self.add_pattern(&pattern.pattern, &field.type_)
+                })
+            }
+            _ => {
+                todo!(
+                    "Oops... This is interesting `Let` {:?} {:?}",
+                    pattern,
+                    type_
+                )
+            }
+        }
+    }
+
+    fn with_pattern_bindigs(
+        &self,
+        pattern_bindigs: &Vec<PatternBinding>,
+    ) -> Result<Context, TypeError> {
+        let mut new_context = self.clone();
+        for binding in pattern_bindigs {
+            let type_ = infer(&binding.rhs, &new_context)?;
+            new_context.add_pattern(&binding.pattern, &type_)?;
+        }
+        Ok(new_context)
+    }
+
     fn add_decl(&mut self, decl: &Decl) {
         match decl {
             Decl::DeclFun {
@@ -124,11 +173,7 @@ impl Context {
     }
 }
 
-fn typecheck_params(
-    params: &Vec<Type>,
-    args: &Vec<Expr>,
-    context: &Context,
-) -> Result<(), TypeError> {
+fn check_params(params: &Vec<Type>, args: &Vec<Expr>, context: &Context) -> Result<(), TypeError> {
     if params.len() != args.len() {
         return Err(TypeError::IncorrectNumberOfArguments {
             expected: params.len(),
@@ -148,23 +193,6 @@ fn check_record_fields(fields: &Vec<RecordFieldType>) -> Result<(), TypeError> {
         }
         Ok(())
     })
-}
-
-fn context_with_pattern_bindigs(
-    context: &Context,
-    pattern_bindigs: &Vec<PatternBinding>,
-) -> Result<Context, TypeError> {
-    let mut new_context = context.clone();
-    for binding in pattern_bindigs {
-        match &binding.pattern {
-            Pattern::Var(name) => {
-                let type_ = infer(&binding.rhs, &context)?;
-                new_context.add(name, type_);
-            }
-            _ => todo!("Oops... This is interesting `Let`"),
-        }
-    }
-    Ok(new_context)
 }
 
 fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
@@ -240,8 +268,12 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
         }
 
         Expr::Let(bindings, expr) => {
-            let context = context_with_pattern_bindigs(context, bindings)?;
+            let context = context.with_pattern_bindigs(bindings)?;
             infer(expr, &context)
+        }
+
+        Expr::Match(_expr, _cases) => {
+            todo!("Oops... `Match` is not implemented yet")
         }
 
         Expr::Abstraction(params, return_) => {
@@ -257,8 +289,7 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
                 Type::Fun(params, return_) => (params, return_),
                 actual => return Err(TypeError::NotAFunction { actual }),
             };
-
-            typecheck_params(&params, args, context)?;
+            check_params(&params, args, context)?;
             Ok(*return_.clone())
         }
         Expr::NatRec(n, z, s) => {
@@ -376,7 +407,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         }
 
         (Expr::Let(bindings, expr), expected) => {
-            let context = context_with_pattern_bindigs(context, bindings)?;
+            let context = context.with_pattern_bindigs(bindings)?;
             match_type(expected, expr, &context)
         }
 
@@ -411,7 +442,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                 actual => return Err(TypeError::NotAFunction { actual }),
             };
 
-            typecheck_params(&params, args, context)?;
+            check_params(&params, args, context)?;
 
             if *return_ != *expected {
                 return Err(TypeError::UnexpectedTypeForExpression {

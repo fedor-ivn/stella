@@ -31,6 +31,11 @@ pub enum ExtensionError {
     #[error("Let bindings not enabled. Consider adding `extend with #let-bindings`.")]
     LetBindingsNotEnabled,
 
+    #[error(
+        "Structural patterns not enabled. Consider adding `extend with #structural-patterns`."
+    )]
+    StructuralPatternsNotEnabled,
+
     #[error("Unsupported extension: {0}")]
     UnsupportedExtension(String),
 }
@@ -46,6 +51,8 @@ struct Extensions {
     tuples: bool,
     records: bool,
     let_bindings: bool,
+    let_patterns: bool,
+    structural_patterns: bool,
 }
 
 fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
@@ -81,6 +88,12 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 }
                 "#let-bindings" => {
                     extensions.let_bindings = true;
+                }
+                "#let-patterns" => {
+                    extensions.let_patterns = true;
+                }
+                "#structural-patterns" => {
+                    extensions.structural_patterns = true;
                 }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };
@@ -174,14 +187,59 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
             if !extensions.let_bindings {
                 return Err(ExtensionError::LetBindingsNotEnabled);
             }
-            bindings
-                .iter()
-                .try_for_each(|binding| check_expr(&binding.rhs, extensions))?;
+            bindings.iter().try_for_each(|binding| {
+                check_pattern(&binding.pattern, extensions)?;
+                check_expr(&binding.rhs, extensions)
+            })?;
             check_expr(expr, extensions)
+        }
+        Expr::Match(expr, cases) => {
+            if !extensions.structural_patterns {
+                return Err(ExtensionError::StructuralPatternsNotEnabled);
+            }
+            check_expr(expr, extensions)?;
+            cases
+                .iter()
+                .try_for_each(|case| check_expr(&case.expr, extensions))
         }
         expr => {
             dbg!(expr);
             todo!("Oops... This expression is not yet supported.")
+        }
+    }
+}
+
+fn check_pattern(pattern: &Pattern, extensions: &Extensions) -> Result<(), ExtensionError> {
+    match pattern {
+        Pattern::True | Pattern::False => Ok(()),
+        Pattern::Unit if extensions.unit_type => Ok(()),
+        Pattern::Unit => Err(ExtensionError::UnitTypeNotEnabled),
+        Pattern::Var(_) => Ok(()),
+        Pattern::Int(0) => Ok(()),
+        Pattern::Int(_) if extensions.natural_literals => Ok(()),
+        Pattern::Int(_) => Err(ExtensionError::NaturalLiteralsNotEnabled),
+        Pattern::Tuple(patterns) => {
+            if extensions.pairs || extensions.tuples {
+                patterns
+                    .iter()
+                    .try_for_each(|pattern| check_pattern(pattern, extensions))
+            } else if patterns.len() <= 2 {
+                Err(ExtensionError::PairsNotEnabled)
+            } else {
+                Err(ExtensionError::TuplesNotEnabled)
+            }
+        }
+        Pattern::Record(bindings) => {
+            if !extensions.records {
+                return Err(ExtensionError::RecordsNotEnabled);
+            }
+            bindings
+                .iter()
+                .try_for_each(|binding| check_pattern(&binding.pattern, extensions))
+        }
+        pattern => {
+            dbg!(pattern);
+            todo!("Oops... This pattern is not yet supported.")
         }
     }
 }
