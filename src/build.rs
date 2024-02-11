@@ -141,7 +141,10 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
                 })
                 .collect(),
         ),
-        ExprContextAll::VariantContext(_) => todo!(),
+        ExprContextAll::VariantContext(ctx) => Expr::Variant(
+            token_name(&ctx.label).into_owned(),
+            build_expr_box(&ctx.rhs),
+        ),
         ExprContextAll::MatchContext(ctx) => Expr::Match(
             build_expr_box(&ctx.expr_),
             ctx.cases
@@ -296,7 +299,15 @@ fn build_type(ctx: &StellatypeContextAll) -> Type {
                 })
                 .collect(),
         ),
-        StellatypeContextAll::TypeVariantContext(_) => todo!(),
+        StellatypeContextAll::TypeVariantContext(ctx) => Type::Variant(
+            ctx.fieldTypes
+                .iter()
+                .map(|ctx| VariantFieldType {
+                    label: token_name(&ctx.label).into_owned(),
+                    type_: ctx.type_.as_ref().map(|x| build_type(&**x)),
+                })
+                .collect(),
+        ),
         StellatypeContextAll::TypeListContext(ctx) => Type::List(build_type_box(&ctx.type_)),
         StellatypeContextAll::TypeUnitContext(_) => Type::Unit,
         StellatypeContextAll::TypeTopContext(_) => Type::Top,
