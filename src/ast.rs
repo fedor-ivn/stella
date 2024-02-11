@@ -142,7 +142,7 @@ pub enum Type {
     Tuple(Vec<Type>),
     Record(Vec<RecordFieldType>),
     Variant(Vec<VariantFieldType>),
-    List(Vec<Type>),
+    List(Box<Type>),
     Unit,
     Top,
     Ref(Box<Type>),
