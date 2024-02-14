@@ -169,6 +169,9 @@ impl Context {
             Decl::DeclTypeAlias { .. } => {
                 todo!("Type aliases are not implemented yet")
             }
+            Decl::DeclGenericFun { .. } => {
+                todo!("Generic functions are not implemented yet")
+            }
         }
     }
 }
@@ -501,6 +504,9 @@ fn typecheck_decl(decl: &Decl, context: &Context) -> Result<(), TypeError> {
         }
         Decl::DeclTypeAlias { name: _, type_: _ } => {
             todo!("Type aliases are not implemented yet")
+        }
+        Decl::DeclGenericFun { .. } => {
+            todo!("Generic functions are not implemented yet")
         }
     }
 }

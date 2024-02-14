@@ -30,6 +30,16 @@ pub enum Decl {
         local_decls: Vec<Decl>,
         return_expr: Expr,
     },
+    DeclGenericFun {
+        annotations: Vec<Annotation>,
+        name: String,
+        generics: Vec<String>,
+        param_decls: Vec<ParamDecl>,
+        return_type: Option<Type>,
+        throws_types: Vec<Type>,
+        local_decls: Vec<Decl>,
+        return_expr: Expr,
+    },
     DeclTypeAlias {
         name: String,
         type_: Type,
@@ -83,8 +93,8 @@ pub enum Expr {
     NatRec(Box<Expr>, Box<Expr>, Box<Expr>), // <-
     Fold(Type, Box<Expr>),
     Unfold(Type, Box<Expr>),
-    Application(Box<Expr>, Vec<Expr>), // <-
-    TypeApplication(Box<Expr>, Type),
+    Application(Box<Expr>, Vec<Expr>),
+    TypeApplication(Box<Expr>, Vec<Type>),
     Multiply(Box<Expr>, Box<Expr>),
     Divide(Box<Expr>, Box<Expr>),
     LogicalAnd(Box<Expr>, Box<Expr>),
@@ -142,7 +152,7 @@ pub enum Type {
     Tuple(Vec<Type>),
     Record(Vec<RecordFieldType>),
     Variant(Vec<VariantFieldType>),
-    List(Vec<Type>),
+    List(Box<Type>),
     Unit,
     Top,
     Ref(Box<Type>),

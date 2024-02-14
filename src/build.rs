@@ -5,9 +5,8 @@ use antlr_rust::parser_rule_context::BaseParserRuleContext;
 use crate::{
     ast::*,
     stellaparser::{
-        DeclContextAll, ExprContextAll, ExtensionContextAll, MatchContextAttrs,
-        ParamDeclContextExt, PatternBindingContext, PatternContextAll, ProgramContextExt,
-        StellatypeContextAll,
+        DeclContextAll, ExprContextAll, ExtensionContextAll, ParamDeclContextExt,
+        PatternBindingContext, PatternContextAll, ProgramContextExt, StellatypeContextAll,
     },
 };
 
@@ -90,7 +89,10 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
             build_expr_box(&ctx.fun),
             ctx.args.iter().map(|expr| build_expr(expr)).collect(),
         ),
-        ExprContextAll::TypeApplicationContext(_) => todo!(),
+        ExprContextAll::TypeApplicationContext(ctx) => Expr::TypeApplication(
+            build_expr_box(&ctx.fun),
+            ctx.types.iter().map(|type_| build_type(type_)).collect(),
+        ),
 
         ExprContextAll::MultiplyContext(ctx) => {
             Expr::Multiply(build_expr_box(&ctx.left), build_expr_box(&ctx.right))
@@ -142,9 +144,12 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
                 })
                 .collect(),
         ),
-        ExprContextAll::VariantContext(_) => todo!(),
+        ExprContextAll::VariantContext(ctx) => Expr::Variant(
+            token_name(&ctx.label).into_owned(),
+            build_expr_box(&ctx.rhs),
+        ),
         ExprContextAll::MatchContext(ctx) => Expr::Match(
-            build_expr_box(&ctx.expr()),
+            build_expr_box(&ctx.expr_),
             ctx.cases
                 .iter()
                 .map(|ctx| MatchCase {
@@ -198,7 +203,13 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
                 .collect(),
             build_expr_box(&ctx.body),
         ),
-        ExprContextAll::TypeAbstractionContext(_) => todo!(),
+        ExprContextAll::TypeAbstractionContext(ctx) => Expr::TypeAbstraction(
+            ctx.generics
+                .iter()
+                .map(|generic| (*generic.text).to_owned())
+                .collect(),
+            build_expr_box(&ctx.expr_),
+        ),
         ExprContextAll::ParenthesisedExprContext(ctx) => build_expr(ctx.expr_.as_ref().unwrap()),
         ExprContextAll::SequenceContext(ctx) => Expr::Sequence(
             build_expr_box(&ctx.expr1),
@@ -280,7 +291,13 @@ fn build_type(ctx: &StellatypeContextAll) -> Type {
                 .collect(),
             Box::new(build_type(ctx.returnType.as_ref().unwrap())),
         ),
-        StellatypeContextAll::TypeForAllContext(_) => todo!(),
+        StellatypeContextAll::TypeForAllContext(ctx) => Type::ForAll(
+            ctx.types
+                .iter()
+                .map(|generic| (*generic.text).to_owned())
+                .collect(),
+            build_type_box(&ctx.type_),
+        ),
         StellatypeContextAll::TypeRecContext(_) => todo!(),
         StellatypeContextAll::TypeSumContext(ctx) => {
             Type::Sum(build_type_box(&ctx.left), build_type_box(&ctx.right))
@@ -297,10 +314,16 @@ fn build_type(ctx: &StellatypeContextAll) -> Type {
                 })
                 .collect(),
         ),
-        StellatypeContextAll::TypeVariantContext(_) => todo!(),
-        StellatypeContextAll::TypeListContext(ctx) => {
-            Type::List(ctx.types.iter().map(|x| build_type(x)).collect())
-        }
+        StellatypeContextAll::TypeVariantContext(ctx) => Type::Variant(
+            ctx.fieldTypes
+                .iter()
+                .map(|ctx| VariantFieldType {
+                    label: token_name(&ctx.label).into_owned(),
+                    type_: ctx.type_.as_ref().map(|x| build_type(&**x)),
+                })
+                .collect(),
+        ),
+        StellatypeContextAll::TypeListContext(ctx) => Type::List(build_type_box(&ctx.type_)),
         StellatypeContextAll::TypeUnitContext(_) => Type::Unit,
         StellatypeContextAll::TypeTopContext(_) => Type::Top,
         StellatypeContextAll::TypeRefContext(ctx) => Type::Ref(build_type_box(&ctx.type_)),
@@ -331,7 +354,28 @@ fn build_decl(ctx: &DeclContextAll) -> Decl {
             local_decls: ctx.localDecls.iter().map(|decl| build_decl(decl)).collect(),
             return_expr: build_expr(ctx.returnExpr.as_ref().unwrap()),
         },
-        DeclContextAll::DeclFunGenericContext(_) => todo!(),
+        DeclContextAll::DeclFunGenericContext(ctx) => Decl::DeclGenericFun {
+            annotations: Vec::new(), // TODO: convert annotations
+            name: token_name(&ctx.name).to_string(),
+            generics: ctx
+                .generics
+                .iter()
+                .map(|generic| (*generic.text).to_owned())
+                .collect(),
+            param_decls: ctx
+                .paramDecls
+                .iter()
+                .map(|param_decl| build_param_decl(param_decl))
+                .collect(),
+            return_type: ctx.returnType.as_ref().map(|type_| build_type(type_)),
+            throws_types: ctx
+                .throwTypes
+                .iter()
+                .map(|type_| build_type(type_))
+                .collect(),
+            local_decls: ctx.localDecls.iter().map(|decl| build_decl(decl)).collect(),
+            return_expr: build_expr(ctx.returnExpr.as_ref().unwrap()),
+        },
 
         DeclContextAll::DeclTypeAliasContext(ctx) => Decl::DeclTypeAlias {
             name: token_name(&ctx.name).to_string(),
