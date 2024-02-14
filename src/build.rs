@@ -211,10 +211,10 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
             build_expr_box(&ctx.expr_),
         ),
         ExprContextAll::ParenthesisedExprContext(ctx) => build_expr(ctx.expr_.as_ref().unwrap()),
-        ExprContextAll::SequenceContext(ctx) => Expr::Sequence(
-            build_expr_box(&ctx.expr1),
-            ctx.expr2.as_ref().map(|x| Box::new(build_expr(&*x))),
-        ),
+        ExprContextAll::SequenceContext(ctx) => {
+            Expr::Sequence(build_expr_box(&ctx.expr1), build_expr_box(&ctx.expr2))
+        }
+        ExprContextAll::TerminatingSemicolonContext(ctx) => build_expr(ctx.expr_.as_ref().unwrap()),
     }
 }
 

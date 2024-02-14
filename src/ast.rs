@@ -126,7 +126,7 @@ pub enum Expr {
     If(Box<Expr>, Box<Expr>, Box<Expr>),
     Let(Vec<PatternBinding>, Box<Expr>),
     LetRec(Vec<PatternBinding>, Box<Expr>),
-    Sequence(Box<Expr>, Option<Box<Expr>>),
+    Sequence(Box<Expr>, Box<Expr>),
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
@@ -145,17 +145,17 @@ pub struct VariantFieldType {
 pub enum Type {
     Bool,
     Nat,
+    Ref(Box<Type>),
+    Sum(Box<Type>, Box<Type>),
     Fun(Vec<Type>, Box<Type>),
     ForAll(Vec<String>, Box<Type>),
     Rec(String, Box<Type>),
-    Sum(Box<Type>, Box<Type>),
     Tuple(Vec<Type>),
     Record(Vec<RecordFieldType>),
     Variant(Vec<VariantFieldType>),
     List(Box<Type>),
     Unit,
     Top,
-    Ref(Box<Type>),
     Bottom,
     Var(String),
 }
