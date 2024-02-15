@@ -62,8 +62,24 @@ pub enum TypeError {
     #[error("[ERROR_NOT_A_TUPLE] unexpected expression where a tuple/pair is expected")]
     NotATuple,
 
-    #[error("[ERROR_UNEXPECTED_PATTERN_FOR_TYPE] unexpected pattern for type")]
-    UnexpectedPatternForType,
+    #[error("[ERROR_UNEXPECTED_PATTERN_FOR_TYPE] unexpected pattern for type (expected {0:?}, found {1:?})")]
+    UnexpectedPatternForType(Type, Pattern),
+
+    #[error("[ERROR_AMBIGUOUS_SUM_TYPE] type inference of sum type failed (use type ascriptions)")]
+    AmbiguousSumType,
+
+    #[error("[ERROR_AMBIGUOUS_LIST_TYPE]")]
+    AmbiguousListType,
+    #[error("[ERROR_ILLEGAL_EMPTY_MATCHING]")]
+    IllegalEmptyMatching,
+    #[error("[ERROR_NONEXHAUSTIVE_MATCH_PATTERNS]")]
+    NonexhaustiveMatchPatterns,
+    #[error("[ERROR_NOT_A_LIST]")]
+    NotAList,
+    #[error("[ERROR_UNEXPECTED_LIST]")]
+    UnexpectedList,
+    #[error("[ERROR_UNEXPECTED_INJECTION]")]
+    UnexpectedInjection,
 }
 
 #[derive(Clone)]
@@ -99,13 +115,20 @@ impl Context {
 
     fn add_pattern(&mut self, pattern: &Pattern, type_: &Type) -> Result<(), TypeError> {
         match (type_, pattern) {
+            (Type::Nat, Pattern::Int(_)) => Ok(()),
+            (Type::Nat, Pattern::Succ(nat)) => self.add_pattern(nat, &Type::Nat),
+            (Type::Bool, Pattern::False | Pattern::True) => Ok(()),
+            (Type::Unit, Pattern::Unit) => Ok(()),
             (type_, Pattern::Var(name)) => {
                 self.add(name, type_.clone());
                 Ok(())
             }
             (Type::Tuple(actual_fields), Pattern::Tuple(pattern_fields)) => {
                 if actual_fields.len() != pattern_fields.len() {
-                    return Err(TypeError::UnexpectedPatternForType);
+                    return Err(TypeError::UnexpectedPatternForType(
+                        type_.clone(),
+                        pattern.clone(),
+                    ));
                 }
                 actual_fields
                     .iter()
@@ -117,18 +140,40 @@ impl Context {
                     let pattern = pattern_fields
                         .iter()
                         .find(|pattern| pattern.label == field.label)
-                        .ok_or(TypeError::UnexpectedPatternForType)?;
+                        .ok_or(TypeError::UnexpectedPatternForType(
+                            type_.clone(),
+                            pattern.clone(),
+                        ))?;
                     self.add_pattern(&pattern.pattern, &field.type_)
                 })
             }
+            (Type::Sum(left, _), Pattern::Inl(pattern)) => self.add_pattern(pattern, left),
+            (Type::Sum(_, right), Pattern::Inr(pattern)) => self.add_pattern(pattern, right),
+            (Type::List(inner), Pattern::Cons(head, tail)) => {
+                self.add_pattern(head, inner)?;
+                self.add_pattern(tail, &type_)
+            }
+            (Type::List(inner), Pattern::List(patterns)) => patterns
+                .iter()
+                .try_for_each(|pattern| self.add_pattern(pattern, inner)),
             _ => {
-                todo!(
-                    "Oops... This is interesting `Let` {:?} {:?}",
+                dbg!(
+                    "Oops... This is interesting `Pattern` {:?} {:?}",
                     pattern,
                     type_
-                )
+                );
+                Err(TypeError::UnexpectedPatternForType(
+                    type_.clone(),
+                    pattern.clone(),
+                ))
             }
         }
+    }
+
+    fn with_pattern(&self, matched: &Type, pattern: &Pattern) -> Result<Context, TypeError> {
+        let mut new_context = self.clone();
+        new_context.add_pattern(pattern, matched)?;
+        Ok(new_context)
     }
 
     fn with_pattern_bindigs(
@@ -196,6 +241,85 @@ fn check_record_fields(fields: &Vec<RecordFieldType>) -> Result<(), TypeError> {
         }
         Ok(())
     })
+}
+
+/// Check if the match is exhaustive for the given type
+///
+/// todo: it is actually not a correct match at all!!!!
+fn check_exhaustive_match(matched: &Type, cases: &Vec<MatchCase>) -> Result<(), TypeError> {
+    fn unit_or_error(cond: bool) -> Result<(), TypeError> {
+        if cond {
+            Ok(())
+        } else {
+            Err(TypeError::NonexhaustiveMatchPatterns)
+        }
+    }
+    match matched {
+        Type::Unit => {
+            for case in cases {
+                match case.pattern {
+                    Pattern::Unit => return Ok(()),
+                    Pattern::Var(_) => return Ok(()),
+                    _ => {}
+                }
+            }
+            Err(TypeError::NonexhaustiveMatchPatterns)
+        }
+        Type::Bool => {
+            let mut false_ = false;
+            let mut true_ = false;
+            for case in cases {
+                match case.pattern {
+                    Pattern::False => false_ = true,
+                    Pattern::True => true_ = true,
+                    Pattern::Var(_) => return Ok(()),
+                    _ => {}
+                }
+            }
+            unit_or_error(false_ && true_)
+        }
+        Type::Nat => {
+            for case in cases {
+                match case.pattern {
+                    Pattern::Var(_) => return Ok(()),
+                    Pattern::Succ(_) => return Ok(()),
+                    _ => {}
+                }
+            }
+            Err(TypeError::NonexhaustiveMatchPatterns)
+        }
+        Type::Sum(_, _) => {
+            let mut left = false;
+            let mut right = false;
+            for case in cases {
+                match case.pattern {
+                    Pattern::Inl(_) => left = true,
+                    Pattern::Inr(_) => right = true,
+                    Pattern::Var(_) => return Ok(()),
+                    _ => {}
+                }
+            }
+            unit_or_error(left && right)
+        }
+        Type::List(_) => {
+            let mut empty = false;
+            let mut head = false;
+            for case in cases {
+                match &case.pattern {
+                    Pattern::Cons(_, _) => head = true,
+                    Pattern::List(list) => {
+                        if list.is_empty() {
+                            empty = true;
+                        }
+                    }
+                    Pattern::Var(_) => return Ok(()),
+                    _ => {}
+                }
+            }
+            unit_or_error(empty && head)
+        }
+        _ => Ok(()),
+    }
 }
 
 fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
@@ -275,10 +399,27 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
             infer(expr, &context)
         }
 
-        Expr::Match(_expr, _cases) => {
-            todo!("Oops... `Match` is not implemented yet")
-        }
+        Expr::Match(expr, cases) => {
+            let matched = infer(expr, context)?;
 
+            let first = {
+                let case = cases.first().ok_or(TypeError::IllegalEmptyMatching)?;
+                let local = context.with_pattern(&matched, &case.pattern)?;
+                infer(&case.expr, &local)
+            }?;
+
+            cases[1..].iter().try_for_each(|case| {
+                let local = context.with_pattern(&matched, &case.pattern)?;
+                match_type(&first, &case.expr, &local)
+            })?;
+
+            check_exhaustive_match(&matched, cases)?;
+            Ok(first)
+        }
+        Expr::TypeAscription(expr, asc) => {
+            match_type(asc, expr, context)?;
+            Ok(asc.clone())
+        }
         Expr::Abstraction(params, return_) => {
             let local_context = context.with_params(params);
             let return_ = infer(return_, &local_context)?;
@@ -304,6 +445,35 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
             match_type(&fun, s, context)?;
             match_type(&Type::Nat, n, context)?;
             Ok(z)
+        }
+        Expr::Inl(_) | Expr::Inr(_) => Err(TypeError::AmbiguousSumType),
+        Expr::List(exprs) => {
+            let first = exprs.first().ok_or(TypeError::AmbiguousListType)?;
+            let first = infer(first, context)?;
+            exprs[1..]
+                .iter()
+                .try_for_each(|expr| match_type(&first, expr, context))?;
+            Ok(Type::List(Box::new(first)))
+        }
+        Expr::Cons(head, tail) => {
+            let head = infer(head, context)?;
+            let list = Type::List(Box::new(head));
+            match_type(&list, tail, context)?;
+            Ok(list)
+        }
+        Expr::ListHead(expr) | Expr::ListTail(expr) => {
+            let Type::List(type_) = infer(expr, context)? else {
+                dbg!(expr);
+                return Err(TypeError::NotAList);
+            };
+            Ok(*type_.clone())
+        }
+        Expr::ListIsEmpty(expr) => {
+            let Type::List(_) = infer(expr, context)? else {
+                dbg!(expr);
+                return Err(TypeError::NotAList);
+            };
+            Ok(Type::Bool)
         }
         _ => todo!("Oops... This is interesting `expr_type`"),
     }
@@ -414,11 +584,55 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             match_type(expected, expr, &context)
         }
 
+        (Expr::Match(_, cases), _) if cases.is_empty() => Err(TypeError::IllegalEmptyMatching),
+        (Expr::Match(matched, cases), expected) => {
+            let matched = infer(matched, context)?;
+            cases.iter().try_for_each(|case| {
+                let local = context.with_pattern(&matched, &case.pattern)?;
+                match_type(expected, &case.expr, &local)
+            })?;
+            check_exhaustive_match(&matched, cases)
+        }
+
+        (Expr::Inl(expr), Type::Sum(left, _)) => match_type(left, expr, context),
+        (Expr::Inr(expr), Type::Sum(_, right)) => match_type(right, expr, context),
+        (Expr::Inl(_), _) | (Expr::Inr(_), _) => Err(TypeError::UnexpectedInjection),
+        (Expr::TypeAscription(expr, asc), expected) if asc == expected => {
+            match_type(asc, expr, context)
+        }
+
+        (Expr::List(exprs), Type::List(expected)) => exprs
+            .iter()
+            .try_for_each(|expr| match_type(expected, expr, context)),
+        (Expr::Cons(head, tail), Type::List(inner)) => {
+            match_type(inner, head, context)?;
+            match_type(expected, tail, context)
+        }
+        (Expr::List(_), _) => Err(TypeError::UnexpectedList),
+        (Expr::ListHead(expr), expected) => {
+            let expected = Type::List(Box::new(expected.clone()));
+            match_type(&expected, expr, context)
+        }
+        (Expr::ListTail(list), expected) => {
+            // todo: if they change again to NOT_A_LIST
+            // let Type::List(_) = infer(list, context)? else {
+            //     dbg!(list);
+            //     return Err(TypeError::NotAList);
+            // };
+            match_type(expected, list, context)
+        }
+        (Expr::ListIsEmpty(expr), Type::Bool) => {
+            let Type::List(_) = infer(expr, context)? else {
+                dbg!(expr);
+                return Err(TypeError::NotAList);
+            };
+            Ok(())
+        }
         (
             Expr::Abstraction(actual_params, actual_return),
             Type::Fun(expected_params, expected_return),
         ) => {
-            let local_context = context.with_params(actual_params);
+            let local = context.with_params(actual_params);
 
             if expected_params.len() != actual_params.len() {
                 return Err(TypeError::UnexpectedNumberOfParametersInLambda {
@@ -436,7 +650,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                     }
                     Ok(())
                 })?;
-            match_type(expected_return, actual_return, &local_context)
+            match_type(expected_return, actual_return, &local)
         }
 
         (Expr::Application(fun, args), expected) => {

@@ -36,8 +36,17 @@ pub enum ExtensionError {
     )]
     StructuralPatternsNotEnabled,
 
+    #[error("Type ascriptions not enabled. Consider adding `extend with #type-ascriptions`.")]
+    TypeAscriptionsNotEnabled,
+
+    #[error("Sum types not enabled. Consider adding `extend with #sum-types`.")]
+    SumTypesNotEnabled,
+
     #[error("Unsupported extension: {0}")]
     UnsupportedExtension(String),
+
+    #[error("Lists not enabled. Consider adding `extend with #lists`.")]
+    ListsNotEnabled,
 }
 
 #[derive(Default)]
@@ -53,6 +62,9 @@ struct Extensions {
     let_bindings: bool,
     let_patterns: bool,
     structural_patterns: bool,
+    type_ascriptions: bool,
+    sum_types: bool,
+    lists: bool,
 }
 
 fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
@@ -94,6 +106,19 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 }
                 "#structural-patterns" => {
                     extensions.structural_patterns = true;
+                }
+                "#type-ascriptions" => {
+                    extensions.type_ascriptions = true;
+                }
+                "#sum-types" => {
+                    extensions.sum_types = true;
+                    extensions.structural_patterns = true;
+                }
+                "#lists" => {
+                    extensions.lists = true;
+                }
+                "#general-recursion" => {
+                    // todo: implement some checking for general recursion
                 }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };
@@ -201,6 +226,39 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
             cases
                 .iter()
                 .try_for_each(|case| check_expr(&case.expr, extensions))
+        }
+        Expr::Inl(expr) | Expr::Inr(expr) => {
+            if !extensions.sum_types {
+                return Err(ExtensionError::SumTypesNotEnabled);
+            }
+            check_expr(expr, extensions)
+        }
+        Expr::TypeAscription(expr, _) => {
+            if !extensions.type_ascriptions {
+                return Err(ExtensionError::TypeAscriptionsNotEnabled);
+            }
+            check_expr(expr, extensions)
+        }
+        Expr::List(exprs) => {
+            if !extensions.lists {
+                return Err(ExtensionError::ListsNotEnabled);
+            }
+            exprs
+                .iter()
+                .try_for_each(|expr| check_expr(expr, extensions))
+        }
+        Expr::Cons(head, tail) => {
+            if !extensions.lists {
+                return Err(ExtensionError::ListsNotEnabled);
+            }
+            check_expr(head, extensions)?;
+            check_expr(tail, extensions)
+        }
+        Expr::ListHead(expr) | Expr::ListIsEmpty(expr) | Expr::ListTail(expr) => {
+            if !extensions.lists {
+                return Err(ExtensionError::ListsNotEnabled);
+            }
+            check_expr(expr, extensions)
         }
         expr => {
             dbg!(expr);
