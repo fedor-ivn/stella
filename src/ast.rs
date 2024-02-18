@@ -106,7 +106,7 @@ pub enum Expr {
     TypeAbstraction(Vec<String>, Box<Expr>),
     Tuple(Vec<Expr>),
     Record(Vec<Binding>),
-    Variant(String, Box<Expr>),
+    Variant(String, Option<Box<Expr>>),
     Match(Box<Expr>, Vec<MatchCase>),
     List(Vec<Expr>),
     LessThan(Box<Expr>, Box<Expr>),
