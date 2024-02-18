@@ -1,5 +1,7 @@
 #![allow(dead_code)] // A lot of stuff here is yet to be used
 
+mod display;
+
 pub type ExtensionName = String;
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
