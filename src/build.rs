@@ -146,7 +146,7 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
         ),
         ExprContextAll::VariantContext(ctx) => Expr::Variant(
             token_name(&ctx.label).into_owned(),
-            build_expr_box(&ctx.rhs),
+            ctx.rhs.as_ref().map(|x| Box::new(build_expr(x))),
         ),
         ExprContextAll::MatchContext(ctx) => Expr::Match(
             build_expr_box(&ctx.expr_),
@@ -211,10 +211,10 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
             build_expr_box(&ctx.expr_),
         ),
         ExprContextAll::ParenthesisedExprContext(ctx) => build_expr(ctx.expr_.as_ref().unwrap()),
-        ExprContextAll::SequenceContext(ctx) => Expr::Sequence(
-            build_expr_box(&ctx.expr1),
-            ctx.expr2.as_ref().map(|x| Box::new(build_expr(&*x))),
-        ),
+        ExprContextAll::SequenceContext(ctx) => {
+            Expr::Sequence(build_expr_box(&ctx.expr1), build_expr_box(&ctx.expr2))
+        }
+        ExprContextAll::TerminatingSemicolonContext(ctx) => build_expr(ctx.expr_.as_ref().unwrap()),
     }
 }
 

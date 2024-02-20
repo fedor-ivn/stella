@@ -343,6 +343,18 @@ fn enter_Head(&mut self, _ctx: &HeadContext<'input>) { }
  */
 fn exit_Head(&mut self, _ctx: &HeadContext<'input>) { }
 /**
+ * Enter a parse tree produced by the {@code TerminatingSemicolon}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn enter_TerminatingSemicolon(&mut self, _ctx: &TerminatingSemicolonContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code TerminatingSemicolon}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn exit_TerminatingSemicolon(&mut self, _ctx: &TerminatingSemicolonContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code NotEqual}
  * labeled alternative in {@link stellaParser#expr}.
  * @param ctx the parse tree
