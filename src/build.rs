@@ -146,7 +146,7 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
         ),
         ExprContextAll::VariantContext(ctx) => Expr::Variant(
             token_name(&ctx.label).into_owned(),
-            build_expr_box(&ctx.rhs),
+            ctx.rhs.as_ref().map(|x| Box::new(build_expr(x))),
         ),
         ExprContextAll::MatchContext(ctx) => Expr::Match(
             build_expr_box(&ctx.expr_),

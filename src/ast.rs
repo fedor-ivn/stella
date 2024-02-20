@@ -1,5 +1,7 @@
 #![allow(dead_code)] // A lot of stuff here is yet to be used
 
+mod display;
+
 pub type ExtensionName = String;
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
@@ -106,7 +108,7 @@ pub enum Expr {
     TypeAbstraction(Vec<String>, Box<Expr>),
     Tuple(Vec<Expr>),
     Record(Vec<Binding>),
-    Variant(String, Box<Expr>),
+    Variant(String, Option<Box<Expr>>),
     Match(Box<Expr>, Vec<MatchCase>),
     List(Vec<Expr>),
     LessThan(Box<Expr>, Box<Expr>),
