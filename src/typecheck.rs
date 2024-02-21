@@ -9,7 +9,10 @@ pub enum TypeError {
     UnexpectedTypeForParameter,
 
     #[error("[ERROR_UNEXPECTED_TYPE_FOR_EXPRESSION] unexpected type for expression (expected {expected:?}, found {actual:?})")]
-    UnexpectedTypeForExpression { expected: Type, actual: Type },
+    UnexpectedTypeForExpression {
+        expected: Type,
+        actual: Option<Type>,
+    },
 
     #[error("[ERROR_UNEXPECTED_LAMBDA] unexpected lambda (expected {expected:?})")]
     UnexpectedLambda { expected: Type },
@@ -80,26 +83,36 @@ pub enum TypeError {
     UnexpectedList,
     #[error("[ERROR_UNEXPECTED_INJECTION]")]
     UnexpectedInjection,
+    #[error("[ERROR_AMBIGUOUS_VARIANT_TYPE]")]
+    AmbiguousVariantType,
+    #[error("[ERROR_UNEXPECTED_VARIANT]")]
+    UnexpectedVariant,
+    #[error("[ERROR_UNEXPECTED_VARIANT_LABEL]")]
+    UnexpectedVariantLabel,
+    #[error("[ERROR_UNEXPECTED_DATA_FOR_NULLARY_LABEL]")]
+    UnexpectedDataForNullaryLabel,
+    #[error("[ERROR_MISSING_DATA_FOR_LABEL]")]
+    MissingDataForLabel,
+    #[error("[ERROR_UNEXPECTED_NULLARY_VARIANT_PATTERN]")]
+    UnexpectedNullaryVariantPattern,
+    #[error("[ERROR_UNEXPECTED_NON_NULLARY_VARIANT_PATTERN]")]
+    UnexpectedNonNullaryVariantPattern,
 }
 
 #[derive(Clone)]
-struct Context {
-    decls: HashMap<String, Type>,
-}
+struct Context(HashMap<String, Type>);
 
 impl Context {
     fn new() -> Self {
-        Self {
-            decls: HashMap::new(),
-        }
+        Self(HashMap::new())
     }
 
     fn add(&mut self, name: &str, type_: Type) {
-        self.decls.insert(name.to_owned(), type_);
+        self.0.insert(name.to_owned(), type_);
     }
 
     fn get(&self, name: &str) -> Result<&Type, TypeError> {
-        match self.decls.get(name) {
+        match self.0.get(name) {
             Some(type_) => Ok(type_),
             None => Err(TypeError::UndefinedVariable(name.to_owned())),
         }
@@ -156,9 +169,20 @@ impl Context {
             (Type::List(inner), Pattern::List(patterns)) => patterns
                 .iter()
                 .try_for_each(|pattern| self.add_pattern(pattern, inner)),
+            (Type::Variant(fields), Pattern::Variant(label, inner)) => {
+                let field = fields.iter().find(|field| field.label == *label).ok_or(
+                    TypeError::UnexpectedPatternForType(type_.clone(), pattern.clone()),
+                )?;
+                match (inner, field.type_.as_ref()) {
+                    (Some(pattern), Some(type_)) => self.add_pattern(pattern, type_),
+                    (None, None) => Ok(()),
+                    (_, None) => Err(TypeError::UnexpectedNonNullaryVariantPattern),
+                    (None, _) => Err(TypeError::UnexpectedNullaryVariantPattern),
+                }
+            }
             _ => {
                 dbg!(
-                    "Oops... This is interesting `Pattern` {:?} {:?}",
+                    "Oops... This is interesting `Pattern` {} {}",
                     pattern,
                     type_
                 );
@@ -176,12 +200,9 @@ impl Context {
         Ok(new_context)
     }
 
-    fn with_pattern_bindigs(
-        &self,
-        pattern_bindigs: &Vec<PatternBinding>,
-    ) -> Result<Context, TypeError> {
+    fn with_let_bindigs(&self, let_bindings: &Vec<PatternBinding>) -> Result<Context, TypeError> {
         let mut new_context = self.clone();
-        for binding in pattern_bindigs {
+        for binding in let_bindings {
             let type_ = infer(&binding.rhs, &new_context)?;
             new_context.add_pattern(&binding.pattern, &type_)?;
         }
@@ -246,7 +267,7 @@ fn check_record_fields(fields: &Vec<RecordFieldType>) -> Result<(), TypeError> {
 /// Check if the match is exhaustive for the given type
 ///
 /// todo: it is actually not a correct match at all!!!!
-fn check_exhaustive_match(matched: &Type, cases: &Vec<MatchCase>) -> Result<(), TypeError> {
+fn check_exhaustiveness(matched: &Type, cases: &Vec<MatchCase>) -> Result<(), TypeError> {
     fn unit_or_error(cond: bool) -> Result<(), TypeError> {
         if cond {
             Ok(())
@@ -318,6 +339,34 @@ fn check_exhaustive_match(matched: &Type, cases: &Vec<MatchCase>) -> Result<(), 
             }
             unit_or_error(empty && head)
         }
+        Type::Variant(fields) => {
+            let mut variants = fields
+                .iter()
+                .map(|field| field.label.clone())
+                .collect::<Vec<_>>();
+            for case in cases {
+                match &case.pattern {
+                    Pattern::Variant(label, _) => {
+                        if let Some(index) = variants.iter().position(|v| v == label) {
+                            variants.remove(index);
+                        }
+                    }
+                    Pattern::Var(_) => return Ok(()),
+                    _ => {}
+                }
+            }
+            unit_or_error(variants.is_empty())
+        }
+        Type::Tuple(_) => {
+            for case in cases {
+                match case.pattern {
+                    Pattern::Tuple(_) => return Ok(()),
+                    Pattern::Var(_) => return Ok(()),
+                    _ => {}
+                }
+            }
+            Err(TypeError::NonexhaustiveMatchPatterns)
+        }
         _ => Ok(()),
     }
 }
@@ -328,10 +377,9 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
         Expr::ConstFalse => Ok(Type::Bool),
         Expr::ConstUnit => Ok(Type::Unit),
         Expr::ConstInt(_) => Ok(Type::Nat),
-        Expr::Sequence(expr, None) => infer(expr, context),
-        Expr::Sequence(_, _) => {
-            dbg!(expr);
-            todo!("Oops... This is interesting `Sequence`")
+        Expr::Sequence(_expr, _) => {
+            todo!("Sequence is not implemented yet")
+            // todo: ????
         }
         Expr::Succ(expr) => {
             match_type(&Type::Nat, expr, context)?;
@@ -395,7 +443,7 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
         }
 
         Expr::Let(bindings, expr) => {
-            let context = context.with_pattern_bindigs(bindings)?;
+            let context = context.with_let_bindigs(bindings)?;
             infer(expr, &context)
         }
 
@@ -413,7 +461,7 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
                 match_type(&first, &case.expr, &local)
             })?;
 
-            check_exhaustive_match(&matched, cases)?;
+            check_exhaustiveness(&matched, cases)?;
             Ok(first)
         }
         Expr::TypeAscription(expr, asc) => {
@@ -446,7 +494,28 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
             match_type(&Type::Nat, n, context)?;
             Ok(z)
         }
+        Expr::Fix(expr) => {
+            let Type::Fun(params, _) = infer(expr, context)? else {
+                dbg!(expr);
+                return Err(TypeError::NotAFunction {
+                    actual: Type::Fun(vec![], Box::new(Type::Unit)),
+                });
+            };
+
+            let param = params
+                .first()
+                .ok_or_else(|| TypeError::NotAFunction { actual: Type::Bool })?;
+
+            if !params[1..].is_empty() {
+                return Err(TypeError::NotAFunction { actual: Type::Bool });
+            }
+
+            let fun = Type::Fun(vec![param.clone()], Box::new(param.clone()));
+            match_type(&fun, expr, context)?;
+            Ok(param.clone())
+        }
         Expr::Inl(_) | Expr::Inr(_) => Err(TypeError::AmbiguousSumType),
+        Expr::Variant(..) => Err(TypeError::AmbiguousVariantType),
         Expr::List(exprs) => {
             let first = exprs.first().ok_or(TypeError::AmbiguousListType)?;
             let first = infer(first, context)?;
@@ -475,7 +544,7 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
             };
             Ok(Type::Bool)
         }
-        _ => todo!("Oops... This is interesting `expr_type`"),
+        _ => unreachable!(),
     }
 }
 
@@ -484,10 +553,8 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         (Expr::ConstTrue | Expr::ConstFalse, Type::Bool) => Ok(()),
         (Expr::ConstUnit, Type::Unit) => Ok(()),
         (Expr::ConstInt(_), Type::Nat) => Ok(()),
-        (Expr::Sequence(actual, None), expected) => match_type(expected, actual, context),
-        (Expr::Sequence(_, _), _) => {
-            dbg!(actual);
-            todo!("Oops... This is interesting `Sequence`")
+        (Expr::Sequence(_actual, _), _expected) => {
+            todo!("Sequence is not implemented yet")
         }
         (Expr::Succ(expr), Type::Nat) => match_type(&Type::Nat, expr, context),
         (Expr::NatIsZero(expr), Type::Bool) => match_type(&Type::Nat, expr, context),
@@ -496,7 +563,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             if actual != expected {
                 Err(TypeError::UnexpectedTypeForExpression {
                     expected: expected.clone(),
-                    actual: actual.clone(),
+                    actual: Some(actual.clone()),
                 })
             } else {
                 Ok(())
@@ -533,7 +600,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                 Some(field) if field == expected => Ok(()),
                 Some(field) => Err(TypeError::UnexpectedTypeForExpression {
                     expected: expected.clone(),
-                    actual: field.clone(),
+                    actual: Some(field.clone()),
                 }),
                 None => Err(TypeError::TupleIndexOutOfBounds(fields.len(), *index)),
             }
@@ -572,7 +639,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             if expected != &field.type_ {
                 Err(TypeError::UnexpectedTypeForExpression {
                     expected: expected.clone(),
-                    actual: field.type_.clone(),
+                    actual: Some(field.type_.clone()),
                 })
             } else {
                 Ok(())
@@ -580,7 +647,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         }
 
         (Expr::Let(bindings, expr), expected) => {
-            let context = context.with_pattern_bindigs(bindings)?;
+            let context = context.with_let_bindigs(bindings)?;
             match_type(expected, expr, &context)
         }
 
@@ -591,7 +658,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                 let local = context.with_pattern(&matched, &case.pattern)?;
                 match_type(expected, &case.expr, &local)
             })?;
-            check_exhaustive_match(&matched, cases)
+            check_exhaustiveness(&matched, cases)
         }
 
         (Expr::Inl(expr), Type::Sum(left, _)) => match_type(left, expr, context),
@@ -653,18 +720,36 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             match_type(expected_return, actual_return, &local)
         }
 
+        (Expr::Variant(label, expr), Type::Variant(fields)) => {
+            let field = fields
+                .iter()
+                .find(|field| field.label == *label)
+                .ok_or(TypeError::UnexpectedVariantLabel)?;
+            match (expr, field.type_.as_ref()) {
+                (Some(actual), Some(expected)) => match_type(expected, actual, context),
+                (None, None) => Ok(()),
+                (_, None) => Err(TypeError::UnexpectedDataForNullaryLabel),
+                (None, _) => Err(TypeError::MissingDataForLabel),
+            }
+        }
+        (Expr::Variant(_, _), _) => Err(TypeError::UnexpectedVariant),
+
         (Expr::Application(fun, args), expected) => {
             let (params, return_) = match infer(fun, context)? {
                 Type::Fun(params, return_) => (params, return_),
                 actual => return Err(TypeError::NotAFunction { actual }),
             };
 
+            dbg!(&params, &return_, expected);
+            // dbg!();
+
             check_params(&params, args, context)?;
 
             if *return_ != *expected {
+                dbg!("here");
                 return Err(TypeError::UnexpectedTypeForExpression {
                     expected: expected.clone(),
-                    actual: *return_,
+                    actual: Some(*return_),
                 });
             }
             Ok(())
@@ -681,16 +766,22 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             match_type(expected, z, context)?;
             match_type(&fun, s, context)
         }
+        (Expr::Fix(expr), expected) => {
+            let Type::Fun(..) = infer(expr, context)? else {
+                return Err(TypeError::NotAFunction {
+                    actual: Type::Fun(vec![], Box::new(Type::Unit)),
+                });
+            };
+            let fun = Type::Fun(vec![expected.clone()], Box::new(expected.clone()));
+            match_type(&fun, expr, context)
+        }
         (Expr::Abstraction(_, _), expected) => Err(TypeError::UnexpectedLambda {
             expected: expected.clone(),
         }),
-        (expr, _) => {
-            let actual = infer(expr, context)?;
-            Err(TypeError::UnexpectedTypeForExpression {
-                expected: expected.clone(),
-                actual,
-            })
-        }
+        _ => Err(TypeError::UnexpectedTypeForExpression {
+            expected: expected.clone(),
+            actual: None,
+        }),
     }
 }
 

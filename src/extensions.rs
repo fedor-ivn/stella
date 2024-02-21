@@ -47,6 +47,14 @@ pub enum ExtensionError {
 
     #[error("Lists not enabled. Consider adding `extend with #lists`.")]
     ListsNotEnabled,
+
+    #[error("Variants not enabled. Consider adding `extend with #variants`.")]
+    VariantsNotEnabled,
+
+    #[error(
+        "Fixpoint combinator not enabled. Consider adding `extend with #fixpoint-combinator`."
+    )]
+    FixpointCombinatorNotEnabled,
 }
 
 #[derive(Default)]
@@ -65,6 +73,8 @@ struct Extensions {
     type_ascriptions: bool,
     sum_types: bool,
     lists: bool,
+    variants: bool,
+    fixpoint_combinator: bool,
 }
 
 fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
@@ -120,6 +130,13 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 "#general-recursion" => {
                     // todo: implement some checking for general recursion
                 }
+                "#variants" => {
+                    extensions.variants = true;
+                    extensions.structural_patterns = true;
+                }
+                "#fixpoint-combinator" => {
+                    extensions.fixpoint_combinator = true;
+                }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };
             Ok(extensions)
@@ -144,9 +161,9 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
                 Err(ExtensionError::UnitTypeNotEnabled)
             }
         }
-        Expr::Sequence(expr, None) => check_expr(expr, extensions),
-        Expr::Sequence(_, _) => {
-            todo!("Oops... `Sequence` with a `Some` is not yet supported.")
+        Expr::Sequence(first, second) => {
+            check_expr(first, extensions)?;
+            check_expr(second, extensions)
         }
         Expr::Var(_) => Ok(()),
         Expr::Succ(expr) => check_expr(expr, extensions),
@@ -247,6 +264,12 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
                 .iter()
                 .try_for_each(|expr| check_expr(expr, extensions))
         }
+        Expr::Variant(_, Some(expr)) => {
+            if !extensions.variants {
+                return Err(ExtensionError::VariantsNotEnabled);
+            }
+            check_expr(expr, extensions)
+        }
         Expr::Cons(head, tail) => {
             if !extensions.lists {
                 return Err(ExtensionError::ListsNotEnabled);
@@ -257,6 +280,12 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
         Expr::ListHead(expr) | Expr::ListIsEmpty(expr) | Expr::ListTail(expr) => {
             if !extensions.lists {
                 return Err(ExtensionError::ListsNotEnabled);
+            }
+            check_expr(expr, extensions)
+        }
+        Expr::Fix(expr) => {
+            if !extensions.fixpoint_combinator {
+                return Err(ExtensionError::FixpointCombinatorNotEnabled);
             }
             check_expr(expr, extensions)
         }
