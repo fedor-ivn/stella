@@ -55,6 +55,9 @@ pub enum ExtensionError {
         "Fixpoint combinator not enabled. Consider adding `extend with #fixpoint-combinator`."
     )]
     FixpointCombinatorNotEnabled,
+
+    #[error("Letrec bindings not enabled. Consider adding `extend with #letrec-bindings`.")]
+    LetRecBindingsNotEnabled,
 }
 
 #[derive(Default)]
@@ -75,6 +78,7 @@ struct Extensions {
     lists: bool,
     variants: bool,
     fixpoint_combinator: bool,
+    letrec_bindings: bool,
 }
 
 fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
@@ -136,6 +140,9 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 }
                 "#fixpoint-combinator" => {
                     extensions.fixpoint_combinator = true;
+                }
+                "#letrec-bindings" | "#letrec-many-bindings" => {
+                    extensions.letrec_bindings = true;
                 }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };
@@ -287,6 +294,16 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
             if !extensions.fixpoint_combinator {
                 return Err(ExtensionError::FixpointCombinatorNotEnabled);
             }
+            check_expr(expr, extensions)
+        }
+        Expr::LetRec(bindings, expr) => {
+            if !extensions.letrec_bindings {
+                return Err(ExtensionError::LetRecBindingsNotEnabled);
+            }
+            bindings.iter().try_for_each(|binding| {
+                check_pattern(&binding.pattern, extensions)?;
+                check_expr(&binding.rhs, extensions)
+            })?;
             check_expr(expr, extensions)
         }
         expr => {

@@ -446,6 +446,10 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
             let context = context.with_let_bindigs(bindings)?;
             infer(expr, &context)
         }
+        Expr::LetRec(bindings, expr) => {
+            let context = context.with_let_bindigs(bindings)?;
+            infer(expr, &context)
+        }
 
         Expr::Match(expr, cases) => {
             let matched = infer(expr, context)?;
@@ -647,6 +651,10 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         }
 
         (Expr::Let(bindings, expr), expected) => {
+            let context = context.with_let_bindigs(bindings)?;
+            match_type(expected, expr, &context)
+        }
+        (Expr::LetRec(bindings, expr), expected) => {
             let context = context.with_let_bindigs(bindings)?;
             match_type(expected, expr, &context)
         }
