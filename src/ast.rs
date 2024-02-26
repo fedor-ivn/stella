@@ -46,6 +46,11 @@ pub enum Decl {
         name: String,
         type_: Type,
     },
+    DeclExceptionType(Type),
+    DeclExceptionVariant {
+        name: String,
+        type_: Type,
+    },
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
@@ -78,8 +83,8 @@ pub enum Expr {
     ConstTrue,
     ConstFalse,
     ConstUnit,
-    ConstInt(isize),
-    ConstMemory(String),
+    ConstInt(usize),
+    ConstMemory(usize),
     Var(String),
     Inl(Box<Expr>),
     Inr(Box<Expr>),

@@ -7,6 +7,8 @@ fn typecheck_decl(decl: &Decl) -> Result<(), TypeError> {
         Decl::DeclFun { .. } => Ok(()),
         Decl::DeclGenericFun { .. } => todo!(),
         Decl::DeclTypeAlias { name: _, type_: _ } => todo!(),
+        Decl::DeclExceptionType(_) => todo!(),
+        Decl::DeclExceptionVariant { .. } => todo!(),
     }
 }
 
