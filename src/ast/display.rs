@@ -241,6 +241,10 @@ impl DisplayWithDepth for Decl {
                     deeper.with(return_expr)
                 )
             }
+            Decl::DeclExceptionType(type_) => write!(formatter, "exception type = {type_}"),
+            Decl::DeclExceptionVariant { name, type_ } => {
+                write!(formatter, "exception variant {name} : {type_}")
+            }
         }
     }
 }
@@ -325,7 +329,7 @@ impl DisplayWithDepth for Expr {
             Self::ConstFalse => write!(formatter, "false"),
             Self::ConstUnit => write!(formatter, "unit"),
             Self::ConstInt(value) => write!(formatter, "{value}"),
-            Self::ConstMemory(address) => write!(formatter, "{address}"),
+            Self::ConstMemory(address) => write!(formatter, "<0x{address:x}>"),
             Self::Var(var) => write!(formatter, "{var}"),
             Self::Inl(inner) => write!(formatter, "inl({})", depth.with(inner)),
             Self::Inr(inner) => write!(formatter, "inr({})", depth.with(inner)),

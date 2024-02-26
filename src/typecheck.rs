@@ -238,6 +238,8 @@ impl Context {
             Decl::DeclGenericFun { .. } => {
                 todo!("Generic functions are not implemented yet")
             }
+            Decl::DeclExceptionType(_) => todo!(),
+            Decl::DeclExceptionVariant { .. } => todo!(),
         }
     }
 }
@@ -821,6 +823,8 @@ fn typecheck_decl(decl: &Decl, context: &Context) -> Result<(), TypeError> {
         Decl::DeclGenericFun { .. } => {
             todo!("Generic functions are not implemented yet")
         }
+        Decl::DeclExceptionType(_) => todo!(),
+        Decl::DeclExceptionVariant { .. } => todo!(),
     }
 }
 

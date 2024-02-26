@@ -48,13 +48,28 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
         ExprContextAll::ConstUnitContext(_) => Expr::ConstUnit,
 
         ExprContextAll::ConstIntContext(ctx) => Expr::ConstInt(token_name(&ctx.n).parse().unwrap()),
-        ExprContextAll::ConstMemoryContext(_) => todo!(),
+        ExprContextAll::ConstMemoryContext(ctx) => ctx
+            .mem
+            .as_ref()
+            .map(|x| &x.text)
+            .and_then(|x| x.strip_prefix("<0x"))
+            .and_then(|x| x.strip_suffix(">"))
+            .and_then(|x| usize::from_str_radix(x, 16).ok())
+            .map(Expr::ConstMemory)
+            .unwrap(),
         ExprContextAll::VarContext(ctx) => Expr::Var(token_name(&ctx.name).into_owned()),
 
         ExprContextAll::PanicContext(_) => Expr::Panic,
         ExprContextAll::ThrowContext(ctx) => Expr::Throw(build_expr_box(&ctx.expr_)),
-        ExprContextAll::TryCatchContext(_) => todo!(),
-        ExprContextAll::TryWithContext(_) => todo!(),
+        ExprContextAll::TryCatchContext(ctx) => Expr::TryCatch(
+            build_expr_box(&ctx.tryExpr),
+            build_pattern(ctx.pat.as_ref().unwrap()),
+            build_expr_box(&ctx.fallbackExpr),
+        ),
+        ExprContextAll::TryWithContext(ctx) => Expr::TryWith(
+            build_expr_box(&ctx.tryExpr),
+            build_expr_box(&ctx.fallbackExpr),
+        ),
 
         ExprContextAll::InlContext(ctx) => Expr::Inl(build_expr_box(&ctx.expr_)),
         ExprContextAll::InrContext(ctx) => Expr::Inr(build_expr_box(&ctx.expr_)),
@@ -298,7 +313,10 @@ fn build_type(ctx: &StellatypeContextAll) -> Type {
                 .collect(),
             build_type_box(&ctx.type_),
         ),
-        StellatypeContextAll::TypeRecContext(_) => todo!(),
+        StellatypeContextAll::TypeRecContext(ctx) => Type::Rec(
+            token_name(&ctx.var).into_owned(),
+            build_type_box(&ctx.type_),
+        ),
         StellatypeContextAll::TypeSumContext(ctx) => {
             Type::Sum(build_type_box(&ctx.left), build_type_box(&ctx.right))
         }
@@ -378,11 +396,16 @@ fn build_decl(ctx: &DeclContextAll) -> Decl {
         },
 
         DeclContextAll::DeclTypeAliasContext(ctx) => Decl::DeclTypeAlias {
-            name: token_name(&ctx.name).to_string(),
+            name: token_name(&ctx.name).into_owned(),
             type_: build_type(ctx.atype.as_ref().unwrap()),
         },
-        DeclContextAll::DeclExceptionTypeContext(_) => todo!(),
-        DeclContextAll::DeclExceptionVariantContext(_) => todo!(),
+        DeclContextAll::DeclExceptionTypeContext(ctx) => {
+            Decl::DeclExceptionType(build_type(&ctx.exceptionType.as_ref().unwrap()))
+        }
+        DeclContextAll::DeclExceptionVariantContext(ctx) => Decl::DeclExceptionVariant {
+            name: token_name(&ctx.name).into_owned(),
+            type_: build_type(&ctx.variantType.as_ref().unwrap()),
+        },
     }
 }
 
