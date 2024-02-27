@@ -404,7 +404,7 @@ where
 					recog.precpred(None, 8)
 				}
 				13=>{
-					recog.precpred(None, 2)
+					recog.precpred(None, 6)
 				}
 				14=>{
 					recog.precpred(None, 58)
@@ -8167,7 +8167,7 @@ where
 
 					/*InvokeRule expr*/
 					recog.base.set_state(405);
-					let tmp = recog.expr_rec(6)?;
+					let tmp = recog.expr_rec(5)?;
 					if let ExprContextAll::LetContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 					ctx.body = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
@@ -8223,7 +8223,7 @@ where
 
 					/*InvokeRule expr*/
 					recog.base.set_state(417);
-					let tmp = recog.expr_rec(5)?;
+					let tmp = recog.expr_rec(4)?;
 					if let ExprContextAll::LetRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 					ctx.body = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
@@ -8280,7 +8280,7 @@ where
 
 					/*InvokeRule expr*/
 					recog.base.set_state(430);
-					let tmp = recog.expr_rec(4)?;
+					let tmp = recog.expr_rec(3)?;
 					if let ExprContextAll::TypeAbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
@@ -8659,15 +8659,15 @@ where
 							recog.push_new_recursion_context(tmp.clone(), _startState, RULE_expr);
 							_localctx = tmp;
 							recog.base.set_state(476);
-							if !({recog.precpred(None, 2)}) {
-								Err(FailedPredicateError::new(&mut recog.base, Some("recog.precpred(None, 2)".to_owned()), None))?;
+							if !({recog.precpred(None, 6)}) {
+								Err(FailedPredicateError::new(&mut recog.base, Some("recog.precpred(None, 6)".to_owned()), None))?;
 							}
 							recog.base.set_state(477);
 							recog.base.match_token(Surrogate_id_SYMB_1,&mut recog.err_handler)?;
 
 							/*InvokeRule expr*/
 							recog.base.set_state(478);
-							let tmp = recog.expr_rec(3)?;
+							let tmp = recog.expr_rec(7)?;
 							if let ExprContextAll::SequenceContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 							ctx.expr2 = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
@@ -13107,18 +13107,18 @@ const _serializedATN:&'static str =
 	\u{190}\u{192}\x05\x16\x0c\x02\u{191}\u{18f}\x03\x02\x02\x02\u{192}\u{195}\
 	\x03\x02\x02\x02\u{193}\u{191}\x03\x02\x02\x02\u{193}\u{194}\x03\x02\x02\
 	\x02\u{194}\u{196}\x03\x02\x02\x02\u{195}\u{193}\x03\x02\x02\x02\u{196}\
-	\u{197}\x07\x31\x02\x02\u{197}\u{198}\x05\x14\x0b\x08\u{198}\u{1b6}\x03\
+	\u{197}\x07\x31\x02\x02\u{197}\u{198}\x05\x14\x0b\x07\u{198}\u{1b6}\x03\
 	\x02\x02\x02\u{199}\u{19a}\x07\x37\x02\x02\u{19a}\u{19f}\x05\x16\x0c\x02\
 	\u{19b}\u{19c}\x07\x03\x02\x02\u{19c}\u{19e}\x05\x16\x0c\x02\u{19d}\u{19b}\
 	\x03\x02\x02\x02\u{19e}\u{1a1}\x03\x02\x02\x02\u{19f}\u{19d}\x03\x02\x02\
 	\x02\u{19f}\u{1a0}\x03\x02\x02\x02\u{1a0}\u{1a2}\x03\x02\x02\x02\u{1a1}\
 	\u{19f}\x03\x02\x02\x02\u{1a2}\u{1a3}\x07\x31\x02\x02\u{1a3}\u{1a4}\x05\
-	\x14\x0b\x07\u{1a4}\u{1b6}\x03\x02\x02\x02\u{1a5}\u{1a6}\x07\x51\x02\x02\
+	\x14\x0b\x06\u{1a4}\u{1b6}\x03\x02\x02\x02\u{1a5}\u{1a6}\x07\x51\x02\x02\
 	\u{1a6}\u{1a7}\x07\x10\x02\x02\u{1a7}\u{1ac}\x07\x55\x02\x02\u{1a8}\u{1a9}\
 	\x07\x03\x02\x02\u{1a9}\u{1ab}\x07\x55\x02\x02\u{1aa}\u{1a8}\x03\x02\x02\
 	\x02\u{1ab}\u{1ae}\x03\x02\x02\x02\u{1ac}\u{1aa}\x03\x02\x02\x02\u{1ac}\
 	\u{1ad}\x03\x02\x02\x02\u{1ad}\u{1af}\x03\x02\x02\x02\u{1ae}\u{1ac}\x03\
-	\x02\x02\x02\u{1af}\u{1b0}\x07\x11\x02\x02\u{1b0}\u{1b6}\x05\x14\x0b\x06\
+	\x02\x02\x02\u{1af}\u{1b0}\x07\x11\x02\x02\u{1b0}\u{1b6}\x05\x14\x0b\x05\
 	\u{1b1}\u{1b2}\x07\x05\x02\x02\u{1b2}\u{1b3}\x05\x14\x0b\x02\u{1b3}\u{1b4}\
 	\x07\x06\x02\x02\u{1b4}\u{1b6}\x03\x02\x02\x02\u{1b5}\u{c8}\x03\x02\x02\
 	\x02\u{1b5}\u{ca}\x03\x02\x02\x02\u{1b5}\u{cb}\x03\x02\x02\x02\u{1b5}\u{cc}\
@@ -13152,8 +13152,8 @@ const _serializedATN:&'static str =
 	\x0c\x02\x02\u{1d6}\u{1d7}\x07\x16\x02\x02\u{1d7}\u{20a}\x05\x14\x0b\x0d\
 	\u{1d8}\u{1d9}\x0c\x0b\x02\x02\u{1d9}\u{1da}\x07\x17\x02\x02\u{1da}\u{20a}\
 	\x05\x14\x0b\x0c\u{1db}\u{1dc}\x0c\x0a\x02\x02\u{1dc}\u{1dd}\x07\x48\x02\
-	\x02\u{1dd}\u{20a}\x05\x14\x0b\x0b\u{1de}\u{1df}\x0c\x04\x02\x02\u{1df}\
-	\u{1e0}\x07\x04\x02\x02\u{1e0}\u{20a}\x05\x14\x0b\x05\u{1e1}\u{1e2}\x0c\
+	\x02\u{1dd}\u{20a}\x05\x14\x0b\x0b\u{1de}\u{1df}\x0c\x08\x02\x02\u{1df}\
+	\u{1e0}\x07\x04\x02\x02\u{1e0}\u{20a}\x05\x14\x0b\x09\u{1e1}\u{1e2}\x0c\
 	\x3c\x02\x02\u{1e2}\u{1e3}\x07\x1c\x02\x02\u{1e3}\u{20a}\x07\x55\x02\x02\
 	\u{1e4}\u{1e5}\x0c\x3b\x02\x02\u{1e5}\u{1e6}\x07\x1c\x02\x02\u{1e6}\u{20a}\
 	\x07\x58\x02\x02\u{1e7}\u{1e8}\x0c\x22\x02\x02\u{1e8}\u{1f1}\x07\x05\x02\
