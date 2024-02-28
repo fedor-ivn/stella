@@ -97,6 +97,19 @@ pub enum TypeError {
     UnexpectedNullaryVariantPattern,
     #[error("[ERROR_UNEXPECTED_NON_NULLARY_VARIANT_PATTERN]")]
     UnexpectedNonNullaryVariantPattern,
+
+    #[error("[ERROR_EXCEPTION_TYPE_NOT_DECLARED]")]
+    ExceptionTypeNotDeclared,
+    #[error("[ERROR_AMBIGUOUS_THROW_TYPE]")]
+    AmbiguousThrowType,
+    #[error("[ERROR_AMBIGUOUS_REFERENCE_TYPE]")]
+    AmbiguousReferenceType,
+    #[error("[ERROR_AMBIGUOUS_PANIC_TYPE]")]
+    AmbiguousPanicType,
+    #[error("[ERROR_NOT_A_REFERENCE]")]
+    NotAReference,
+    #[error("[ERROR_UNEXPECTED_MEMORY_ADDRESS]")]
+    UnexpectedMemoryAddress,
 }
 
 #[derive(Clone)]
@@ -379,9 +392,9 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
         Expr::ConstFalse => Ok(Type::Bool),
         Expr::ConstUnit => Ok(Type::Unit),
         Expr::ConstInt(_) => Ok(Type::Nat),
-        Expr::Sequence(_expr, _) => {
-            todo!("Sequence is not implemented yet")
-            // todo: ????
+        Expr::Sequence(preceding, following) => {
+            match_type(&Type::Unit, preceding, context)?;
+            infer(following, context)
         }
         Expr::Succ(expr) => {
             match_type(&Type::Nat, expr, context)?;
@@ -407,7 +420,6 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
         )),
         Expr::DotTuple(expr, index) => {
             let Type::Tuple(fields) = infer(&expr, context)? else {
-                dbg!(expr);
                 return Err(TypeError::NotATuple);
             };
 
@@ -433,7 +445,6 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
         }
         Expr::DotRecord(expr, name) => {
             let Type::Record(fields) = infer(&expr, context)? else {
-                dbg!(expr);
                 return Err(TypeError::NotARecord);
             };
 
@@ -502,7 +513,6 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
         }
         Expr::Fix(expr) => {
             let Type::Fun(params, _) = infer(expr, context)? else {
-                dbg!(expr);
                 return Err(TypeError::NotAFunction {
                     actual: Type::Fun(vec![], Box::new(Type::Unit)),
                 });
@@ -538,18 +548,35 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
         }
         Expr::ListHead(expr) | Expr::ListTail(expr) => {
             let Type::List(type_) = infer(expr, context)? else {
-                dbg!(expr);
                 return Err(TypeError::NotAList);
             };
             Ok(*type_.clone())
         }
         Expr::ListIsEmpty(expr) => {
             let Type::List(_) = infer(expr, context)? else {
-                dbg!(expr);
                 return Err(TypeError::NotAList);
             };
             Ok(Type::Bool)
         }
+        Expr::ConstMemory(_) => Err(TypeError::AmbiguousReferenceType),
+        Expr::Reference(expr) => {
+            let type_ = infer(expr, context)?;
+            Ok(Type::Ref(Box::new(type_)))
+        }
+        Expr::Dereference(expr) => {
+            let Type::Ref(type_) = infer(expr, context)? else {
+                return Err(TypeError::NotAReference);
+            };
+            Ok(*type_.clone())
+        }
+        Expr::Assignment(reference, value) => {
+            let Type::Ref(type_) = infer(reference, context)? else {
+                return Err(TypeError::NotAReference);
+            };
+            match_type(&type_, value, context)?;
+            Ok(Type::Unit)
+        }
+
         _ => unreachable!(),
     }
 }
@@ -559,8 +586,9 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         (Expr::ConstTrue | Expr::ConstFalse, Type::Bool) => Ok(()),
         (Expr::ConstUnit, Type::Unit) => Ok(()),
         (Expr::ConstInt(_), Type::Nat) => Ok(()),
-        (Expr::Sequence(_actual, _), _expected) => {
-            todo!("Sequence is not implemented yet")
+        (Expr::Sequence(preceding, following), _expected) => {
+            match_type(&Type::Unit, preceding, context)?;
+            match_type(expected, following, context)
         }
         (Expr::Succ(expr), Type::Nat) => match_type(&Type::Nat, expr, context),
         (Expr::NatIsZero(expr), Type::Bool) => match_type(&Type::Nat, expr, context),
@@ -597,7 +625,6 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         (Expr::Tuple(_), _) => Err(TypeError::UnexpectedTuple),
         (Expr::DotTuple(expr, index), expected) => {
             let Type::Tuple(fields) = infer(&expr, context)? else {
-                dbg!(expr);
                 return Err(TypeError::NotATuple);
             };
 
@@ -634,7 +661,6 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         (Expr::Record(_), _) => Err(TypeError::UnexpectedRecord),
         (Expr::DotRecord(expr, name), expected) => {
             let Type::Record(fields) = infer(&expr, context)? else {
-                dbg!(expr);
                 return Err(TypeError::NotARecord);
             };
 
@@ -700,7 +726,6 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         }
         (Expr::ListIsEmpty(expr), Type::Bool) => {
             let Type::List(_) = infer(expr, context)? else {
-                dbg!(expr);
                 return Err(TypeError::NotAList);
             };
             Ok(())
@@ -729,6 +754,9 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                 })?;
             match_type(expected_return, actual_return, &local)
         }
+        (Expr::Abstraction(_, _), expected) => Err(TypeError::UnexpectedLambda {
+            expected: expected.clone(),
+        }),
 
         (Expr::Variant(label, expr), Type::Variant(fields)) => {
             let field = fields
@@ -744,19 +772,31 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         }
         (Expr::Variant(_, _), _) => Err(TypeError::UnexpectedVariant),
 
+        (Expr::ConstMemory(_), Type::Ref(_)) => Ok(()),
+        (Expr::ConstMemory(_), _) => Err(TypeError::UnexpectedMemoryAddress),
+        (Expr::Reference(actual), Type::Ref(expected)) => match_type(expected, actual, context),
+        (Expr::Dereference(actual), expected) => {
+            let expected = Type::Ref(Box::new(expected.clone()));
+            match_type(&expected, actual, context)
+        }
+
+        (Expr::Assignment(reference, value), Type::Unit) => {
+            let Type::Ref(value_type) = infer(reference, context)? else {
+                dbg!(reference);
+                return Err(TypeError::NotAReference);
+            };
+            match_type(&value_type, value, context)
+        }
+
         (Expr::Application(fun, args), expected) => {
             let (params, return_) = match infer(fun, context)? {
                 Type::Fun(params, return_) => (params, return_),
                 actual => return Err(TypeError::NotAFunction { actual }),
             };
 
-            dbg!(&params, &return_, expected);
-            // dbg!();
-
             check_params(&params, args, context)?;
 
             if *return_ != *expected {
-                dbg!("here");
                 return Err(TypeError::UnexpectedTypeForExpression {
                     expected: expected.clone(),
                     actual: Some(*return_),
@@ -785,9 +825,6 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             let fun = Type::Fun(vec![expected.clone()], Box::new(expected.clone()));
             match_type(&fun, expr, context)
         }
-        (Expr::Abstraction(_, _), expected) => Err(TypeError::UnexpectedLambda {
-            expected: expected.clone(),
-        }),
         _ => Err(TypeError::UnexpectedTypeForExpression {
             expected: expected.clone(),
             actual: None,

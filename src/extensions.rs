@@ -58,6 +58,24 @@ pub enum ExtensionError {
 
     #[error("Letrec bindings not enabled. Consider adding `extend with #letrec-bindings`.")]
     LetRecBindingsNotEnabled,
+
+    #[error("Sequencing not enabled. Consider adding `extend with #sequencing`.")]
+    SequencingNotEnabled,
+
+    #[error("References not enabled. Consider adding `extend with #references`.")]
+    ReferencesNotEnabled,
+
+    #[error("Panic not enabled. Consider adding `extend with #panic`.")]
+    PanicNotEnabled,
+
+    #[error("Exceptions not enabled. Consider adding `extend with #exceptions`.")]
+    ExceptionsNotEnabled,
+
+    #[error("Type declarations for exceptions not enabled. Consider adding `extend with #exception-type-declaration`.")]
+    ExceptionTypeDeclarationNotEnabled,
+
+    #[error("Open variant exceptions not enabled. Consider adding `extend with #open-variant-expressions`.")]
+    OpenVariantExceptionsNotEnabled,
 }
 
 #[derive(Default)]
@@ -79,6 +97,12 @@ struct Extensions {
     variants: bool,
     fixpoint_combinator: bool,
     letrec_bindings: bool,
+    sequencing: bool,
+    references: bool,
+    panic: bool,
+    exceptions: bool,
+    exception_type_declaration: bool,
+    open_variant_exceptions: bool,
 }
 
 fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
@@ -145,6 +169,24 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                     extensions.letrec_bindings = true;
                 }
                 "#nullary-variant-labels" => {}
+                "#sequencing" => {
+                    extensions.sequencing = true;
+                }
+                "#references" => {
+                    extensions.references = true;
+                }
+                "#panic" => {
+                    extensions.panic = true;
+                }
+                "#exceptions" => {
+                    extensions.exceptions = true;
+                }
+                "#exception-type-declaration" => {
+                    extensions.exception_type_declaration = true;
+                }
+                "#open-variant-expressions" => {
+                    extensions.open_variant_exceptions = true;
+                }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };
             Ok(extensions)
@@ -170,6 +212,9 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
             }
         }
         Expr::Sequence(first, second) => {
+            if !extensions.sequencing {
+                return Err(ExtensionError::SequencingNotEnabled);
+            }
             check_expr(first, extensions)?;
             check_expr(second, extensions)
         }
@@ -305,6 +350,37 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
                 check_pattern(&binding.pattern, extensions)?;
                 check_expr(&binding.rhs, extensions)
             })?;
+            check_expr(expr, extensions)
+        }
+        Expr::ConstMemory(_) => {
+            if !extensions.references {
+                return Err(ExtensionError::ReferencesNotEnabled);
+            }
+            Ok(())
+        }
+        Expr::Reference(expr) | Expr::Dereference(expr) => {
+            if !extensions.references {
+                return Err(ExtensionError::ReferencesNotEnabled);
+            }
+            check_expr(expr, extensions)
+        }
+        Expr::Assignment(lhs, rhs) => {
+            if !extensions.references {
+                return Err(ExtensionError::ReferencesNotEnabled);
+            }
+            check_expr(lhs, extensions)?;
+            check_expr(rhs, extensions)
+        }
+        Expr::Panic => {
+            if !extensions.panic {
+                return Err(ExtensionError::PanicNotEnabled);
+            }
+            check_expr(expr, extensions)
+        }
+        Expr::Throw(expr) => {
+            if !extensions.exceptions {
+                return Err(ExtensionError::ExceptionsNotEnabled);
+            }
             check_expr(expr, extensions)
         }
         expr => {
