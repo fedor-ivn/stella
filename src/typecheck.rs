@@ -113,19 +113,25 @@ pub enum TypeError {
 }
 
 #[derive(Clone)]
-struct Context(HashMap<String, Type>);
+struct Context {
+    variables: HashMap<String, Type>,
+    exception: Option<Type>,
+}
 
 impl Context {
     fn new() -> Self {
-        Self(HashMap::new())
+        Self {
+            variables: HashMap::new(),
+            exception: None,
+        }
     }
 
     fn add(&mut self, name: &str, type_: Type) {
-        self.0.insert(name.to_owned(), type_);
+        self.variables.insert(name.to_owned(), type_);
     }
 
     fn get(&self, name: &str) -> Result<&Type, TypeError> {
-        match self.0.get(name) {
+        match self.variables.get(name) {
             Some(type_) => Ok(type_),
             None => Err(TypeError::UndefinedVariable(name.to_owned())),
         }
@@ -251,7 +257,9 @@ impl Context {
             Decl::DeclGenericFun { .. } => {
                 todo!("Generic functions are not implemented yet")
             }
-            Decl::DeclExceptionType(_) => todo!(),
+            Decl::DeclExceptionType(type_) => {
+                self.exception = Some(type_.clone());
+            }
             Decl::DeclExceptionVariant { .. } => todo!(),
         }
     }
@@ -384,6 +392,13 @@ fn check_exhaustiveness(matched: &Type, cases: &Vec<MatchCase>) -> Result<(), Ty
         }
         _ => Ok(()),
     }
+}
+
+fn get_exception_type(context: &Context) -> Result<&Type, TypeError> {
+    context
+        .exception
+        .as_ref()
+        .ok_or(TypeError::ExceptionTypeNotDeclared)
 }
 
 fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
@@ -576,7 +591,19 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
             match_type(&type_, value, context)?;
             Ok(Type::Unit)
         }
-
+        Expr::Throw(_) => Err(TypeError::AmbiguousThrowType),
+        Expr::Panic => Err(TypeError::AmbiguousPanicType),
+        Expr::TryWith(error_prone, fallback_value) => {
+            let type_ = infer(error_prone, context)?;
+            match_type(&type_, fallback_value, context)?;
+            Ok(type_)
+        }
+        Expr::TryCatch(error_prone, pattern, handler) => {
+            let type_ = infer(error_prone, context)?;
+            let local = context.with_pattern(&type_, pattern)?;
+            match_type(&type_, handler, &local)?;
+            Ok(type_)
+        }
         _ => unreachable!(),
     }
 }
@@ -609,7 +636,6 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             match_type(expected, else_, context)?;
             Ok(())
         }
-
         (Expr::Tuple(actual_fields), Type::Tuple(expected_fields)) => {
             if actual_fields.len() != expected_fields.len() {
                 return Err(TypeError::UnexpectedTupleLength(
@@ -825,6 +851,21 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             let fun = Type::Fun(vec![expected.clone()], Box::new(expected.clone()));
             match_type(&fun, expr, context)
         }
+        (Expr::Panic, _) => Ok(()),
+        (Expr::Throw(expr), _) => {
+            let exception = get_exception_type(context)?;
+            match_type(exception, expr, context)
+        }
+        (Expr::TryWith(error_prone, fallback_value), expected) => {
+            match_type(expected, error_prone, context)?;
+            match_type(expected, fallback_value, context)
+        }
+        (Expr::TryCatch(error_prone, pattern, handler), expected) => {
+            match_type(expected, error_prone, context)?;
+            let exception = get_exception_type(context)?;
+            let local = context.with_pattern(exception, pattern)?;
+            match_type(expected, handler, &local)
+        }
         _ => Err(TypeError::UnexpectedTypeForExpression {
             expected: expected.clone(),
             actual: None,
@@ -860,7 +901,7 @@ fn typecheck_decl(decl: &Decl, context: &Context) -> Result<(), TypeError> {
         Decl::DeclGenericFun { .. } => {
             todo!("Generic functions are not implemented yet")
         }
-        Decl::DeclExceptionType(_) => todo!(),
+        Decl::DeclExceptionType(_) => Ok(()),
         Decl::DeclExceptionVariant { .. } => todo!(),
     }
 }

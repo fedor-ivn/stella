@@ -375,13 +375,28 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
             if !extensions.panic {
                 return Err(ExtensionError::PanicNotEnabled);
             }
-            check_expr(expr, extensions)
+            Ok(())
         }
         Expr::Throw(expr) => {
             if !extensions.exceptions {
                 return Err(ExtensionError::ExceptionsNotEnabled);
             }
             check_expr(expr, extensions)
+        }
+        Expr::TryCatch(error_prone, pattern, handler) => {
+            if !extensions.exceptions {
+                return Err(ExtensionError::ExceptionsNotEnabled);
+            }
+            check_expr(error_prone, extensions)?;
+            check_pattern(pattern, extensions)?;
+            check_expr(handler, extensions)
+        }
+        Expr::TryWith(error_prone, fallback_value) => {
+            if !extensions.exceptions {
+                return Err(ExtensionError::ExceptionsNotEnabled);
+            }
+            check_expr(error_prone, extensions)?;
+            check_expr(fallback_value, extensions)
         }
         expr => {
             dbg!(expr);
