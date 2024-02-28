@@ -184,7 +184,7 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 "#exception-type-declaration" => {
                     extensions.exception_type_declaration = true;
                 }
-                "#open-variant-expressions" => {
+                "#open-variant-exceptions" => {
                     extensions.open_variant_exceptions = true;
                 }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
@@ -455,6 +455,12 @@ fn check_decl(decl: Decl, extensions: &Extensions) -> Result<(), ExtensionError>
             &Expr::Abstraction(param_decls, Box::new(return_expr)),
             extensions,
         ),
+        Decl::DeclExceptionType(_) if !extensions.exception_type_declaration => {
+            Err(ExtensionError::ExceptionTypeDeclarationNotEnabled)
+        }
+        Decl::DeclExceptionVariant { .. } if !extensions.open_variant_exceptions => {
+            Err(ExtensionError::OpenVariantExceptionsNotEnabled)
+        }
         _ => Ok(()),
     }
 }

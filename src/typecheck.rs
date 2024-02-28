@@ -260,7 +260,22 @@ impl Context {
             Decl::DeclExceptionType(type_) => {
                 self.exception = Some(type_.clone());
             }
-            Decl::DeclExceptionVariant { .. } => todo!(),
+            Decl::DeclExceptionVariant { name, type_ } => {
+                self.exception = match &self.exception {
+                    Some(Type::Variant(fields)) => {
+                        let mut fields = fields.clone();
+                        fields.push(VariantFieldType {
+                            label: name.clone(),
+                            type_: Some(type_.clone()),
+                        });
+                        Some(Type::Variant(fields))
+                    }
+                    Some(_) | None => Some(Type::Variant(vec![VariantFieldType {
+                        label: name.clone(),
+                        type_: Some(type_.clone()),
+                    }])),
+                }
+            }
         }
     }
 }
@@ -901,8 +916,7 @@ fn typecheck_decl(decl: &Decl, context: &Context) -> Result<(), TypeError> {
         Decl::DeclGenericFun { .. } => {
             todo!("Generic functions are not implemented yet")
         }
-        Decl::DeclExceptionType(_) => Ok(()),
-        Decl::DeclExceptionVariant { .. } => todo!(),
+        Decl::DeclExceptionType(_) | Decl::DeclExceptionVariant { .. } => Ok(()),
     }
 }
 
