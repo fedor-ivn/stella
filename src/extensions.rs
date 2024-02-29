@@ -144,6 +144,7 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 "#letrec-bindings" | "#letrec-many-bindings" => {
                     extensions.letrec_bindings = true;
                 }
+                "#nullary-variant-labels" => {}
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };
             Ok(extensions)
