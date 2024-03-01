@@ -858,11 +858,12 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             match_type(&fun, s, context)
         }
         (Expr::Fix(expr), expected) => {
-            let Type::Fun(..) = infer(expr, context)? else {
-                return Err(TypeError::NotAFunction {
-                    actual: Type::Fun(vec![], Box::new(Type::Unit)),
-                });
-            };
+            // todo: if the change the playgound once again
+            // let Type::Fun(..) = infer(expr, context)? else {
+            //     return Err(TypeError::NotAFunction {
+            //         actual: Type::Fun(vec![], Box::new(Type::Unit)),
+            //     });
+            // };
             let fun = Type::Fun(vec![expected.clone()], Box::new(expected.clone()));
             match_type(&fun, expr, context)
         }
