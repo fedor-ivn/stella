@@ -499,6 +499,26 @@ impl DisplayWithDepth for Expr {
                 depth.next().with(fallback),
                 deeper = depth.next(),
             ),
+            Self::TryCastAs {
+                try_,
+                to,
+                casted_pattern,
+                casted_arm,
+                fallback_arm,
+            } => write!(
+                formatter,
+                "try {{\n\
+                 {deeper}{}\n\
+                 {depth}}} cast as {to} {{\n\
+                 {deeper}{casted_pattern} => {}\n\
+                 {depth}}} with {{\n\
+                 {deeper}{}\n\
+                 {depth}}}",
+                depth.next().with(try_),
+                depth.next().with(casted_arm),
+                depth.next().with(fallback_arm),
+                deeper = depth.next(),
+            ),
             Self::If(condition, then, otherwise) => write!(
                 formatter,
                 "if {}\n{depth}then {}\n{depth}else {}",
@@ -613,6 +633,8 @@ impl Display for Pattern {
             Self::Int(value) => write!(formatter, "{value}"),
             Self::Succ(inner) => write!(formatter, "succ({inner})"),
             Self::Var(var) => write!(formatter, "{var}"),
+            Self::Ascription(inner, type_) => write!(formatter, "{inner} as {type_}"),
+            Self::CastAs(inner, type_) => write!(formatter, "{inner} cast as {type_}"),
         }
     }
 }

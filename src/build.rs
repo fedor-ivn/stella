@@ -66,6 +66,13 @@ pub fn build_expr(ctx: &ExprContextAll) -> Expr {
             build_pattern(ctx.pat.as_ref().unwrap()),
             build_expr_box(&ctx.fallbackExpr),
         ),
+        ExprContextAll::TryCastAsContext(ctx) => Expr::TryCastAs {
+            try_: build_expr_box(&ctx.tryExpr),
+            to: build_type(ctx.type_.as_ref().unwrap()),
+            casted_pattern: build_pattern(ctx.pattern_.as_ref().unwrap()),
+            casted_arm: build_expr_box(&ctx.expr_),
+            fallback_arm: build_expr_box(&ctx.fallbackExpr),
+        },
         ExprContextAll::TryWithContext(ctx) => Expr::TryWith(
             build_expr_box(&ctx.tryExpr),
             build_expr_box(&ctx.fallbackExpr),
@@ -284,6 +291,14 @@ fn build_pattern(ctx: &PatternContextAll<'_>) -> Pattern {
         PatternContextAll::PatternVarContext(ctx) => {
             Pattern::Var(token_name(&ctx.name).into_owned())
         }
+        PatternContextAll::PatternAscContext(ctx) => Pattern::Ascription(
+            build_pattern_box(&ctx.pattern_),
+            build_type(ctx.type_.as_ref().unwrap()),
+        ),
+        PatternContextAll::PatternCastAsContext(ctx) => Pattern::CastAs(
+            build_pattern_box(&ctx.pattern_),
+            build_type(ctx.type_.as_ref().unwrap()),
+        ),
         PatternContextAll::ParenthesisedPatternContext(ctx) => {
             build_pattern(&ctx.pattern_.as_ref().unwrap())
         }
