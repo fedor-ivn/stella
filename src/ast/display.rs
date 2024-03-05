@@ -584,7 +584,7 @@ impl Display for Type {
             Self::List(inner) => write!(formatter, "[{inner}]"),
             Self::Unit => write!(formatter, "Unit"),
             Self::Top => write!(formatter, "Top"),
-            Self::Bottom => write!(formatter, "Bottom"),
+            Self::Bottom => write!(formatter, "Bot"),
             Self::Var(name) => write!(formatter, "{name}"),
         }
     }
