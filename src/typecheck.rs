@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use thiserror::Error;
 
 use crate::ast::*;
+use crate::extensions::Extensions;
 
 #[derive(Error, Debug)]
 pub enum TypeError {
@@ -110,17 +111,22 @@ pub enum TypeError {
     NotAReference,
     #[error("[ERROR_UNEXPECTED_MEMORY_ADDRESS]")]
     UnexpectedMemoryAddress,
+
+    #[error("[ERROR_UNEXPECTED_SUBTYPE]")]
+    UnexpectedSubtype,
 }
 
 #[derive(Clone)]
 struct Context {
     variables: HashMap<String, Type>,
+    extensions: Extensions,
     exception: Option<Type>,
 }
 
 impl Context {
-    fn new() -> Self {
+    fn new(extensions: Extensions) -> Self {
         Self {
+            extensions,
             variables: HashMap::new(),
             exception: None,
         }
@@ -293,10 +299,19 @@ fn check_params(params: &Vec<Type>, args: &Vec<Expr>, context: &Context) -> Resu
         .try_for_each(|(param, arg)| match_type(param, arg, context))
 }
 
-fn check_record_fields(fields: &Vec<RecordFieldType>) -> Result<(), TypeError> {
+fn check_for_duplicate_record_field_types(fields: &Vec<RecordFieldType>) -> Result<(), TypeError> {
     fields.iter().try_for_each(|field| {
         if fields.iter().filter(|f| f.label == field.label).count() > 1 {
             return Err(TypeError::DuplicatedRecordField(field.label.clone()));
+        }
+        Ok(())
+    })
+}
+
+fn check_for_duplicate_record_bindings(fields: &Vec<Binding>) -> Result<(), TypeError> {
+    fields.iter().try_for_each(|field| {
+        if fields.iter().filter(|f| f.name == field.name).count() > 1 {
+            return Err(TypeError::DuplicatedRecordField(field.name.clone()));
         }
         Ok(())
     })
@@ -461,6 +476,7 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
         }
 
         Expr::Record(fields) => {
+            check_for_duplicate_record_bindings(fields)?;
             let fields = fields
                 .iter()
                 .map(|field| {
@@ -470,7 +486,6 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
                     })
                 })
                 .collect::<Result<_, _>>()?;
-            check_record_fields(&fields)?;
             Ok(Type::Record(fields))
         }
         Expr::DotRecord(expr, name) => {
@@ -619,7 +634,78 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
             match_type(&type_, handler, &local)?;
             Ok(type_)
         }
+        Expr::TypeCast(expr, type_) => {
+            infer(expr, context)?;
+            Ok(type_.clone())
+        }
         _ => unreachable!(),
+    }
+}
+
+fn is_equal_or_subtype(sub: &Type, super_: &Type, context: &Context) -> Result<(), TypeError> {
+    match (sub, super_) {
+        _ if sub == super_ => Ok(()),
+        _ if !context.extensions.structural_subtyping => {
+            dbg!("here");
+            Err(TypeError::UnexpectedTypeForExpression {
+                expected: super_.clone(),
+                actual: Some(sub.clone()),
+            })
+        }
+        (Type::Fun(sub_params, sub_return), Type::Fun(super_params, super_return)) => {
+            dbg!(super_, sub);
+            if sub_params.len() != super_params.len() {
+                return Err(TypeError::IncorrectNumberOfArguments {
+                    expected: super_params.len(),
+                    actual: sub_params.len(),
+                });
+            }
+            super_params
+                .iter()
+                .zip(sub_params)
+                .try_for_each(|(super_param, sub_param)| {
+                    is_equal_or_subtype(super_param, sub_param, context)
+                })?;
+            is_equal_or_subtype(sub_return, super_return, context)
+        }
+        // _ if expected == &Type::Top => Ok(()),
+        (Type::Record(sub_fields), Type::Record(super_fields)) => {
+            check_for_duplicate_record_field_types(super_fields)?;
+            check_for_duplicate_record_field_types(sub_fields)?;
+            dbg!(sub_fields, super_fields);
+            super_fields.iter().try_for_each(|super_field| {
+                let sub_field = sub_fields
+                    .iter()
+                    .find(|sub_field| sub_field.label == super_field.label)
+                    .ok_or(TypeError::MissingRecordFields)?;
+                is_equal_or_subtype(&sub_field.type_, &super_field.type_, context)
+            })
+        }
+        // (Type::Variant(sub_fields), Type::Variant(super_fields)) => {
+        //     super_fields.iter().try_for_each(|super_field| {
+        //         let sub_field = sub_fields
+        //             .iter()
+        //             .find(|sub_field| sub_field.label == super_field.label)
+        //             .ok_or(TypeError::UnexpectedVariantLabel)?;
+        //         match (sub_field.type_.as_ref(), super_field.type_.as_ref()) {
+        //             (Some(sub_type), Some(super_type)) => {
+        //                 check_equality_or_subtyping(sub_type, super_type, context)
+        //             }
+        //             (None, None) => Ok(()),
+        //             (_, None) => Err(TypeError::UnexpectedDataForNullaryLabel),
+        //             (None, _) => Err(TypeError::MissingDataForLabel),
+        //         }
+        //     })
+        // }
+        (Type::List(sub_type), Type::List(super_type)) => {
+            is_equal_or_subtype(sub_type, super_type, context)
+        }
+        (_, Type::Top) => Ok(()),
+        (Type::Bottom, _) => Ok(()),
+        _ => {
+            dbg!(super_, sub);
+            Err(TypeError::UnexpectedSubtype)
+        }
     }
 }
 
@@ -636,14 +722,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         (Expr::NatIsZero(expr), Type::Bool) => match_type(&Type::Nat, expr, context),
         (Expr::Var(name), expected) => {
             let actual = context.get(name)?;
-            if actual != expected {
-                Err(TypeError::UnexpectedTypeForExpression {
-                    expected: expected.clone(),
-                    actual: Some(actual.clone()),
-                })
-            } else {
-                Ok(())
-            }
+            is_equal_or_subtype(actual, expected, context)
         }
         (Expr::If(cond, then, else_), expected) => {
             match_type(&Type::Bool, cond, context)?;
@@ -681,10 +760,17 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         }
 
         (Expr::Record(actual_fields), Type::Record(expected_fields)) => {
-            if actual_fields.len() != expected_fields.len() {
-                return Err(TypeError::UnexpectedRecordFields);
+            check_for_duplicate_record_bindings(actual_fields)?;
+            check_for_duplicate_record_field_types(expected_fields)?;
+            if !context.extensions.structural_subtyping {
+                actual_fields.iter().try_for_each(|actual| {
+                    expected_fields
+                        .iter()
+                        .find(|expected| expected.label == actual.name)
+                        .and(Some(()))
+                        .ok_or(TypeError::UnexpectedRecordFields)
+                })?;
             }
-            check_record_fields(expected_fields)?;
             expected_fields.iter().try_for_each(|expected| {
                 let actual = actual_fields
                     .iter()
@@ -692,11 +778,6 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                     .ok_or(TypeError::MissingRecordFields)?;
                 match_type(&expected.type_, &actual.expr, context)
             })?;
-
-            // todo: надо или нет?
-            if expected_fields.is_empty() {
-                return Err(TypeError::MissingRecordFields);
-            }
             Ok(())
         }
         (Expr::Record(_), _) => Err(TypeError::UnexpectedRecord),
@@ -788,10 +869,14 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
                 .iter()
                 .zip(actual_params.iter())
                 .try_for_each(|(expected_param, actual_param)| {
-                    if *expected_param != actual_param.type_ {
-                        return Err(TypeError::UnexpectedTypeForParameter);
-                    }
-                    Ok(())
+                    is_equal_or_subtype(expected_param, &actual_param.type_, &local).map_err(
+                        |err| match err {
+                            TypeError::UnexpectedTypeForExpression { .. } => {
+                                TypeError::UnexpectedTypeForParameter
+                            }
+                            _ => err,
+                        },
+                    )
                 })?;
             match_type(expected_return, actual_return, &local)
         }
@@ -837,13 +922,13 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
 
             check_params(&params, args, context)?;
 
-            if *return_ != *expected {
-                return Err(TypeError::UnexpectedTypeForExpression {
-                    expected: expected.clone(),
-                    actual: Some(*return_),
-                });
-            }
-            Ok(())
+            // if *return_ != *expected {
+            //     return Err(TypeError::UnexpectedTypeForExpression {
+            //         expected: expected.clone(),
+            //         actual: Some(*return_),
+            //     });
+            // }
+            is_equal_or_subtype(expected, &return_, context)
         }
         (Expr::NatRec(n, z, s), expected) => {
             match_type(&Type::Nat, n, context)?;
@@ -881,6 +966,10 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
             let exception = get_exception_type(context)?;
             let local = context.with_pattern(exception, pattern)?;
             match_type(expected, handler, &local)
+        }
+        (Expr::TypeCast(expr, type_), expected) => {
+            infer(&expr, context)?;
+            is_equal_or_subtype(type_, expected, context)
         }
         _ => Err(TypeError::UnexpectedTypeForExpression {
             expected: expected.clone(),
@@ -921,8 +1010,8 @@ fn typecheck_decl(decl: &Decl, context: &Context) -> Result<(), TypeError> {
     }
 }
 
-pub fn typecheck_program(program: &Program) -> Result<(), TypeError> {
-    let mut global_context = Context::new();
+pub fn typecheck_program(program: &Program, extensions: &Extensions) -> Result<(), TypeError> {
+    let mut global_context = Context::new(extensions.clone());
     for decl in &program.decls {
         global_context.add_decl(decl);
     }

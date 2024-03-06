@@ -52,6 +52,11 @@ pub enum ExtensionError {
     VariantsNotEnabled,
 
     #[error(
+        "Nullary variant labels not enabled. Consider adding `extend with #nullary-variant-labels`."
+    )]
+    NullaryVariantLabelsNotEnabled,
+
+    #[error(
         "Fixpoint combinator not enabled. Consider adding `extend with #fixpoint-combinator`."
     )]
     FixpointCombinatorNotEnabled,
@@ -74,12 +79,25 @@ pub enum ExtensionError {
     #[error("Type declarations for exceptions not enabled. Consider adding `extend with #exception-type-declaration`.")]
     ExceptionTypeDeclarationNotEnabled,
 
-    #[error("Open variant exceptions not enabled. Consider adding `extend with #open-variant-expressions`.")]
+    #[error(
+        "Open variant exceptions not enabled. Consider adding `extend with #open-variant-expressions`."
+    )]
     OpenVariantExceptionsNotEnabled,
+
+    #[error(
+        "Structural subtyping not enabled. Consider adding `extend with #structural-subtyping`."
+    )]
+    StructuralSubtypingNotEnabled,
+    #[error("Structural subtyping not enabled. Consider adding `extend with #type-cast`.")]
+    TypeCastNotEnabled,
+    #[error("Structural subtyping not enabled. Consider adding `extend with #top-type`.")]
+    TopTypeNotEnabled,
+    #[error("Structural subtyping not enabled. Consider adding `extend with #bottom-type`.")]
+    BottomTypeNotEnabled,
 }
 
-#[derive(Default)]
-struct Extensions {
+#[derive(Default, Clone)]
+pub struct Extensions {
     natural_literals: bool,
     nullary_functions: bool,
     multi_parameter_functions: bool,
@@ -104,9 +122,13 @@ struct Extensions {
     exceptions: bool,
     exception_type_declaration: bool,
     open_variant_exceptions: bool,
+    pub structural_subtyping: bool,
+    type_cast: bool,
+    top_type: bool,
+    bottom_type: bool,
 }
 
-fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
+pub fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
     program
         .extensions
         .iter()
@@ -172,7 +194,6 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 "#letrec-bindings" | "#letrec-many-bindings" => {
                     extensions.letrec_bindings = true;
                 }
-                "#nullary-variant-labels" => {}
                 "#sequencing" => {
                     extensions.sequencing = true;
                 }
@@ -190,6 +211,18 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 }
                 "#open-variant-exceptions" => {
                     extensions.open_variant_exceptions = true;
+                }
+                "#structural-subtyping" => {
+                    extensions.structural_subtyping = true;
+                }
+                "#type-cast" => {
+                    extensions.type_cast = true;
+                }
+                "#top-type" => {
+                    extensions.top_type = true;
+                }
+                "#bottom-type" => {
+                    extensions.bottom_type = true;
                 }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };
@@ -408,6 +441,12 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
             check_expr(error_prone, extensions)?;
             check_expr(fallback_value, extensions)
         }
+        Expr::TypeCast(expr, _) => {
+            if !extensions.type_cast {
+                return Err(ExtensionError::TypeCastNotEnabled);
+            }
+            check_expr(expr, extensions)
+        }
         expr => {
             dbg!(expr);
             todo!("Oops... This expression is not yet supported.")
@@ -475,8 +514,7 @@ fn check_decl(decl: Decl, extensions: &Extensions) -> Result<(), ExtensionError>
     }
 }
 
-pub fn check_program(program: &Program) -> Result<(), ExtensionError> {
-    let extensions = parse_extensions(program)?;
+pub fn check_extensions(program: &Program, extensions: &Extensions) -> Result<(), ExtensionError> {
     program
         .decls
         .iter()
