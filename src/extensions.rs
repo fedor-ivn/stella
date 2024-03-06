@@ -84,16 +84,20 @@ pub enum ExtensionError {
     )]
     OpenVariantExceptionsNotEnabled,
 
-    #[error(
-        "Structural subtyping not enabled. Consider adding `extend with #structural-subtyping`."
-    )]
-    StructuralSubtypingNotEnabled,
+    // #[error(
+    //     "Structural subtyping not enabled. Consider adding `extend with #structural-subtyping`."
+    // )]
+    // StructuralSubtypingNotEnabled,
     #[error("Structural subtyping not enabled. Consider adding `extend with #type-cast`.")]
     TypeCastNotEnabled,
-    #[error("Structural subtyping not enabled. Consider adding `extend with #top-type`.")]
-    TopTypeNotEnabled,
-    #[error("Structural subtyping not enabled. Consider adding `extend with #bottom-type`.")]
-    BottomTypeNotEnabled,
+    // #[error("Structural subtyping not enabled. Consider adding `extend with #top-type`.")]
+    // TopTypeNotEnabled,
+    // #[error("Structural subtyping not enabled. Consider adding `extend with #bottom-type`.")]
+    // BottomTypeNotEnabled,
+    #[error("Try cast as not enabled. Consider adding `extend with #try-cast-as`.")]
+    TryCastAsNotEnabled,
+    #[error("Type cast patterns not enabled. Consider adding `extend with #type-cast-patterns`.")]
+    TypeCastPatternsNotEnabled,
 }
 
 #[derive(Default, Clone)]
@@ -123,9 +127,12 @@ pub struct Extensions {
     exception_type_declaration: bool,
     open_variant_exceptions: bool,
     pub structural_subtyping: bool,
+    pub ambiguous_type_as_bottom: bool,
     type_cast: bool,
     top_type: bool,
     bottom_type: bool,
+    try_cast_as: bool,
+    type_cast_patterns: bool,
 }
 
 pub fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
@@ -215,6 +222,9 @@ pub fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError>
                 "#structural-subtyping" => {
                     extensions.structural_subtyping = true;
                 }
+                "#ambiguous-type-as-bottom" => {
+                    extensions.ambiguous_type_as_bottom = true;
+                }
                 "#type-cast" => {
                     extensions.type_cast = true;
                 }
@@ -223,6 +233,13 @@ pub fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError>
                 }
                 "#bottom-type" => {
                     extensions.bottom_type = true;
+                }
+                "#try-cast-as" => {
+                    extensions.try_cast_as = true;
+                }
+                "#type-cast-patterns" => {
+                    extensions.type_cast_patterns = true;
+                    extensions.structural_patterns = true;
                 }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };
@@ -447,6 +464,21 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
             }
             check_expr(expr, extensions)
         }
+        Expr::TryCastAs {
+            try_,
+            casted_pattern,
+            casted_arm,
+            fallback_arm,
+            ..
+        } => {
+            if !extensions.try_cast_as {
+                return Err(ExtensionError::TryCastAsNotEnabled);
+            }
+            check_expr(try_, extensions)?;
+            check_pattern(casted_pattern, extensions)?;
+            check_expr(casted_arm, extensions)?;
+            check_expr(fallback_arm, extensions)
+        }
         expr => {
             dbg!(expr);
             todo!("Oops... This expression is not yet supported.")
@@ -481,6 +513,18 @@ fn check_pattern(pattern: &Pattern, extensions: &Extensions) -> Result<(), Exten
             bindings
                 .iter()
                 .try_for_each(|binding| check_pattern(&binding.pattern, extensions))
+        }
+        Pattern::Inl(pattern) | Pattern::Inr(pattern) => {
+            if !extensions.sum_types {
+                return Err(ExtensionError::SumTypesNotEnabled);
+            }
+            check_pattern(pattern, extensions)
+        }
+        Pattern::CastAs(pattern, _) => {
+            if !extensions.type_cast_patterns {
+                return Err(ExtensionError::TypeCastPatternsNotEnabled);
+            }
+            check_pattern(pattern, extensions)
         }
         pattern => {
             dbg!(pattern);
