@@ -105,6 +105,8 @@ pub enum TypeError {
     AmbiguousThrowType,
     #[error("[ERROR_AMBIGUOUS_REFERENCE_TYPE]")]
     AmbiguousReferenceType,
+    #[error("[ERROR_UNEXPECTED_REFERENCE]")]
+    UnexpectedReference,
     #[error("[ERROR_AMBIGUOUS_PANIC_TYPE]")]
     AmbiguousPanicType,
     #[error("[ERROR_NOT_A_REFERENCE]")]
@@ -932,6 +934,7 @@ fn match_type(expected: &Type, actual: &Expr, context: &Context) -> Result<(), T
         (Expr::ConstMemory(_), Type::Ref(_)) => Ok(()),
         (Expr::ConstMemory(_), _) => Err(TypeError::UnexpectedMemoryAddress),
         (Expr::Reference(actual), Type::Ref(expected)) => match_type(expected, actual, context),
+        (Expr::Reference(..), _) => Err(TypeError::UnexpectedReference),
         (Expr::Dereference(actual), expected) if !context.extensions.structural_subtyping => {
             let expected = Type::Ref(Box::new(expected.clone()));
             match_type(&expected, actual, context)
