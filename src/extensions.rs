@@ -95,6 +95,7 @@ struct Extensions {
     sum_types: bool,
     lists: bool,
     variants: bool,
+    nullary_variant_labels: bool,
     fixpoint_combinator: bool,
     letrec_bindings: bool,
     sequencing: bool,
@@ -161,6 +162,9 @@ fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
                 "#variants" => {
                     extensions.variants = true;
                     extensions.structural_patterns = true;
+                }
+                "#nullary-variant-labels" => {
+                    extensions.nullary_variant_labels = true;
                 }
                 "#fixpoint-combinator" => {
                     extensions.fixpoint_combinator = true;
@@ -322,6 +326,12 @@ fn check_expr(expr: &Expr, extensions: &Extensions) -> Result<(), ExtensionError
                 return Err(ExtensionError::VariantsNotEnabled);
             }
             check_expr(expr, extensions)
+        }
+        Expr::Variant(_, None) => {
+            if !extensions.nullary_variant_labels {
+                return Err(ExtensionError::NullaryVariantLabelsNotEnabled);
+            }
+            Ok(())
         }
         Expr::Cons(head, tail) => {
             if !extensions.lists {
