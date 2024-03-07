@@ -331,6 +331,18 @@ fn enter_TryCatch(&mut self, _ctx: &TryCatchContext<'input>) { }
  */
 fn exit_TryCatch(&mut self, _ctx: &TryCatchContext<'input>) { }
 /**
+ * Enter a parse tree produced by the {@code TryCastAs}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn enter_TryCastAs(&mut self, _ctx: &TryCastAsContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code TryCastAs}
+ * labeled alternative in {@link stellaParser#expr}.
+ * @param ctx the parse tree
+ */
+fn exit_TryCastAs(&mut self, _ctx: &TryCastAsContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code Head}
  * labeled alternative in {@link stellaParser#expr}.
  * @param ctx the parse tree
@@ -877,41 +889,17 @@ fn enter_matchCase(&mut self, _ctx: &MatchCaseContext<'input>) { }
  */
 fn exit_matchCase(&mut self, _ctx: &MatchCaseContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code PatternVariant}
+ * Enter a parse tree produced by the {@code PatternCons}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
  */
-fn enter_PatternVariant(&mut self, _ctx: &PatternVariantContext<'input>) { }
+fn enter_PatternCons(&mut self, _ctx: &PatternConsContext<'input>) { }
 /**
- * Exit a parse tree produced by the {@code PatternVariant}
+ * Exit a parse tree produced by the {@code PatternCons}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
  */
-fn exit_PatternVariant(&mut self, _ctx: &PatternVariantContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code PatternInl}
- * labeled alternative in {@link stellaParser#pattern}.
- * @param ctx the parse tree
- */
-fn enter_PatternInl(&mut self, _ctx: &PatternInlContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code PatternInl}
- * labeled alternative in {@link stellaParser#pattern}.
- * @param ctx the parse tree
- */
-fn exit_PatternInl(&mut self, _ctx: &PatternInlContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code PatternInr}
- * labeled alternative in {@link stellaParser#pattern}.
- * @param ctx the parse tree
- */
-fn enter_PatternInr(&mut self, _ctx: &PatternInrContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code PatternInr}
- * labeled alternative in {@link stellaParser#pattern}.
- * @param ctx the parse tree
- */
-fn exit_PatternInr(&mut self, _ctx: &PatternInrContext<'input>) { }
+fn exit_PatternCons(&mut self, _ctx: &PatternConsContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code PatternTuple}
  * labeled alternative in {@link stellaParser#pattern}.
@@ -925,18 +913,6 @@ fn enter_PatternTuple(&mut self, _ctx: &PatternTupleContext<'input>) { }
  */
 fn exit_PatternTuple(&mut self, _ctx: &PatternTupleContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code PatternRecord}
- * labeled alternative in {@link stellaParser#pattern}.
- * @param ctx the parse tree
- */
-fn enter_PatternRecord(&mut self, _ctx: &PatternRecordContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code PatternRecord}
- * labeled alternative in {@link stellaParser#pattern}.
- * @param ctx the parse tree
- */
-fn exit_PatternRecord(&mut self, _ctx: &PatternRecordContext<'input>) { }
-/**
  * Enter a parse tree produced by the {@code PatternList}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
@@ -949,53 +925,41 @@ fn enter_PatternList(&mut self, _ctx: &PatternListContext<'input>) { }
  */
 fn exit_PatternList(&mut self, _ctx: &PatternListContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code PatternCons}
+ * Enter a parse tree produced by the {@code PatternRecord}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
  */
-fn enter_PatternCons(&mut self, _ctx: &PatternConsContext<'input>) { }
+fn enter_PatternRecord(&mut self, _ctx: &PatternRecordContext<'input>) { }
 /**
- * Exit a parse tree produced by the {@code PatternCons}
+ * Exit a parse tree produced by the {@code PatternRecord}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
  */
-fn exit_PatternCons(&mut self, _ctx: &PatternConsContext<'input>) { }
+fn exit_PatternRecord(&mut self, _ctx: &PatternRecordContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code PatternFalse}
+ * Enter a parse tree produced by the {@code PatternVariant}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
  */
-fn enter_PatternFalse(&mut self, _ctx: &PatternFalseContext<'input>) { }
+fn enter_PatternVariant(&mut self, _ctx: &PatternVariantContext<'input>) { }
 /**
- * Exit a parse tree produced by the {@code PatternFalse}
+ * Exit a parse tree produced by the {@code PatternVariant}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
  */
-fn exit_PatternFalse(&mut self, _ctx: &PatternFalseContext<'input>) { }
+fn exit_PatternVariant(&mut self, _ctx: &PatternVariantContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code PatternTrue}
+ * Enter a parse tree produced by the {@code PatternAsc}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
  */
-fn enter_PatternTrue(&mut self, _ctx: &PatternTrueContext<'input>) { }
+fn enter_PatternAsc(&mut self, _ctx: &PatternAscContext<'input>) { }
 /**
- * Exit a parse tree produced by the {@code PatternTrue}
+ * Exit a parse tree produced by the {@code PatternAsc}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
  */
-fn exit_PatternTrue(&mut self, _ctx: &PatternTrueContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code PatternUnit}
- * labeled alternative in {@link stellaParser#pattern}.
- * @param ctx the parse tree
- */
-fn enter_PatternUnit(&mut self, _ctx: &PatternUnitContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code PatternUnit}
- * labeled alternative in {@link stellaParser#pattern}.
- * @param ctx the parse tree
- */
-fn exit_PatternUnit(&mut self, _ctx: &PatternUnitContext<'input>) { }
+fn exit_PatternAsc(&mut self, _ctx: &PatternAscContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code PatternInt}
  * labeled alternative in {@link stellaParser#pattern}.
@@ -1009,17 +973,41 @@ fn enter_PatternInt(&mut self, _ctx: &PatternIntContext<'input>) { }
  */
 fn exit_PatternInt(&mut self, _ctx: &PatternIntContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code PatternSucc}
+ * Enter a parse tree produced by the {@code PatternInr}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
  */
-fn enter_PatternSucc(&mut self, _ctx: &PatternSuccContext<'input>) { }
+fn enter_PatternInr(&mut self, _ctx: &PatternInrContext<'input>) { }
 /**
- * Exit a parse tree produced by the {@code PatternSucc}
+ * Exit a parse tree produced by the {@code PatternInr}
  * labeled alternative in {@link stellaParser#pattern}.
  * @param ctx the parse tree
  */
-fn exit_PatternSucc(&mut self, _ctx: &PatternSuccContext<'input>) { }
+fn exit_PatternInr(&mut self, _ctx: &PatternInrContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code PatternTrue}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn enter_PatternTrue(&mut self, _ctx: &PatternTrueContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code PatternTrue}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn exit_PatternTrue(&mut self, _ctx: &PatternTrueContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code PatternInl}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn enter_PatternInl(&mut self, _ctx: &PatternInlContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code PatternInl}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn exit_PatternInl(&mut self, _ctx: &PatternInlContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code PatternVar}
  * labeled alternative in {@link stellaParser#pattern}.
@@ -1044,6 +1032,54 @@ fn enter_ParenthesisedPattern(&mut self, _ctx: &ParenthesisedPatternContext<'inp
  * @param ctx the parse tree
  */
 fn exit_ParenthesisedPattern(&mut self, _ctx: &ParenthesisedPatternContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code PatternSucc}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn enter_PatternSucc(&mut self, _ctx: &PatternSuccContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code PatternSucc}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn exit_PatternSucc(&mut self, _ctx: &PatternSuccContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code PatternFalse}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn enter_PatternFalse(&mut self, _ctx: &PatternFalseContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code PatternFalse}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn exit_PatternFalse(&mut self, _ctx: &PatternFalseContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code PatternUnit}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn enter_PatternUnit(&mut self, _ctx: &PatternUnitContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code PatternUnit}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn exit_PatternUnit(&mut self, _ctx: &PatternUnitContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code PatternCastAs}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn enter_PatternCastAs(&mut self, _ctx: &PatternCastAsContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code PatternCastAs}
+ * labeled alternative in {@link stellaParser#pattern}.
+ * @param ctx the parse tree
+ */
+fn exit_PatternCastAs(&mut self, _ctx: &PatternCastAsContext<'input>) { }
 /**
  * Enter a parse tree produced by {@link stellaParser#labelledPattern}.
  * @param ctx the parse tree

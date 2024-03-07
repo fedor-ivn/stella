@@ -129,6 +129,13 @@ pub enum Expr {
     Panic,
     Throw(Box<Expr>),
     TryCatch(Box<Expr>, Pattern, Box<Expr>),
+    TryCastAs {
+        try_: Box<Expr>,
+        to: Type,
+        casted_pattern: Pattern,
+        casted_arm: Box<Expr>,
+        fallback_arm: Box<Expr>,
+    },
     TryWith(Box<Expr>, Box<Expr>),
     If(Box<Expr>, Box<Expr>, Box<Expr>),
     Let(Vec<PatternBinding>, Box<Expr>),
@@ -194,4 +201,6 @@ pub enum Pattern {
     Int(isize),
     Succ(Box<Pattern>),
     Var(String),
+    Ascription(Box<Pattern>, Type),
+    CastAs(Box<Pattern>, Type),
 }
