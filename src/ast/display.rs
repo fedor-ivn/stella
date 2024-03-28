@@ -605,6 +605,7 @@ impl Display for Type {
             Self::Unit => write!(formatter, "Unit"),
             Self::Top => write!(formatter, "Top"),
             Self::Bottom => write!(formatter, "Bot"),
+            Self::Auto => write!(formatter, "auto"),
             Self::Var(name) => write!(formatter, "{name}"),
         }
     }
