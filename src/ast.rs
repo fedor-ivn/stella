@@ -171,6 +171,7 @@ pub enum Type {
     Unit,
     Top,
     Bottom,
+    Auto,
     Var(String),
 }
 
