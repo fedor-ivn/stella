@@ -361,6 +361,7 @@ fn build_type(ctx: &StellatypeContextAll) -> Type {
         StellatypeContextAll::TypeTopContext(_) => Type::Top,
         StellatypeContextAll::TypeRefContext(ctx) => Type::Ref(build_type_box(&ctx.type_)),
         StellatypeContextAll::TypeBottomContext(_) => Type::Bottom,
+        StellatypeContextAll::TypeAutoContext(_) => Type::Auto,
         StellatypeContextAll::TypeVarContext(ctx) => Type::Var(token_name(&ctx.name).into_owned()),
         StellatypeContextAll::TypeParensContext(ctx) => build_type(ctx.type_.as_ref().unwrap()),
     }

@@ -37,167 +37,169 @@ use std::ops::{DerefMut, Deref};
 use std::borrow::{Borrow,BorrowMut};
 use std::any::{Any,TypeId};
 
-		pub const Surrogate_id_SYMB_0:isize=1;
-		pub const Surrogate_id_SYMB_1:isize=2;
-		pub const Surrogate_id_SYMB_2:isize=3;
-		pub const Surrogate_id_SYMB_3:isize=4;
-		pub const Surrogate_id_SYMB_4:isize=5;
-		pub const Surrogate_id_SYMB_5:isize=6;
-		pub const Surrogate_id_SYMB_6:isize=7;
-		pub const Surrogate_id_SYMB_7:isize=8;
-		pub const Surrogate_id_SYMB_8:isize=9;
-		pub const Surrogate_id_SYMB_9:isize=10;
-		pub const Surrogate_id_SYMB_10:isize=11;
-		pub const Surrogate_id_SYMB_11:isize=12;
-		pub const Surrogate_id_SYMB_12:isize=13;
-		pub const Surrogate_id_SYMB_13:isize=14;
-		pub const Surrogate_id_SYMB_14:isize=15;
-		pub const Surrogate_id_SYMB_15:isize=16;
-		pub const Surrogate_id_SYMB_16:isize=17;
-		pub const Surrogate_id_SYMB_17:isize=18;
-		pub const Surrogate_id_SYMB_18:isize=19;
-		pub const Surrogate_id_SYMB_19:isize=20;
-		pub const Surrogate_id_SYMB_20:isize=21;
-		pub const Surrogate_id_SYMB_21:isize=22;
-		pub const Surrogate_id_SYMB_22:isize=23;
-		pub const Surrogate_id_SYMB_23:isize=24;
-		pub const Surrogate_id_SYMB_24:isize=25;
-		pub const Surrogate_id_SYMB_25:isize=26;
-		pub const Surrogate_id_SYMB_26:isize=27;
-		pub const Surrogate_id_SYMB_27:isize=28;
-		pub const Surrogate_id_SYMB_28:isize=29;
-		pub const Surrogate_id_SYMB_29:isize=30;
-		pub const Surrogate_id_SYMB_30:isize=31;
-		pub const Surrogate_id_SYMB_31:isize=32;
-		pub const Surrogate_id_SYMB_32:isize=33;
-		pub const Surrogate_id_SYMB_33:isize=34;
-		pub const Surrogate_id_SYMB_34:isize=35;
-		pub const Surrogate_id_SYMB_35:isize=36;
-		pub const Surrogate_id_SYMB_36:isize=37;
-		pub const Surrogate_id_SYMB_37:isize=38;
-		pub const Surrogate_id_SYMB_38:isize=39;
-		pub const Surrogate_id_SYMB_39:isize=40;
-		pub const Surrogate_id_SYMB_40:isize=41;
-		pub const Surrogate_id_SYMB_41:isize=42;
-		pub const Surrogate_id_SYMB_42:isize=43;
-		pub const Surrogate_id_SYMB_43:isize=44;
-		pub const Surrogate_id_SYMB_44:isize=45;
-		pub const Surrogate_id_SYMB_45:isize=46;
-		pub const Surrogate_id_SYMB_46:isize=47;
-		pub const Surrogate_id_SYMB_47:isize=48;
-		pub const Surrogate_id_SYMB_48:isize=49;
-		pub const Surrogate_id_SYMB_49:isize=50;
-		pub const Surrogate_id_SYMB_50:isize=51;
-		pub const Surrogate_id_SYMB_51:isize=52;
-		pub const Surrogate_id_SYMB_52:isize=53;
-		pub const Surrogate_id_SYMB_53:isize=54;
-		pub const Surrogate_id_SYMB_54:isize=55;
-		pub const Surrogate_id_SYMB_55:isize=56;
-		pub const Surrogate_id_SYMB_56:isize=57;
-		pub const Surrogate_id_SYMB_57:isize=58;
-		pub const Surrogate_id_SYMB_58:isize=59;
-		pub const Surrogate_id_SYMB_59:isize=60;
-		pub const Surrogate_id_SYMB_60:isize=61;
-		pub const Surrogate_id_SYMB_61:isize=62;
-		pub const Surrogate_id_SYMB_62:isize=63;
-		pub const Surrogate_id_SYMB_63:isize=64;
-		pub const Surrogate_id_SYMB_64:isize=65;
-		pub const Surrogate_id_SYMB_65:isize=66;
-		pub const EXCEPTION:isize=67;
-		pub const VARIANT:isize=68;
-		pub const CAST:isize=69;
-		pub const ASSIGN:isize=70;
-		pub const REF_TYPE:isize=71;
-		pub const REFERENCE:isize=72;
-		pub const PANIC:isize=73;
-		pub const THROW:isize=74;
-		pub const TRY:isize=75;
-		pub const CATCH:isize=76;
-		pub const TOP_TYPE:isize=77;
-		pub const BOTTOM_TYPE:isize=78;
-		pub const GENERIC:isize=79;
-		pub const FORALL:isize=80;
-		pub const COMMENT_antlr_builtin:isize=81;
-		pub const MULTICOMMENT_antlr_builtin:isize=82;
-		pub const StellaIdent:isize=83;
-		pub const ExtensionName:isize=84;
-		pub const MemoryAddress:isize=85;
-		pub const INTEGER:isize=86;
-		pub const WS:isize=87;
-		pub const ErrorToken:isize=88;
-	pub const RULE_start_Program:usize = 0;
-	pub const RULE_start_Expr:usize = 1;
-	pub const RULE_start_Type:usize = 2;
-	pub const RULE_program:usize = 3;
-	pub const RULE_languageDecl:usize = 4;
-	pub const RULE_extension:usize = 5;
-	pub const RULE_decl:usize = 6;
-	pub const RULE_annotation:usize = 7;
-	pub const RULE_paramDecl:usize = 8;
-	pub const RULE_expr:usize = 9;
-	pub const RULE_patternBinding:usize = 10;
-	pub const RULE_binding:usize = 11;
-	pub const RULE_matchCase:usize = 12;
-	pub const RULE_pattern:usize = 13;
-	pub const RULE_labelledPattern:usize = 14;
-	pub const RULE_stellatype:usize = 15;
-	pub const RULE_recordFieldType:usize = 16;
+		pub const Surrogate_id_SYMB_0:isize=1; 
+		pub const Surrogate_id_SYMB_1:isize=2; 
+		pub const Surrogate_id_SYMB_2:isize=3; 
+		pub const Surrogate_id_SYMB_3:isize=4; 
+		pub const Surrogate_id_SYMB_4:isize=5; 
+		pub const Surrogate_id_SYMB_5:isize=6; 
+		pub const Surrogate_id_SYMB_6:isize=7; 
+		pub const Surrogate_id_SYMB_7:isize=8; 
+		pub const Surrogate_id_SYMB_8:isize=9; 
+		pub const Surrogate_id_SYMB_9:isize=10; 
+		pub const Surrogate_id_SYMB_10:isize=11; 
+		pub const Surrogate_id_SYMB_11:isize=12; 
+		pub const Surrogate_id_SYMB_12:isize=13; 
+		pub const Surrogate_id_SYMB_13:isize=14; 
+		pub const Surrogate_id_SYMB_14:isize=15; 
+		pub const Surrogate_id_SYMB_15:isize=16; 
+		pub const Surrogate_id_SYMB_16:isize=17; 
+		pub const Surrogate_id_SYMB_17:isize=18; 
+		pub const Surrogate_id_SYMB_18:isize=19; 
+		pub const Surrogate_id_SYMB_19:isize=20; 
+		pub const Surrogate_id_SYMB_20:isize=21; 
+		pub const Surrogate_id_SYMB_21:isize=22; 
+		pub const Surrogate_id_SYMB_22:isize=23; 
+		pub const Surrogate_id_SYMB_23:isize=24; 
+		pub const Surrogate_id_SYMB_24:isize=25; 
+		pub const Surrogate_id_SYMB_25:isize=26; 
+		pub const Surrogate_id_SYMB_26:isize=27; 
+		pub const Surrogate_id_SYMB_27:isize=28; 
+		pub const Surrogate_id_SYMB_28:isize=29; 
+		pub const Surrogate_id_SYMB_29:isize=30; 
+		pub const Surrogate_id_SYMB_30:isize=31; 
+		pub const Surrogate_id_SYMB_31:isize=32; 
+		pub const Surrogate_id_SYMB_32:isize=33; 
+		pub const Surrogate_id_SYMB_33:isize=34; 
+		pub const Surrogate_id_SYMB_34:isize=35; 
+		pub const Surrogate_id_SYMB_35:isize=36; 
+		pub const Surrogate_id_SYMB_36:isize=37; 
+		pub const Surrogate_id_SYMB_37:isize=38; 
+		pub const Surrogate_id_SYMB_38:isize=39; 
+		pub const Surrogate_id_SYMB_39:isize=40; 
+		pub const Surrogate_id_SYMB_40:isize=41; 
+		pub const Surrogate_id_SYMB_41:isize=42; 
+		pub const Surrogate_id_SYMB_42:isize=43; 
+		pub const Surrogate_id_SYMB_43:isize=44; 
+		pub const Surrogate_id_SYMB_44:isize=45; 
+		pub const Surrogate_id_SYMB_45:isize=46; 
+		pub const Surrogate_id_SYMB_46:isize=47; 
+		pub const Surrogate_id_SYMB_47:isize=48; 
+		pub const Surrogate_id_SYMB_48:isize=49; 
+		pub const Surrogate_id_SYMB_49:isize=50; 
+		pub const Surrogate_id_SYMB_50:isize=51; 
+		pub const Surrogate_id_SYMB_51:isize=52; 
+		pub const Surrogate_id_SYMB_52:isize=53; 
+		pub const Surrogate_id_SYMB_53:isize=54; 
+		pub const Surrogate_id_SYMB_54:isize=55; 
+		pub const Surrogate_id_SYMB_55:isize=56; 
+		pub const Surrogate_id_SYMB_56:isize=57; 
+		pub const Surrogate_id_SYMB_57:isize=58; 
+		pub const Surrogate_id_SYMB_58:isize=59; 
+		pub const Surrogate_id_SYMB_59:isize=60; 
+		pub const Surrogate_id_SYMB_60:isize=61; 
+		pub const Surrogate_id_SYMB_61:isize=62; 
+		pub const Surrogate_id_SYMB_62:isize=63; 
+		pub const Surrogate_id_SYMB_63:isize=64; 
+		pub const Surrogate_id_SYMB_64:isize=65; 
+		pub const Surrogate_id_SYMB_65:isize=66; 
+		pub const EXCEPTION:isize=67; 
+		pub const VARIANT:isize=68; 
+		pub const CAST:isize=69; 
+		pub const ASSIGN:isize=70; 
+		pub const REF_TYPE:isize=71; 
+		pub const REFERENCE:isize=72; 
+		pub const PANIC:isize=73; 
+		pub const THROW:isize=74; 
+		pub const TRY:isize=75; 
+		pub const CATCH:isize=76; 
+		pub const TOP_TYPE:isize=77; 
+		pub const BOTTOM_TYPE:isize=78; 
+		pub const AUTO_TYPE:isize=79; 
+		pub const GENERIC:isize=80; 
+		pub const FORALL:isize=81; 
+		pub const COMMENT_antlr_builtin:isize=82; 
+		pub const MULTICOMMENT_antlr_builtin:isize=83; 
+		pub const StellaIdent:isize=84; 
+		pub const ExtensionName:isize=85; 
+		pub const MemoryAddress:isize=86; 
+		pub const INTEGER:isize=87; 
+		pub const WS:isize=88; 
+		pub const ErrorToken:isize=89;
+	pub const RULE_start_Program:usize = 0; 
+	pub const RULE_start_Expr:usize = 1; 
+	pub const RULE_start_Type:usize = 2; 
+	pub const RULE_program:usize = 3; 
+	pub const RULE_languageDecl:usize = 4; 
+	pub const RULE_extension:usize = 5; 
+	pub const RULE_decl:usize = 6; 
+	pub const RULE_annotation:usize = 7; 
+	pub const RULE_paramDecl:usize = 8; 
+	pub const RULE_expr:usize = 9; 
+	pub const RULE_patternBinding:usize = 10; 
+	pub const RULE_binding:usize = 11; 
+	pub const RULE_matchCase:usize = 12; 
+	pub const RULE_pattern:usize = 13; 
+	pub const RULE_labelledPattern:usize = 14; 
+	pub const RULE_stellatype:usize = 15; 
+	pub const RULE_recordFieldType:usize = 16; 
 	pub const RULE_variantFieldType:usize = 17;
 	pub const ruleNames: [&'static str; 18] =  [
-		"start_Program", "start_Expr", "start_Type", "program", "languageDecl",
-		"extension", "decl", "annotation", "paramDecl", "expr", "patternBinding",
-		"binding", "matchCase", "pattern", "labelledPattern", "stellatype", "recordFieldType",
+		"start_Program", "start_Expr", "start_Type", "program", "languageDecl", 
+		"extension", "decl", "annotation", "paramDecl", "expr", "patternBinding", 
+		"binding", "matchCase", "pattern", "labelledPattern", "stellatype", "recordFieldType", 
 		"variantFieldType"
 	];
 
 
-	pub const _LITERAL_NAMES: [Option<&'static str>;81] = [
-		None, Some("','"), Some("';'"), Some("'('"), Some("')'"), Some("'{'"),
-		Some("'}'"), Some("'='"), Some("':'"), Some("'->'"), Some("'=>'"), Some("'|'"),
-		Some("'<|'"), Some("'|>'"), Some("'['"), Some("']'"), Some("'<'"), Some("'<='"),
-		Some("'>'"), Some("'>='"), Some("'=='"), Some("'!='"), Some("'+'"), Some("'-'"),
-		Some("'*'"), Some("'/'"), Some("'.'"), Some("'List::head'"), Some("'List::isempty'"),
-		Some("'List::tail'"), Some("'Nat::pred'"), Some("'Nat::iszero'"), Some("'Nat::rec'"),
-		Some("'Bool'"), Some("'Nat'"), Some("'Unit'"), Some("'and'"), Some("'as'"),
-		Some("'cons'"), Some("'core'"), Some("'else'"), Some("'extend'"), Some("'false'"),
-		Some("'fix'"), Some("'fn'"), Some("'fold'"), Some("'if'"), Some("'in'"),
-		Some("'inl'"), Some("'inline'"), Some("'inr'"), Some("'language'"), Some("'let'"),
-		Some("'letrec'"), Some("'match'"), Some("'not'"), Some("'or'"), Some("'return'"),
-		Some("'succ'"), Some("'then'"), Some("'throws'"), Some("'true'"), Some("'type'"),
-		Some("'unfold'"), Some("'unit'"), Some("'with'"), Some("'\u{00B5}'"),
-		Some("'exception'"), Some("'variant'"), Some("'cast'"), Some("':='"),
-		Some("'&'"), Some("'new'"), Some("'panic!'"), Some("'throw'"), Some("'try'"),
-		Some("'catch'"), Some("'Top'"), Some("'Bot'"), Some("'generic'"), Some("'forall'")
+	pub const _LITERAL_NAMES: [Option<&'static str>;82] = [
+		None, Some("','"), Some("';'"), Some("'('"), Some("')'"), Some("'{'"), 
+		Some("'}'"), Some("'='"), Some("':'"), Some("'->'"), Some("'=>'"), Some("'|'"), 
+		Some("'<|'"), Some("'|>'"), Some("'['"), Some("']'"), Some("'<'"), Some("'<='"), 
+		Some("'>'"), Some("'>='"), Some("'=='"), Some("'!='"), Some("'+'"), Some("'-'"), 
+		Some("'*'"), Some("'/'"), Some("'.'"), Some("'List::head'"), Some("'List::isempty'"), 
+		Some("'List::tail'"), Some("'Nat::pred'"), Some("'Nat::iszero'"), Some("'Nat::rec'"), 
+		Some("'Bool'"), Some("'Nat'"), Some("'Unit'"), Some("'and'"), Some("'as'"), 
+		Some("'cons'"), Some("'core'"), Some("'else'"), Some("'extend'"), Some("'false'"), 
+		Some("'fix'"), Some("'fn'"), Some("'fold'"), Some("'if'"), Some("'in'"), 
+		Some("'inl'"), Some("'inline'"), Some("'inr'"), Some("'language'"), Some("'let'"), 
+		Some("'letrec'"), Some("'match'"), Some("'not'"), Some("'or'"), Some("'return'"), 
+		Some("'succ'"), Some("'then'"), Some("'throws'"), Some("'true'"), Some("'type'"), 
+		Some("'unfold'"), Some("'unit'"), Some("'with'"), Some("'\u{00B5}'"), 
+		Some("'exception'"), Some("'variant'"), Some("'cast'"), Some("':='"), 
+		Some("'&'"), Some("'new'"), Some("'panic!'"), Some("'throw'"), Some("'try'"), 
+		Some("'catch'"), Some("'Top'"), Some("'Bot'"), Some("'auto'"), Some("'generic'"), 
+		Some("'forall'")
 	];
-	pub const _SYMBOLIC_NAMES: [Option<&'static str>;89]  = [
-		None, Some("Surrogate_id_SYMB_0"), Some("Surrogate_id_SYMB_1"), Some("Surrogate_id_SYMB_2"),
-		Some("Surrogate_id_SYMB_3"), Some("Surrogate_id_SYMB_4"), Some("Surrogate_id_SYMB_5"),
-		Some("Surrogate_id_SYMB_6"), Some("Surrogate_id_SYMB_7"), Some("Surrogate_id_SYMB_8"),
-		Some("Surrogate_id_SYMB_9"), Some("Surrogate_id_SYMB_10"), Some("Surrogate_id_SYMB_11"),
-		Some("Surrogate_id_SYMB_12"), Some("Surrogate_id_SYMB_13"), Some("Surrogate_id_SYMB_14"),
-		Some("Surrogate_id_SYMB_15"), Some("Surrogate_id_SYMB_16"), Some("Surrogate_id_SYMB_17"),
-		Some("Surrogate_id_SYMB_18"), Some("Surrogate_id_SYMB_19"), Some("Surrogate_id_SYMB_20"),
-		Some("Surrogate_id_SYMB_21"), Some("Surrogate_id_SYMB_22"), Some("Surrogate_id_SYMB_23"),
-		Some("Surrogate_id_SYMB_24"), Some("Surrogate_id_SYMB_25"), Some("Surrogate_id_SYMB_26"),
-		Some("Surrogate_id_SYMB_27"), Some("Surrogate_id_SYMB_28"), Some("Surrogate_id_SYMB_29"),
-		Some("Surrogate_id_SYMB_30"), Some("Surrogate_id_SYMB_31"), Some("Surrogate_id_SYMB_32"),
-		Some("Surrogate_id_SYMB_33"), Some("Surrogate_id_SYMB_34"), Some("Surrogate_id_SYMB_35"),
-		Some("Surrogate_id_SYMB_36"), Some("Surrogate_id_SYMB_37"), Some("Surrogate_id_SYMB_38"),
-		Some("Surrogate_id_SYMB_39"), Some("Surrogate_id_SYMB_40"), Some("Surrogate_id_SYMB_41"),
-		Some("Surrogate_id_SYMB_42"), Some("Surrogate_id_SYMB_43"), Some("Surrogate_id_SYMB_44"),
-		Some("Surrogate_id_SYMB_45"), Some("Surrogate_id_SYMB_46"), Some("Surrogate_id_SYMB_47"),
-		Some("Surrogate_id_SYMB_48"), Some("Surrogate_id_SYMB_49"), Some("Surrogate_id_SYMB_50"),
-		Some("Surrogate_id_SYMB_51"), Some("Surrogate_id_SYMB_52"), Some("Surrogate_id_SYMB_53"),
-		Some("Surrogate_id_SYMB_54"), Some("Surrogate_id_SYMB_55"), Some("Surrogate_id_SYMB_56"),
-		Some("Surrogate_id_SYMB_57"), Some("Surrogate_id_SYMB_58"), Some("Surrogate_id_SYMB_59"),
-		Some("Surrogate_id_SYMB_60"), Some("Surrogate_id_SYMB_61"), Some("Surrogate_id_SYMB_62"),
-		Some("Surrogate_id_SYMB_63"), Some("Surrogate_id_SYMB_64"), Some("Surrogate_id_SYMB_65"),
-		Some("EXCEPTION"), Some("VARIANT"), Some("CAST"), Some("ASSIGN"), Some("REF_TYPE"),
-		Some("REFERENCE"), Some("PANIC"), Some("THROW"), Some("TRY"), Some("CATCH"),
-		Some("TOP_TYPE"), Some("BOTTOM_TYPE"), Some("GENERIC"), Some("FORALL"),
-		Some("COMMENT_antlr_builtin"), Some("MULTICOMMENT_antlr_builtin"), Some("StellaIdent"),
-		Some("ExtensionName"), Some("MemoryAddress"), Some("INTEGER"), Some("WS"),
-		Some("ErrorToken")
+	pub const _SYMBOLIC_NAMES: [Option<&'static str>;90]  = [
+		None, Some("Surrogate_id_SYMB_0"), Some("Surrogate_id_SYMB_1"), Some("Surrogate_id_SYMB_2"), 
+		Some("Surrogate_id_SYMB_3"), Some("Surrogate_id_SYMB_4"), Some("Surrogate_id_SYMB_5"), 
+		Some("Surrogate_id_SYMB_6"), Some("Surrogate_id_SYMB_7"), Some("Surrogate_id_SYMB_8"), 
+		Some("Surrogate_id_SYMB_9"), Some("Surrogate_id_SYMB_10"), Some("Surrogate_id_SYMB_11"), 
+		Some("Surrogate_id_SYMB_12"), Some("Surrogate_id_SYMB_13"), Some("Surrogate_id_SYMB_14"), 
+		Some("Surrogate_id_SYMB_15"), Some("Surrogate_id_SYMB_16"), Some("Surrogate_id_SYMB_17"), 
+		Some("Surrogate_id_SYMB_18"), Some("Surrogate_id_SYMB_19"), Some("Surrogate_id_SYMB_20"), 
+		Some("Surrogate_id_SYMB_21"), Some("Surrogate_id_SYMB_22"), Some("Surrogate_id_SYMB_23"), 
+		Some("Surrogate_id_SYMB_24"), Some("Surrogate_id_SYMB_25"), Some("Surrogate_id_SYMB_26"), 
+		Some("Surrogate_id_SYMB_27"), Some("Surrogate_id_SYMB_28"), Some("Surrogate_id_SYMB_29"), 
+		Some("Surrogate_id_SYMB_30"), Some("Surrogate_id_SYMB_31"), Some("Surrogate_id_SYMB_32"), 
+		Some("Surrogate_id_SYMB_33"), Some("Surrogate_id_SYMB_34"), Some("Surrogate_id_SYMB_35"), 
+		Some("Surrogate_id_SYMB_36"), Some("Surrogate_id_SYMB_37"), Some("Surrogate_id_SYMB_38"), 
+		Some("Surrogate_id_SYMB_39"), Some("Surrogate_id_SYMB_40"), Some("Surrogate_id_SYMB_41"), 
+		Some("Surrogate_id_SYMB_42"), Some("Surrogate_id_SYMB_43"), Some("Surrogate_id_SYMB_44"), 
+		Some("Surrogate_id_SYMB_45"), Some("Surrogate_id_SYMB_46"), Some("Surrogate_id_SYMB_47"), 
+		Some("Surrogate_id_SYMB_48"), Some("Surrogate_id_SYMB_49"), Some("Surrogate_id_SYMB_50"), 
+		Some("Surrogate_id_SYMB_51"), Some("Surrogate_id_SYMB_52"), Some("Surrogate_id_SYMB_53"), 
+		Some("Surrogate_id_SYMB_54"), Some("Surrogate_id_SYMB_55"), Some("Surrogate_id_SYMB_56"), 
+		Some("Surrogate_id_SYMB_57"), Some("Surrogate_id_SYMB_58"), Some("Surrogate_id_SYMB_59"), 
+		Some("Surrogate_id_SYMB_60"), Some("Surrogate_id_SYMB_61"), Some("Surrogate_id_SYMB_62"), 
+		Some("Surrogate_id_SYMB_63"), Some("Surrogate_id_SYMB_64"), Some("Surrogate_id_SYMB_65"), 
+		Some("EXCEPTION"), Some("VARIANT"), Some("CAST"), Some("ASSIGN"), Some("REF_TYPE"), 
+		Some("REFERENCE"), Some("PANIC"), Some("THROW"), Some("TRY"), Some("CATCH"), 
+		Some("TOP_TYPE"), Some("BOTTOM_TYPE"), Some("AUTO_TYPE"), Some("GENERIC"), 
+		Some("FORALL"), Some("COMMENT_antlr_builtin"), Some("MULTICOMMENT_antlr_builtin"), 
+		Some("StellaIdent"), Some("ExtensionName"), Some("MemoryAddress"), Some("INTEGER"), 
+		Some("WS"), Some("ErrorToken")
 	];
 	lazy_static!{
 	    static ref _shared_context_cache: Arc<PredictionContextCache> = Arc::new(PredictionContextCache::new());
@@ -282,7 +284,7 @@ where
 
 /// Trait for monomorphized trait object that corresponds to the nodes of parse tree generated for stellaParser
 pub trait stellaParserContext<'input>:
-	for<'x> Listenable<dyn stellaParserListener<'input> + 'x > +
+	for<'x> Listenable<dyn stellaParserListener<'input> + 'x > + 
 	ParserRuleContext<'input, TF=LocalTokenFactory<'input>, Ctx=stellaParserContextType>
 {}
 
@@ -449,7 +451,7 @@ where
 		) -> bool {
 		match pred_index {
 				23=>{
-					recog.precpred(None, 13)
+					recog.precpred(None, 14)
 				}
 			_ => true
 		}
@@ -491,7 +493,7 @@ impl<'input> Start_ProgramContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Start_ProgramContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Start_ProgramContextExt{
-				x: None,
+				x: None, 
 				ph:PhantomData
 			}),
 		)
@@ -534,7 +536,7 @@ where
 			recog.base.set_state(36);
 			let tmp = recog.program()?;
 			 cast_mut::<_,Start_ProgramContext >(&mut _localctx).x = Some(tmp.clone());
-
+			  
 
 			recog.base.set_state(37);
 			recog.base.match_token(EOF,&mut recog.err_handler)?;
@@ -592,7 +594,7 @@ impl<'input> Start_ExprContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Start_ExprContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Start_ExprContextExt{
-				x: None,
+				x: None, 
 				ph:PhantomData
 			}),
 		)
@@ -635,7 +637,7 @@ where
 			recog.base.set_state(39);
 			let tmp = recog.expr_rec(0)?;
 			 cast_mut::<_,Start_ExprContext >(&mut _localctx).x = Some(tmp.clone());
-
+			  
 
 			recog.base.set_state(40);
 			recog.base.match_token(EOF,&mut recog.err_handler)?;
@@ -693,7 +695,7 @@ impl<'input> Start_TypeContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Start_TypeContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Start_TypeContextExt{
-				x: None,
+				x: None, 
 				ph:PhantomData
 			}),
 		)
@@ -736,7 +738,7 @@ where
 			recog.base.set_state(42);
 			let tmp = recog.stellatype_rec(0)?;
 			 cast_mut::<_,Start_TypeContext >(&mut _localctx).x = Some(tmp.clone());
-
+			  
 
 			recog.base.set_state(43);
 			recog.base.match_token(EOF,&mut recog.err_handler)?;
@@ -797,8 +799,8 @@ impl<'input> ProgramContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<ProgramContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,ProgramContextExt{
-				extension: None, decl: None,
-				extensions: Vec::new(), decls: Vec::new(),
+				extension: None, decl: None, 
+				extensions: Vec::new(), decls: Vec::new(), 
 				ph:PhantomData
 			}),
 		)
@@ -859,12 +861,12 @@ where
 				recog.base.set_state(46);
 				let tmp = recog.extension()?;
 				 cast_mut::<_,ProgramContext >(&mut _localctx).extension = Some(tmp.clone());
-
+				  
 
 				let temp =  cast_mut::<_,ProgramContext >(&mut _localctx).extension.clone().unwrap()
 				 ;
 				 cast_mut::<_,ProgramContext >(&mut _localctx).extensions.push(temp);
-
+				  
 				}
 				}
 				recog.base.set_state(51);
@@ -881,12 +883,12 @@ where
 				recog.base.set_state(52);
 				let tmp = recog.decl()?;
 				 cast_mut::<_,ProgramContext >(&mut _localctx).decl = Some(tmp.clone());
-
+				  
 
 				let temp =  cast_mut::<_,ProgramContext >(&mut _localctx).decl.clone().unwrap()
 				 ;
 				 cast_mut::<_,ProgramContext >(&mut _localctx).decls.push(temp);
-
+				  
 				}
 				}
 				recog.base.set_state(57);
@@ -1236,8 +1238,8 @@ impl<'input> AnExtensionContextExt<'input>{
 		Rc::new(
 			ExtensionContextAll::AnExtensionContext(
 				BaseParserRuleContext::copy_from(ctx,AnExtensionContextExt{
-					ExtensionName:None,
-        			extensionNames:Vec::new(),
+					ExtensionName:None, 
+        			extensionNames:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -1274,12 +1276,12 @@ where
 			recog.base.set_state(64);
 			let tmp = recog.base.match_token(ExtensionName,&mut recog.err_handler)?;
 			if let ExtensionContextAll::AnExtensionContext(ctx) = cast_mut::<_,ExtensionContextAll >(&mut _localctx){
-			ctx.ExtensionName = Some(tmp.clone()); } else {unreachable!("cant cast");}
+			ctx.ExtensionName = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 			let temp = if let ExtensionContextAll::AnExtensionContext(ctx) = cast_mut::<_,ExtensionContextAll >(&mut _localctx){
 			ctx.ExtensionName.clone().unwrap() } else {unreachable!("cant cast");} ;
 			if let ExtensionContextAll::AnExtensionContext(ctx) = cast_mut::<_,ExtensionContextAll >(&mut _localctx){
-			ctx.extensionNames.push(temp); } else {unreachable!("cant cast");}
+			ctx.extensionNames.push(temp); } else {unreachable!("cant cast");}  
 			recog.base.set_state(69);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
@@ -1292,12 +1294,12 @@ where
 				recog.base.set_state(66);
 				let tmp = recog.base.match_token(ExtensionName,&mut recog.err_handler)?;
 				if let ExtensionContextAll::AnExtensionContext(ctx) = cast_mut::<_,ExtensionContextAll >(&mut _localctx){
-				ctx.ExtensionName = Some(tmp.clone()); } else {unreachable!("cant cast");}
+				ctx.ExtensionName = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 				let temp = if let ExtensionContextAll::AnExtensionContext(ctx) = cast_mut::<_,ExtensionContextAll >(&mut _localctx){
 				ctx.ExtensionName.clone().unwrap() } else {unreachable!("cant cast");} ;
 				if let ExtensionContextAll::AnExtensionContext(ctx) = cast_mut::<_,ExtensionContextAll >(&mut _localctx){
-				ctx.extensionNames.push(temp); } else {unreachable!("cant cast");}
+				ctx.extensionNames.push(temp); } else {unreachable!("cant cast");}  
 				}
 				}
 				recog.base.set_state(71);
@@ -1464,8 +1466,8 @@ impl<'input> DeclTypeAliasContextExt<'input>{
 		Rc::new(
 			DeclContextAll::DeclTypeAliasContext(
 				BaseParserRuleContext::copy_from(ctx,DeclTypeAliasContextExt{
-					name:None,
-        			atype:None,
+					name:None, 
+        			atype:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -1537,7 +1539,7 @@ impl<'input> DeclExceptionTypeContextExt<'input>{
 		Rc::new(
 			DeclContextAll::DeclExceptionTypeContext(
 				BaseParserRuleContext::copy_from(ctx,DeclExceptionTypeContextExt{
-        			exceptionType:None,
+        			exceptionType:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -1682,9 +1684,9 @@ impl<'input> DeclFunContextExt<'input>{
 		Rc::new(
 			DeclContextAll::DeclFunContext(
 				BaseParserRuleContext::copy_from(ctx,DeclFunContextExt{
-					name:None,
-        			annotation:None, paramDecl:None, returnType:None, stellatype:None, decl:None, returnExpr:None,
-        			annotations:Vec::new(), paramDecls:Vec::new(), throwTypes:Vec::new(), localDecls:Vec::new(),
+					name:None, 
+        			annotation:None, paramDecl:None, returnType:None, stellatype:None, decl:None, returnExpr:None, 
+        			annotations:Vec::new(), paramDecls:Vec::new(), throwTypes:Vec::new(), localDecls:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -1762,8 +1764,8 @@ impl<'input> DeclExceptionVariantContextExt<'input>{
 		Rc::new(
 			DeclContextAll::DeclExceptionVariantContext(
 				BaseParserRuleContext::copy_from(ctx,DeclExceptionVariantContextExt{
-					name:None,
-        			variantType:None,
+					name:None, 
+        			variantType:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -1929,10 +1931,10 @@ impl<'input> DeclFunGenericContextExt<'input>{
 		Rc::new(
 			DeclContextAll::DeclFunGenericContext(
 				BaseParserRuleContext::copy_from(ctx,DeclFunGenericContextExt{
-					name:None, StellaIdent:None,
-        			generics:Vec::new(),
-        			annotation:None, paramDecl:None, returnType:None, stellatype:None, decl:None, returnExpr:None,
-        			annotations:Vec::new(), paramDecls:Vec::new(), throwTypes:Vec::new(), localDecls:Vec::new(),
+					name:None, StellaIdent:None, 
+        			generics:Vec::new(), 
+        			annotation:None, paramDecl:None, returnType:None, stellatype:None, decl:None, returnExpr:None, 
+        			annotations:Vec::new(), paramDecls:Vec::new(), throwTypes:Vec::new(), localDecls:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -1974,12 +1976,12 @@ where
 						recog.base.set_state(74);
 						let tmp = recog.annotation()?;
 						if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.annotation = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.annotation = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 						ctx.annotation.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.annotations.push(temp); } else {unreachable!("cant cast");}
+						ctx.annotations.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(79);
@@ -1992,7 +1994,7 @@ where
 					recog.base.set_state(81);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(82);
 					recog.base.match_token(Surrogate_id_SYMB_2,&mut recog.err_handler)?;
@@ -2006,12 +2008,12 @@ where
 						recog.base.set_state(83);
 						let tmp = recog.paramDecl()?;
 						if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 						ctx.paramDecl.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}
+						ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(88);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -2025,12 +2027,12 @@ where
 							recog.base.set_state(85);
 							let tmp = recog.paramDecl()?;
 							if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-							ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 							ctx.paramDecl.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-							ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}
+							ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(90);
@@ -2055,7 +2057,7 @@ where
 						recog.base.set_state(95);
 						let tmp = recog.stellatype_rec(0)?;
 						if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.returnType = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.returnType = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						}
 					}
@@ -2072,12 +2074,12 @@ where
 						recog.base.set_state(99);
 						let tmp = recog.stellatype_rec(0)?;
 						if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 						ctx.stellatype.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.throwTypes.push(temp); } else {unreachable!("cant cast");}
+						ctx.throwTypes.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(104);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -2091,12 +2093,12 @@ where
 							recog.base.set_state(101);
 							let tmp = recog.stellatype_rec(0)?;
 							if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-							ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 							ctx.stellatype.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-							ctx.throwTypes.push(temp); } else {unreachable!("cant cast");}
+							ctx.throwTypes.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(106);
@@ -2119,12 +2121,12 @@ where
 						recog.base.set_state(110);
 						let tmp = recog.decl()?;
 						if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.decl = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.decl = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 						ctx.decl.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.localDecls.push(temp); } else {unreachable!("cant cast");}
+						ctx.localDecls.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(115);
@@ -2138,7 +2140,7 @@ where
 					recog.base.set_state(117);
 					let tmp = recog.expr_rec(0)?;
 					if let DeclContextAll::DeclFunContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.returnExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.returnExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(118);
 					recog.base.match_token(Surrogate_id_SYMB_5,&mut recog.err_handler)?;
@@ -2161,12 +2163,12 @@ where
 						recog.base.set_state(120);
 						let tmp = recog.annotation()?;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.annotation = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.annotation = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 						ctx.annotation.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.annotations.push(temp); } else {unreachable!("cant cast");}
+						ctx.annotations.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(125);
@@ -2182,7 +2184,7 @@ where
 					recog.base.set_state(128);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(129);
 					recog.base.match_token(Surrogate_id_SYMB_13,&mut recog.err_handler)?;
@@ -2190,12 +2192,12 @@ where
 					recog.base.set_state(130);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.StellaIdent = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.StellaIdent = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					let temp = if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 					ctx.StellaIdent.clone().unwrap() } else {unreachable!("cant cast");} ;
 					if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.generics.push(temp); } else {unreachable!("cant cast");}
+					ctx.generics.push(temp); } else {unreachable!("cant cast");}  
 					recog.base.set_state(135);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
@@ -2208,12 +2210,12 @@ where
 						recog.base.set_state(132);
 						let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.StellaIdent = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.StellaIdent = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 						ctx.StellaIdent.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.generics.push(temp); } else {unreachable!("cant cast");}
+						ctx.generics.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(137);
@@ -2235,12 +2237,12 @@ where
 						recog.base.set_state(140);
 						let tmp = recog.paramDecl()?;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 						ctx.paramDecl.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}
+						ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(145);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -2254,12 +2256,12 @@ where
 							recog.base.set_state(142);
 							let tmp = recog.paramDecl()?;
 							if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-							ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 							ctx.paramDecl.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-							ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}
+							ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(147);
@@ -2284,7 +2286,7 @@ where
 						recog.base.set_state(152);
 						let tmp = recog.stellatype_rec(0)?;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.returnType = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.returnType = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						}
 					}
@@ -2301,12 +2303,12 @@ where
 						recog.base.set_state(156);
 						let tmp = recog.stellatype_rec(0)?;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 						ctx.stellatype.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.throwTypes.push(temp); } else {unreachable!("cant cast");}
+						ctx.throwTypes.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(161);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -2320,12 +2322,12 @@ where
 							recog.base.set_state(158);
 							let tmp = recog.stellatype_rec(0)?;
 							if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-							ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 							ctx.stellatype.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-							ctx.throwTypes.push(temp); } else {unreachable!("cant cast");}
+							ctx.throwTypes.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(163);
@@ -2348,12 +2350,12 @@ where
 						recog.base.set_state(167);
 						let tmp = recog.decl()?;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.decl = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.decl = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
 						ctx.decl.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-						ctx.localDecls.push(temp); } else {unreachable!("cant cast");}
+						ctx.localDecls.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(172);
@@ -2367,7 +2369,7 @@ where
 					recog.base.set_state(174);
 					let tmp = recog.expr_rec(0)?;
 					if let DeclContextAll::DeclFunGenericContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.returnExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.returnExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(175);
 					recog.base.match_token(Surrogate_id_SYMB_5,&mut recog.err_handler)?;
@@ -2386,7 +2388,7 @@ where
 					recog.base.set_state(178);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let DeclContextAll::DeclTypeAliasContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(179);
 					recog.base.match_token(Surrogate_id_SYMB_6,&mut recog.err_handler)?;
@@ -2395,7 +2397,7 @@ where
 					recog.base.set_state(180);
 					let tmp = recog.stellatype_rec(0)?;
 					if let DeclContextAll::DeclTypeAliasContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.atype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.atype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -2418,7 +2420,7 @@ where
 					recog.base.set_state(184);
 					let tmp = recog.stellatype_rec(0)?;
 					if let DeclContextAll::DeclExceptionTypeContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.exceptionType = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.exceptionType = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -2437,7 +2439,7 @@ where
 					recog.base.set_state(187);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let DeclContextAll::DeclExceptionVariantContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(188);
 					recog.base.match_token(Surrogate_id_SYMB_7,&mut recog.err_handler)?;
@@ -2446,7 +2448,7 @@ where
 					recog.base.set_state(189);
 					let tmp = recog.stellatype_rec(0)?;
 					if let DeclContextAll::DeclExceptionVariantContext(ctx) = cast_mut::<_,DeclContextAll >(&mut _localctx){
-					ctx.variantType = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.variantType = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -2669,8 +2671,8 @@ impl<'input> ParamDeclContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<ParamDeclContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,ParamDeclContextExt{
-				name: None,
-				paramType: None,
+				name: None, 
+				paramType: None, 
 				ph:PhantomData
 			}),
 		)
@@ -2717,7 +2719,7 @@ where
 			recog.base.set_state(194);
 			let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 			 cast_mut::<_,ParamDeclContext >(&mut _localctx).name = Some(tmp.clone());
-
+			  
 
 			recog.base.set_state(195);
 			recog.base.match_token(Surrogate_id_SYMB_7,&mut recog.err_handler)?;
@@ -2726,7 +2728,7 @@ where
 			recog.base.set_state(196);
 			let tmp = recog.stellatype_rec(0)?;
 			 cast_mut::<_,ParamDeclContext >(&mut _localctx).paramType = Some(tmp.clone());
-
+			  
 
 			}
 			Ok(())
@@ -2996,7 +2998,7 @@ impl<'input> FoldContextExt<'input>{
 		Rc::new(
 			ExprContextAll::FoldContext(
 				BaseParserRuleContext::copy_from(ctx,FoldContextExt{
-        			type_:None, expr_:None,
+        			type_:None, expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3062,7 +3064,7 @@ impl<'input> AddContextExt<'input>{
 		Rc::new(
 			ExprContextAll::AddContext(
 				BaseParserRuleContext::copy_from(ctx,AddContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3134,7 +3136,7 @@ impl<'input> IsZeroContextExt<'input>{
 		Rc::new(
 			ExprContextAll::IsZeroContext(
 				BaseParserRuleContext::copy_from(ctx,IsZeroContextExt{
-        			n:None,
+        			n:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3193,7 +3195,7 @@ impl<'input> VarContextExt<'input>{
 		Rc::new(
 			ExprContextAll::VarContext(
 				BaseParserRuleContext::copy_from(ctx,VarContextExt{
-					name:None,
+					name:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3285,9 +3287,9 @@ impl<'input> TypeAbstractionContextExt<'input>{
 		Rc::new(
 			ExprContextAll::TypeAbstractionContext(
 				BaseParserRuleContext::copy_from(ctx,TypeAbstractionContextExt{
-					StellaIdent:None,
-        			generics:Vec::new(),
-        			expr_:None,
+					StellaIdent:None, 
+        			generics:Vec::new(), 
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3353,7 +3355,7 @@ impl<'input> DivideContextExt<'input>{
 		Rc::new(
 			ExprContextAll::DivideContext(
 				BaseParserRuleContext::copy_from(ctx,DivideContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3419,7 +3421,7 @@ impl<'input> LessThanContextExt<'input>{
 		Rc::new(
 			ExprContextAll::LessThanContext(
 				BaseParserRuleContext::copy_from(ctx,LessThanContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3487,8 +3489,8 @@ impl<'input> DotRecordContextExt<'input>{
 		Rc::new(
 			ExprContextAll::DotRecordContext(
 				BaseParserRuleContext::copy_from(ctx,DotRecordContextExt{
-					label:None,
-        			expr_:None,
+					label:None, 
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3554,7 +3556,7 @@ impl<'input> GreaterThanContextExt<'input>{
 		Rc::new(
 			ExprContextAll::GreaterThanContext(
 				BaseParserRuleContext::copy_from(ctx,GreaterThanContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3620,7 +3622,7 @@ impl<'input> EqualContextExt<'input>{
 		Rc::new(
 			ExprContextAll::EqualContext(
 				BaseParserRuleContext::copy_from(ctx,EqualContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3692,7 +3694,7 @@ impl<'input> ThrowContextExt<'input>{
 		Rc::new(
 			ExprContextAll::ThrowContext(
 				BaseParserRuleContext::copy_from(ctx,ThrowContextExt{
-        			expr_:None,
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3758,7 +3760,7 @@ impl<'input> MultiplyContextExt<'input>{
 		Rc::new(
 			ExprContextAll::MultiplyContext(
 				BaseParserRuleContext::copy_from(ctx,MultiplyContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3817,7 +3819,7 @@ impl<'input> ConstMemoryContextExt<'input>{
 		Rc::new(
 			ExprContextAll::ConstMemoryContext(
 				BaseParserRuleContext::copy_from(ctx,ConstMemoryContextExt{
-					mem:None,
+					mem:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3897,8 +3899,8 @@ impl<'input> ListContextExt<'input>{
 		Rc::new(
 			ExprContextAll::ListContext(
 				BaseParserRuleContext::copy_from(ctx,ListContextExt{
-        			expr:None,
-        			exprs:Vec::new(),
+        			expr:None, 
+        			exprs:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -3996,7 +3998,7 @@ impl<'input> TryCatchContextExt<'input>{
 		Rc::new(
 			ExprContextAll::TryCatchContext(
 				BaseParserRuleContext::copy_from(ctx,TryCatchContextExt{
-        			tryExpr:None, pat:None, fallbackExpr:None,
+        			tryExpr:None, pat:None, fallbackExpr:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4109,7 +4111,7 @@ impl<'input> TryCastAsContextExt<'input>{
 		Rc::new(
 			ExprContextAll::TryCastAsContext(
 				BaseParserRuleContext::copy_from(ctx,TryCastAsContextExt{
-        			tryExpr:None, type_:None, pattern_:None, expr_:None, fallbackExpr:None,
+        			tryExpr:None, type_:None, pattern_:None, expr_:None, fallbackExpr:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4181,7 +4183,7 @@ impl<'input> HeadContextExt<'input>{
 		Rc::new(
 			ExprContextAll::HeadContext(
 				BaseParserRuleContext::copy_from(ctx,HeadContextExt{
-        			list:None,
+        			list:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4243,7 +4245,7 @@ impl<'input> TerminatingSemicolonContextExt<'input>{
 		Rc::new(
 			ExprContextAll::TerminatingSemicolonContext(
 				BaseParserRuleContext::copy_from(ctx,TerminatingSemicolonContextExt{
-        			expr_:None,
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4309,7 +4311,7 @@ impl<'input> NotEqualContextExt<'input>{
 		Rc::new(
 			ExprContextAll::NotEqualContext(
 				BaseParserRuleContext::copy_from(ctx,NotEqualContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4432,7 +4434,7 @@ impl<'input> SequenceContextExt<'input>{
 		Rc::new(
 			ExprContextAll::SequenceContext(
 				BaseParserRuleContext::copy_from(ctx,SequenceContextExt{
-        			expr1:None, expr2:None,
+        			expr1:None, expr2:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4593,8 +4595,8 @@ impl<'input> AbstractionContextExt<'input>{
 		Rc::new(
 			ExprContextAll::AbstractionContext(
 				BaseParserRuleContext::copy_from(ctx,AbstractionContextExt{
-        			paramDecl:None, returnExpr:None,
-        			paramDecls:Vec::new(),
+        			paramDecl:None, returnExpr:None, 
+        			paramDecls:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4653,7 +4655,7 @@ impl<'input> ConstIntContextExt<'input>{
 		Rc::new(
 			ExprContextAll::ConstIntContext(
 				BaseParserRuleContext::copy_from(ctx,ConstIntContextExt{
-					n:None,
+					n:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4731,8 +4733,8 @@ impl<'input> VariantContextExt<'input>{
 		Rc::new(
 			ExprContextAll::VariantContext(
 				BaseParserRuleContext::copy_from(ctx,VariantContextExt{
-					label:None,
-        			rhs:None,
+					label:None, 
+        			rhs:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4855,7 +4857,7 @@ impl<'input> SubtractContextExt<'input>{
 		Rc::new(
 			ExprContextAll::SubtractContext(
 				BaseParserRuleContext::copy_from(ctx,SubtractContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4926,7 +4928,7 @@ impl<'input> TypeCastContextExt<'input>{
 		Rc::new(
 			ExprContextAll::TypeCastContext(
 				BaseParserRuleContext::copy_from(ctx,TypeCastContextExt{
-        			expr_:None, type_:None,
+        			expr_:None, type_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5003,7 +5005,7 @@ impl<'input> IfContextExt<'input>{
 		Rc::new(
 			ExprContextAll::IfContext(
 				BaseParserRuleContext::copy_from(ctx,IfContextExt{
-        			condition:None, thenExpr:None, elseExpr:None,
+        			condition:None, thenExpr:None, elseExpr:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5084,8 +5086,8 @@ impl<'input> ApplicationContextExt<'input>{
 		Rc::new(
 			ExprContextAll::ApplicationContext(
 				BaseParserRuleContext::copy_from(ctx,ApplicationContextExt{
-        			fun:None, expr:None,
-        			args:Vec::new(),
+        			fun:None, expr:None, 
+        			args:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5147,7 +5149,7 @@ impl<'input> DerefContextExt<'input>{
 		Rc::new(
 			ExprContextAll::DerefContext(
 				BaseParserRuleContext::copy_from(ctx,DerefContextExt{
-        			expr_:None,
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5219,7 +5221,7 @@ impl<'input> IsEmptyContextExt<'input>{
 		Rc::new(
 			ExprContextAll::IsEmptyContext(
 				BaseParserRuleContext::copy_from(ctx,IsEmptyContextExt{
-        			list:None,
+        			list:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5342,7 +5344,7 @@ impl<'input> LessThanOrEqualContextExt<'input>{
 		Rc::new(
 			ExprContextAll::LessThanOrEqualContext(
 				BaseParserRuleContext::copy_from(ctx,LessThanOrEqualContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5414,7 +5416,7 @@ impl<'input> SuccContextExt<'input>{
 		Rc::new(
 			ExprContextAll::SuccContext(
 				BaseParserRuleContext::copy_from(ctx,SuccContextExt{
-        			n:None,
+        			n:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5486,7 +5488,7 @@ impl<'input> InlContextExt<'input>{
 		Rc::new(
 			ExprContextAll::InlContext(
 				BaseParserRuleContext::copy_from(ctx,InlContextExt{
-        			expr_:None,
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5552,7 +5554,7 @@ impl<'input> GreaterThanOrEqualContextExt<'input>{
 		Rc::new(
 			ExprContextAll::GreaterThanOrEqualContext(
 				BaseParserRuleContext::copy_from(ctx,GreaterThanOrEqualContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5624,7 +5626,7 @@ impl<'input> InrContextExt<'input>{
 		Rc::new(
 			ExprContextAll::InrContext(
 				BaseParserRuleContext::copy_from(ctx,InrContextExt{
-        			expr_:None,
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5713,8 +5715,8 @@ impl<'input> MatchContextExt<'input>{
 		Rc::new(
 			ExprContextAll::MatchContext(
 				BaseParserRuleContext::copy_from(ctx,MatchContextExt{
-        			expr_:None, matchCase:None,
-        			cases:Vec::new(),
+        			expr_:None, matchCase:None, 
+        			cases:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5786,7 +5788,7 @@ impl<'input> LogicNotContextExt<'input>{
 		Rc::new(
 			ExprContextAll::LogicNotContext(
 				BaseParserRuleContext::copy_from(ctx,LogicNotContextExt{
-        			expr_:None,
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5853,7 +5855,7 @@ impl<'input> ParenthesisedExprContextExt<'input>{
 		Rc::new(
 			ExprContextAll::ParenthesisedExprContext(
 				BaseParserRuleContext::copy_from(ctx,ParenthesisedExprContextExt{
-        			expr_:None,
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -5925,7 +5927,7 @@ impl<'input> TailContextExt<'input>{
 		Rc::new(
 			ExprContextAll::TailContext(
 				BaseParserRuleContext::copy_from(ctx,TailContextExt{
-        			list:None,
+        			list:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6005,8 +6007,8 @@ impl<'input> RecordContextExt<'input>{
 		Rc::new(
 			ExprContextAll::RecordContext(
 				BaseParserRuleContext::copy_from(ctx,RecordContextExt{
-        			binding:None,
-        			bindings:Vec::new(),
+        			binding:None, 
+        			bindings:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6072,7 +6074,7 @@ impl<'input> LogicAndContextExt<'input>{
 		Rc::new(
 			ExprContextAll::LogicAndContext(
 				BaseParserRuleContext::copy_from(ctx,LogicAndContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6156,8 +6158,8 @@ impl<'input> TypeApplicationContextExt<'input>{
 		Rc::new(
 			ExprContextAll::TypeApplicationContext(
 				BaseParserRuleContext::copy_from(ctx,TypeApplicationContextExt{
-        			fun:None, stellatype:None,
-        			types:Vec::new(),
+        			fun:None, stellatype:None, 
+        			types:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6241,8 +6243,8 @@ impl<'input> LetRecContextExt<'input>{
 		Rc::new(
 			ExprContextAll::LetRecContext(
 				BaseParserRuleContext::copy_from(ctx,LetRecContextExt{
-        			patternBinding:None, body:None,
-        			patternBindings:Vec::new(),
+        			patternBinding:None, body:None, 
+        			patternBindings:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6308,7 +6310,7 @@ impl<'input> LogicOrContextExt<'input>{
 		Rc::new(
 			ExprContextAll::LogicOrContext(
 				BaseParserRuleContext::copy_from(ctx,LogicOrContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6397,7 +6399,7 @@ impl<'input> TryWithContextExt<'input>{
 		Rc::new(
 			ExprContextAll::TryWithContext(
 				BaseParserRuleContext::copy_from(ctx,TryWithContextExt{
-        			tryExpr:None, fallbackExpr:None,
+        			tryExpr:None, fallbackExpr:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6469,7 +6471,7 @@ impl<'input> PredContextExt<'input>{
 		Rc::new(
 			ExprContextAll::PredContext(
 				BaseParserRuleContext::copy_from(ctx,PredContextExt{
-        			n:None,
+        			n:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6535,7 +6537,7 @@ impl<'input> TypeAscContextExt<'input>{
 		Rc::new(
 			ExprContextAll::TypeAscContext(
 				BaseParserRuleContext::copy_from(ctx,TypeAscContextExt{
-        			expr_:None, type_:None,
+        			expr_:None, type_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6621,7 +6623,7 @@ impl<'input> NatRecContextExt<'input>{
 		Rc::new(
 			ExprContextAll::NatRecContext(
 				BaseParserRuleContext::copy_from(ctx,NatRecContextExt{
-        			n:None, initial:None, step:None,
+        			n:None, initial:None, step:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6697,7 +6699,7 @@ impl<'input> UnfoldContextExt<'input>{
 		Rc::new(
 			ExprContextAll::UnfoldContext(
 				BaseParserRuleContext::copy_from(ctx,UnfoldContextExt{
-        			type_:None, expr_:None,
+        			type_:None, expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6759,7 +6761,7 @@ impl<'input> RefContextExt<'input>{
 		Rc::new(
 			ExprContextAll::RefContext(
 				BaseParserRuleContext::copy_from(ctx,RefContextExt{
-        			expr_:None,
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6827,8 +6829,8 @@ impl<'input> DotTupleContextExt<'input>{
 		Rc::new(
 			ExprContextAll::DotTupleContext(
 				BaseParserRuleContext::copy_from(ctx,DotTupleContextExt{
-					index:None,
-        			expr_:None,
+					index:None, 
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6900,7 +6902,7 @@ impl<'input> FixContextExt<'input>{
 		Rc::new(
 			ExprContextAll::FixContext(
 				BaseParserRuleContext::copy_from(ctx,FixContextExt{
-        			expr_:None,
+        			expr_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -6984,8 +6986,8 @@ impl<'input> LetContextExt<'input>{
 		Rc::new(
 			ExprContextAll::LetContext(
 				BaseParserRuleContext::copy_from(ctx,LetContextExt{
-        			patternBinding:None, body:None,
-        			patternBindings:Vec::new(),
+        			patternBinding:None, body:None, 
+        			patternBindings:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -7051,7 +7053,7 @@ impl<'input> AssignContextExt<'input>{
 		Rc::new(
 			ExprContextAll::AssignContext(
 				BaseParserRuleContext::copy_from(ctx,AssignContextExt{
-        			lhs:None, rhs:None,
+        			lhs:None, rhs:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -7131,8 +7133,8 @@ impl<'input> TupleContextExt<'input>{
 		Rc::new(
 			ExprContextAll::TupleContext(
 				BaseParserRuleContext::copy_from(ctx,TupleContextExt{
-        			expr:None,
-        			exprs:Vec::new(),
+        			expr:None, 
+        			exprs:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -7213,7 +7215,7 @@ impl<'input> ConsListContextExt<'input>{
 		Rc::new(
 			ExprContextAll::ConsListContext(
 				BaseParserRuleContext::copy_from(ctx,ConsListContextExt{
-        			head:None, tail:None,
+        			head:None, tail:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -7298,7 +7300,7 @@ where
 					recog.base.set_state(202);
 					let tmp = recog.base.match_token(INTEGER,&mut recog.err_handler)?;
 					if let ExprContextAll::ConstIntContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -7312,7 +7314,7 @@ where
 					recog.base.set_state(203);
 					let tmp = recog.base.match_token(MemoryAddress,&mut recog.err_handler)?;
 					if let ExprContextAll::ConstMemoryContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.mem = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.mem = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -7326,7 +7328,7 @@ where
 					recog.base.set_state(204);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let ExprContextAll::VarContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -7359,7 +7361,7 @@ where
 					recog.base.set_state(208);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::ThrowContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(209);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7383,7 +7385,7 @@ where
 					recog.base.set_state(213);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::TryCatchContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.tryExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.tryExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(214);
 					recog.base.match_token(Surrogate_id_SYMB_5,&mut recog.err_handler)?;
@@ -7398,7 +7400,7 @@ where
 					recog.base.set_state(217);
 					let tmp = recog.pattern_rec(0)?;
 					if let ExprContextAll::TryCatchContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.pat = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.pat = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(218);
 					recog.base.match_token(Surrogate_id_SYMB_9,&mut recog.err_handler)?;
@@ -7407,7 +7409,7 @@ where
 					recog.base.set_state(219);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::TryCatchContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.fallbackExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.fallbackExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(220);
 					recog.base.match_token(Surrogate_id_SYMB_5,&mut recog.err_handler)?;
@@ -7431,7 +7433,7 @@ where
 					recog.base.set_state(224);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::TryCastAsContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.tryExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.tryExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(225);
 					recog.base.match_token(Surrogate_id_SYMB_5,&mut recog.err_handler)?;
@@ -7446,7 +7448,7 @@ where
 					recog.base.set_state(228);
 					let tmp = recog.stellatype_rec(0)?;
 					if let ExprContextAll::TryCastAsContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(229);
 					recog.base.match_token(Surrogate_id_SYMB_4,&mut recog.err_handler)?;
@@ -7455,7 +7457,7 @@ where
 					recog.base.set_state(230);
 					let tmp = recog.pattern_rec(0)?;
 					if let ExprContextAll::TryCastAsContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(231);
 					recog.base.match_token(Surrogate_id_SYMB_9,&mut recog.err_handler)?;
@@ -7464,7 +7466,7 @@ where
 					recog.base.set_state(232);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::TryCastAsContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(233);
 					recog.base.match_token(Surrogate_id_SYMB_5,&mut recog.err_handler)?;
@@ -7479,7 +7481,7 @@ where
 					recog.base.set_state(236);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::TryCastAsContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.fallbackExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.fallbackExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(237);
 					recog.base.match_token(Surrogate_id_SYMB_5,&mut recog.err_handler)?;
@@ -7503,7 +7505,7 @@ where
 					recog.base.set_state(241);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::TryWithContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.tryExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.tryExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(242);
 					recog.base.match_token(Surrogate_id_SYMB_5,&mut recog.err_handler)?;
@@ -7518,7 +7520,7 @@ where
 					recog.base.set_state(245);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::TryWithContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.fallbackExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.fallbackExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(246);
 					recog.base.match_token(Surrogate_id_SYMB_5,&mut recog.err_handler)?;
@@ -7542,7 +7544,7 @@ where
 					recog.base.set_state(250);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::InlContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(251);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7566,7 +7568,7 @@ where
 					recog.base.set_state(255);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::InrContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(256);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7590,7 +7592,7 @@ where
 					recog.base.set_state(260);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::ConsListContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.head = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.head = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(261);
 					recog.base.match_token(Surrogate_id_SYMB_0,&mut recog.err_handler)?;
@@ -7599,7 +7601,7 @@ where
 					recog.base.set_state(262);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::ConsListContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.tail = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.tail = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(263);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7623,7 +7625,7 @@ where
 					recog.base.set_state(267);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::HeadContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.list = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.list = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(268);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7647,7 +7649,7 @@ where
 					recog.base.set_state(272);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::IsEmptyContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.list = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.list = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(273);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7671,7 +7673,7 @@ where
 					recog.base.set_state(277);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::TailContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.list = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.list = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(278);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7695,7 +7697,7 @@ where
 					recog.base.set_state(282);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::SuccContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(283);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7719,7 +7721,7 @@ where
 					recog.base.set_state(287);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::LogicNotContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(288);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7743,7 +7745,7 @@ where
 					recog.base.set_state(292);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::PredContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(293);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7767,7 +7769,7 @@ where
 					recog.base.set_state(297);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::IsZeroContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(298);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7791,7 +7793,7 @@ where
 					recog.base.set_state(302);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::FixContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(303);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7815,7 +7817,7 @@ where
 					recog.base.set_state(307);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::NatRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(308);
 					recog.base.match_token(Surrogate_id_SYMB_0,&mut recog.err_handler)?;
@@ -7824,7 +7826,7 @@ where
 					recog.base.set_state(309);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::NatRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.initial = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.initial = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(310);
 					recog.base.match_token(Surrogate_id_SYMB_0,&mut recog.err_handler)?;
@@ -7833,7 +7835,7 @@ where
 					recog.base.set_state(311);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::NatRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.step = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.step = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(312);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -7857,7 +7859,7 @@ where
 					recog.base.set_state(316);
 					let tmp = recog.stellatype_rec(0)?;
 					if let ExprContextAll::FoldContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(317);
 					recog.base.match_token(Surrogate_id_SYMB_14,&mut recog.err_handler)?;
@@ -7866,7 +7868,7 @@ where
 					recog.base.set_state(318);
 					let tmp = recog.expr_rec(34)?;
 					if let ExprContextAll::FoldContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -7887,7 +7889,7 @@ where
 					recog.base.set_state(322);
 					let tmp = recog.stellatype_rec(0)?;
 					if let ExprContextAll::UnfoldContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(323);
 					recog.base.match_token(Surrogate_id_SYMB_14,&mut recog.err_handler)?;
@@ -7896,7 +7898,7 @@ where
 					recog.base.set_state(324);
 					let tmp = recog.expr_rec(33)?;
 					if let ExprContextAll::UnfoldContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -7914,7 +7916,7 @@ where
 					recog.base.set_state(327);
 					let tmp = recog.expr_rec(27)?;
 					if let ExprContextAll::RefContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -7932,7 +7934,7 @@ where
 					recog.base.set_state(329);
 					let tmp = recog.expr_rec(26)?;
 					if let ExprContextAll::DerefContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -7958,12 +7960,12 @@ where
 						recog.base.set_state(332);
 						let tmp = recog.paramDecl()?;
 						if let ExprContextAll::AbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let ExprContextAll::AbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 						ctx.paramDecl.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let ExprContextAll::AbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}
+						ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(337);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -7977,12 +7979,12 @@ where
 							recog.base.set_state(334);
 							let tmp = recog.paramDecl()?;
 							if let ExprContextAll::AbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.paramDecl = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let ExprContextAll::AbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 							ctx.paramDecl.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let ExprContextAll::AbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}
+							ctx.paramDecls.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(339);
@@ -8005,7 +8007,7 @@ where
 					recog.base.set_state(345);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::AbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.returnExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.returnExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(346);
 					recog.base.match_token(Surrogate_id_SYMB_5,&mut recog.err_handler)?;
@@ -8031,12 +8033,12 @@ where
 						recog.base.set_state(349);
 						let tmp = recog.expr_rec(0)?;
 						if let ExprContextAll::TupleContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let ExprContextAll::TupleContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 						ctx.expr.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let ExprContextAll::TupleContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.exprs.push(temp); } else {unreachable!("cant cast");}
+						ctx.exprs.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(354);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -8050,12 +8052,12 @@ where
 							recog.base.set_state(351);
 							let tmp = recog.expr_rec(0)?;
 							if let ExprContextAll::TupleContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let ExprContextAll::TupleContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 							ctx.expr.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let ExprContextAll::TupleContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.exprs.push(temp); } else {unreachable!("cant cast");}
+							ctx.exprs.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(356);
@@ -8084,12 +8086,12 @@ where
 					recog.base.set_state(361);
 					let tmp = recog.binding()?;
 					if let ExprContextAll::RecordContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.binding = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.binding = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					let temp = if let ExprContextAll::RecordContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 					ctx.binding.clone().unwrap() } else {unreachable!("cant cast");} ;
 					if let ExprContextAll::RecordContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.bindings.push(temp); } else {unreachable!("cant cast");}
+					ctx.bindings.push(temp); } else {unreachable!("cant cast");}  
 					recog.base.set_state(366);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
@@ -8103,12 +8105,12 @@ where
 						recog.base.set_state(363);
 						let tmp = recog.binding()?;
 						if let ExprContextAll::RecordContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.binding = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.binding = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let ExprContextAll::RecordContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 						ctx.binding.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let ExprContextAll::RecordContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.bindings.push(temp); } else {unreachable!("cant cast");}
+						ctx.bindings.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(368);
@@ -8133,7 +8135,7 @@ where
 					recog.base.set_state(372);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let ExprContextAll::VariantContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.label = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.label = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(375);
 					recog.err_handler.sync(&mut recog.base)?;
@@ -8147,7 +8149,7 @@ where
 						recog.base.set_state(374);
 						let tmp = recog.expr_rec(0)?;
 						if let ExprContextAll::VariantContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.rhs = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.rhs = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						}
 					}
@@ -8171,7 +8173,7 @@ where
 					recog.base.set_state(379);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::MatchContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(380);
 					recog.base.match_token(Surrogate_id_SYMB_4,&mut recog.err_handler)?;
@@ -8185,12 +8187,12 @@ where
 						recog.base.set_state(381);
 						let tmp = recog.matchCase()?;
 						if let ExprContextAll::MatchContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.matchCase = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.matchCase = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let ExprContextAll::MatchContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 						ctx.matchCase.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let ExprContextAll::MatchContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.cases.push(temp); } else {unreachable!("cant cast");}
+						ctx.cases.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(386);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -8204,12 +8206,12 @@ where
 							recog.base.set_state(383);
 							let tmp = recog.matchCase()?;
 							if let ExprContextAll::MatchContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.matchCase = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.matchCase = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let ExprContextAll::MatchContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 							ctx.matchCase.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let ExprContextAll::MatchContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.cases.push(temp); } else {unreachable!("cant cast");}
+							ctx.cases.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(388);
@@ -8243,12 +8245,12 @@ where
 						recog.base.set_state(394);
 						let tmp = recog.expr_rec(0)?;
 						if let ExprContextAll::ListContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let ExprContextAll::ListContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 						ctx.expr.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let ExprContextAll::ListContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.exprs.push(temp); } else {unreachable!("cant cast");}
+						ctx.exprs.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(399);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -8262,12 +8264,12 @@ where
 							recog.base.set_state(396);
 							let tmp = recog.expr_rec(0)?;
 							if let ExprContextAll::ListContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let ExprContextAll::ListContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 							ctx.expr.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let ExprContextAll::ListContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.exprs.push(temp); } else {unreachable!("cant cast");}
+							ctx.exprs.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(401);
@@ -8296,7 +8298,7 @@ where
 					recog.base.set_state(406);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::IfContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.condition = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.condition = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(407);
 					recog.base.match_token(Surrogate_id_SYMB_58,&mut recog.err_handler)?;
@@ -8305,7 +8307,7 @@ where
 					recog.base.set_state(408);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::IfContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.thenExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.thenExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(409);
 					recog.base.match_token(Surrogate_id_SYMB_39,&mut recog.err_handler)?;
@@ -8314,7 +8316,7 @@ where
 					recog.base.set_state(410);
 					let tmp = recog.expr_rec(7)?;
 					if let ExprContextAll::IfContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.elseExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.elseExpr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -8332,12 +8334,12 @@ where
 					recog.base.set_state(413);
 					let tmp = recog.patternBinding()?;
 					if let ExprContextAll::LetContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.patternBinding = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.patternBinding = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					let temp = if let ExprContextAll::LetContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 					ctx.patternBinding.clone().unwrap() } else {unreachable!("cant cast");} ;
 					if let ExprContextAll::LetContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.patternBindings.push(temp); } else {unreachable!("cant cast");}
+					ctx.patternBindings.push(temp); } else {unreachable!("cant cast");}  
 					recog.base.set_state(418);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
@@ -8351,12 +8353,12 @@ where
 						recog.base.set_state(415);
 						let tmp = recog.patternBinding()?;
 						if let ExprContextAll::LetContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.patternBinding = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.patternBinding = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let ExprContextAll::LetContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 						ctx.patternBinding.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let ExprContextAll::LetContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.patternBindings.push(temp); } else {unreachable!("cant cast");}
+						ctx.patternBindings.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(420);
@@ -8370,7 +8372,7 @@ where
 					recog.base.set_state(422);
 					let tmp = recog.expr_rec(5)?;
 					if let ExprContextAll::LetContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.body = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.body = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -8388,12 +8390,12 @@ where
 					recog.base.set_state(425);
 					let tmp = recog.patternBinding()?;
 					if let ExprContextAll::LetRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.patternBinding = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.patternBinding = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					let temp = if let ExprContextAll::LetRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 					ctx.patternBinding.clone().unwrap() } else {unreachable!("cant cast");} ;
 					if let ExprContextAll::LetRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.patternBindings.push(temp); } else {unreachable!("cant cast");}
+					ctx.patternBindings.push(temp); } else {unreachable!("cant cast");}  
 					recog.base.set_state(430);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
@@ -8407,12 +8409,12 @@ where
 						recog.base.set_state(427);
 						let tmp = recog.patternBinding()?;
 						if let ExprContextAll::LetRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.patternBinding = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.patternBinding = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let ExprContextAll::LetRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 						ctx.patternBinding.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let ExprContextAll::LetRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.patternBindings.push(temp); } else {unreachable!("cant cast");}
+						ctx.patternBindings.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(432);
@@ -8426,7 +8428,7 @@ where
 					recog.base.set_state(434);
 					let tmp = recog.expr_rec(4)?;
 					if let ExprContextAll::LetRecContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.body = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.body = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -8446,12 +8448,12 @@ where
 					recog.base.set_state(438);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let ExprContextAll::TypeAbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.StellaIdent = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.StellaIdent = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					let temp = if let ExprContextAll::TypeAbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 					ctx.StellaIdent.clone().unwrap() } else {unreachable!("cant cast");} ;
 					if let ExprContextAll::TypeAbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.generics.push(temp); } else {unreachable!("cant cast");}
+					ctx.generics.push(temp); } else {unreachable!("cant cast");}  
 					recog.base.set_state(443);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
@@ -8464,12 +8466,12 @@ where
 						recog.base.set_state(440);
 						let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 						if let ExprContextAll::TypeAbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.StellaIdent = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.StellaIdent = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let ExprContextAll::TypeAbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 						ctx.StellaIdent.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let ExprContextAll::TypeAbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-						ctx.generics.push(temp); } else {unreachable!("cant cast");}
+						ctx.generics.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(445);
@@ -8483,7 +8485,7 @@ where
 					recog.base.set_state(447);
 					let tmp = recog.expr_rec(3)?;
 					if let ExprContextAll::TypeAbstractionContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -8501,7 +8503,7 @@ where
 					recog.base.set_state(449);
 					let tmp = recog.expr_rec(0)?;
 					if let ExprContextAll::ParenthesisedExprContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.expr_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(450);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -8545,7 +8547,7 @@ where
 							recog.base.set_state(456);
 							let tmp = recog.expr_rec(31)?;
 							if let ExprContextAll::MultiplyContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8570,7 +8572,7 @@ where
 							recog.base.set_state(459);
 							let tmp = recog.expr_rec(30)?;
 							if let ExprContextAll::DivideContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8595,7 +8597,7 @@ where
 							recog.base.set_state(462);
 							let tmp = recog.expr_rec(29)?;
 							if let ExprContextAll::LogicAndContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8620,7 +8622,7 @@ where
 							recog.base.set_state(465);
 							let tmp = recog.expr_rec(26)?;
 							if let ExprContextAll::AddContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8645,7 +8647,7 @@ where
 							recog.base.set_state(468);
 							let tmp = recog.expr_rec(25)?;
 							if let ExprContextAll::SubtractContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8670,7 +8672,7 @@ where
 							recog.base.set_state(471);
 							let tmp = recog.expr_rec(24)?;
 							if let ExprContextAll::LogicOrContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8695,7 +8697,7 @@ where
 							recog.base.set_state(474);
 							let tmp = recog.expr_rec(15)?;
 							if let ExprContextAll::LessThanContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8720,7 +8722,7 @@ where
 							recog.base.set_state(477);
 							let tmp = recog.expr_rec(14)?;
 							if let ExprContextAll::LessThanOrEqualContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8745,7 +8747,7 @@ where
 							recog.base.set_state(480);
 							let tmp = recog.expr_rec(13)?;
 							if let ExprContextAll::GreaterThanContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8770,7 +8772,7 @@ where
 							recog.base.set_state(483);
 							let tmp = recog.expr_rec(12)?;
 							if let ExprContextAll::GreaterThanOrEqualContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8795,7 +8797,7 @@ where
 							recog.base.set_state(486);
 							let tmp = recog.expr_rec(11)?;
 							if let ExprContextAll::EqualContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8820,7 +8822,7 @@ where
 							recog.base.set_state(489);
 							let tmp = recog.expr_rec(10)?;
 							if let ExprContextAll::NotEqualContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8845,7 +8847,7 @@ where
 							recog.base.set_state(492);
 							let tmp = recog.expr_rec(9)?;
 							if let ExprContextAll::AssignContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.rhs = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.rhs = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8870,7 +8872,7 @@ where
 							recog.base.set_state(495);
 							let tmp = recog.expr_rec(7)?;
 							if let ExprContextAll::SequenceContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.expr2 = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.expr2 = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8894,7 +8896,7 @@ where
 							recog.base.set_state(498);
 							let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 							if let ExprContextAll::DotRecordContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.label = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.label = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8918,7 +8920,7 @@ where
 							recog.base.set_state(501);
 							let tmp = recog.base.match_token(INTEGER,&mut recog.err_handler)?;
 							if let ExprContextAll::DotTupleContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.index = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.index = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -8948,12 +8950,12 @@ where
 								recog.base.set_state(504);
 								let tmp = recog.expr_rec(0)?;
 								if let ExprContextAll::ApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-								ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+								ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 								let temp = if let ExprContextAll::ApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 								ctx.expr.clone().unwrap() } else {unreachable!("cant cast");} ;
 								if let ExprContextAll::ApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-								ctx.args.push(temp); } else {unreachable!("cant cast");}
+								ctx.args.push(temp); } else {unreachable!("cant cast");}  
 								recog.base.set_state(509);
 								recog.err_handler.sync(&mut recog.base)?;
 								_la = recog.base.input.la(1);
@@ -8967,12 +8969,12 @@ where
 									recog.base.set_state(506);
 									let tmp = recog.expr_rec(0)?;
 									if let ExprContextAll::ApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-									ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}
+									ctx.expr = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 									let temp = if let ExprContextAll::ApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 									ctx.expr.clone().unwrap() } else {unreachable!("cant cast");} ;
 									if let ExprContextAll::ApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-									ctx.args.push(temp); } else {unreachable!("cant cast");}
+									ctx.args.push(temp); } else {unreachable!("cant cast");}  
 									}
 									}
 									recog.base.set_state(511);
@@ -9009,12 +9011,12 @@ where
 							recog.base.set_state(517);
 							let tmp = recog.stellatype_rec(0)?;
 							if let ExprContextAll::TypeApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let ExprContextAll::TypeApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 							ctx.stellatype.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let ExprContextAll::TypeApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.types.push(temp); } else {unreachable!("cant cast");}
+							ctx.types.push(temp); } else {unreachable!("cant cast");}  
 							recog.base.set_state(522);
 							recog.err_handler.sync(&mut recog.base)?;
 							_la = recog.base.input.la(1);
@@ -9028,12 +9030,12 @@ where
 								recog.base.set_state(519);
 								let tmp = recog.stellatype_rec(0)?;
 								if let ExprContextAll::TypeApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-								ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+								ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 								let temp = if let ExprContextAll::TypeApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
 								ctx.stellatype.clone().unwrap() } else {unreachable!("cant cast");} ;
 								if let ExprContextAll::TypeApplicationContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-								ctx.types.push(temp); } else {unreachable!("cant cast");}
+								ctx.types.push(temp); } else {unreachable!("cant cast");}  
 								}
 								}
 								recog.base.set_state(524);
@@ -9067,7 +9069,7 @@ where
 							recog.base.set_state(529);
 							let tmp = recog.stellatype_rec(0)?;
 							if let ExprContextAll::TypeAscContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -9095,7 +9097,7 @@ where
 							recog.base.set_state(533);
 							let tmp = recog.stellatype_rec(0)?;
 							if let ExprContextAll::TypeCastContext(ctx) = cast_mut::<_,ExprContextAll >(&mut _localctx){
-							ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -9121,7 +9123,7 @@ where
 
 						_ => {}
 					}
-					}
+					} 
 				}
 				recog.base.set_state(540);
 				recog.err_handler.sync(&mut recog.base)?;
@@ -9180,7 +9182,7 @@ impl<'input> PatternBindingContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<PatternBindingContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,PatternBindingContextExt{
-				pat: None, rhs: None,
+				pat: None, rhs: None, 
 				ph:PhantomData
 			}),
 		)
@@ -9226,7 +9228,7 @@ where
 			recog.base.set_state(541);
 			let tmp = recog.pattern_rec(0)?;
 			 cast_mut::<_,PatternBindingContext >(&mut _localctx).pat = Some(tmp.clone());
-
+			  
 
 			recog.base.set_state(542);
 			recog.base.match_token(Surrogate_id_SYMB_6,&mut recog.err_handler)?;
@@ -9235,7 +9237,7 @@ where
 			recog.base.set_state(543);
 			let tmp = recog.expr_rec(0)?;
 			 cast_mut::<_,PatternBindingContext >(&mut _localctx).rhs = Some(tmp.clone());
-
+			  
 
 			}
 			Ok(())
@@ -9291,8 +9293,8 @@ impl<'input> BindingContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<BindingContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,BindingContextExt{
-				name: None,
-				rhs: None,
+				name: None, 
+				rhs: None, 
 				ph:PhantomData
 			}),
 		)
@@ -9339,7 +9341,7 @@ where
 			recog.base.set_state(545);
 			let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 			 cast_mut::<_,BindingContext >(&mut _localctx).name = Some(tmp.clone());
-
+			  
 
 			recog.base.set_state(546);
 			recog.base.match_token(Surrogate_id_SYMB_6,&mut recog.err_handler)?;
@@ -9348,7 +9350,7 @@ where
 			recog.base.set_state(547);
 			let tmp = recog.expr_rec(0)?;
 			 cast_mut::<_,BindingContext >(&mut _localctx).rhs = Some(tmp.clone());
-
+			  
 
 			}
 			Ok(())
@@ -9404,7 +9406,7 @@ impl<'input> MatchCaseContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<MatchCaseContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,MatchCaseContextExt{
-				pattern_: None, expr_: None,
+				pattern_: None, expr_: None, 
 				ph:PhantomData
 			}),
 		)
@@ -9450,7 +9452,7 @@ where
 			recog.base.set_state(549);
 			let tmp = recog.pattern_rec(0)?;
 			 cast_mut::<_,MatchCaseContext >(&mut _localctx).pattern_ = Some(tmp.clone());
-
+			  
 
 			recog.base.set_state(550);
 			recog.base.match_token(Surrogate_id_SYMB_9,&mut recog.err_handler)?;
@@ -9459,7 +9461,7 @@ where
 			recog.base.set_state(551);
 			let tmp = recog.expr_rec(0)?;
 			 cast_mut::<_,MatchCaseContext >(&mut _localctx).expr_ = Some(tmp.clone());
-
+			  
 
 			}
 			Ok(())
@@ -9648,7 +9650,7 @@ impl<'input> PatternConsContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternConsContext(
 				BaseParserRuleContext::copy_from(ctx,PatternConsContextExt{
-        			head:None, tail:None,
+        			head:None, tail:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -9728,8 +9730,8 @@ impl<'input> PatternTupleContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternTupleContext(
 				BaseParserRuleContext::copy_from(ctx,PatternTupleContextExt{
-        			pattern:None,
-        			patterns:Vec::new(),
+        			pattern:None, 
+        			patterns:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -9809,8 +9811,8 @@ impl<'input> PatternListContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternListContext(
 				BaseParserRuleContext::copy_from(ctx,PatternListContextExt{
-        			pattern:None,
-        			patterns:Vec::new(),
+        			pattern:None, 
+        			patterns:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -9890,8 +9892,8 @@ impl<'input> PatternRecordContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternRecordContext(
 				BaseParserRuleContext::copy_from(ctx,PatternRecordContextExt{
-        			labelledPattern:None,
-        			patterns:Vec::new(),
+        			labelledPattern:None, 
+        			patterns:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -9969,8 +9971,8 @@ impl<'input> PatternVariantContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternVariantContext(
 				BaseParserRuleContext::copy_from(ctx,PatternVariantContextExt{
-					label:None,
-        			pattern_:None,
+					label:None, 
+        			pattern_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -10036,7 +10038,7 @@ impl<'input> PatternAscContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternAscContext(
 				BaseParserRuleContext::copy_from(ctx,PatternAscContextExt{
-        			pattern_:None, type_:None,
+        			pattern_:None, type_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -10095,7 +10097,7 @@ impl<'input> PatternIntContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternIntContext(
 				BaseParserRuleContext::copy_from(ctx,PatternIntContextExt{
-					n:None,
+					n:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -10167,7 +10169,7 @@ impl<'input> PatternInrContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternInrContext(
 				BaseParserRuleContext::copy_from(ctx,PatternInrContextExt{
-        			pattern_:None,
+        			pattern_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -10296,7 +10298,7 @@ impl<'input> PatternInlContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternInlContext(
 				BaseParserRuleContext::copy_from(ctx,PatternInlContextExt{
-        			pattern_:None,
+        			pattern_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -10355,7 +10357,7 @@ impl<'input> PatternVarContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternVarContext(
 				BaseParserRuleContext::copy_from(ctx,PatternVarContextExt{
-					name:None,
+					name:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -10422,7 +10424,7 @@ impl<'input> ParenthesisedPatternContextExt<'input>{
 		Rc::new(
 			PatternContextAll::ParenthesisedPatternContext(
 				BaseParserRuleContext::copy_from(ctx,ParenthesisedPatternContextExt{
-        			pattern_:None,
+        			pattern_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -10494,7 +10496,7 @@ impl<'input> PatternSuccContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternSuccContext(
 				BaseParserRuleContext::copy_from(ctx,PatternSuccContextExt{
-        			pattern_:None,
+        			pattern_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -10679,7 +10681,7 @@ impl<'input> PatternCastAsContextExt<'input>{
 		Rc::new(
 			PatternContextAll::PatternCastAsContext(
 				BaseParserRuleContext::copy_from(ctx,PatternCastAsContextExt{
-        			pattern_:None, type_:None,
+        			pattern_:None, type_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -10731,7 +10733,7 @@ where
 					recog.base.set_state(555);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let PatternContextAll::PatternVariantContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-					ctx.label = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.label = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(558);
 					recog.err_handler.sync(&mut recog.base)?;
@@ -10745,7 +10747,7 @@ where
 						recog.base.set_state(557);
 						let tmp = recog.pattern_rec(0)?;
 						if let PatternContextAll::PatternVariantContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-						ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						}
 					}
@@ -10772,7 +10774,7 @@ where
 					recog.base.set_state(563);
 					let tmp = recog.pattern_rec(0)?;
 					if let PatternContextAll::PatternInlContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-					ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(564);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -10796,7 +10798,7 @@ where
 					recog.base.set_state(568);
 					let tmp = recog.pattern_rec(0)?;
 					if let PatternContextAll::PatternInrContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-					ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(569);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -10822,12 +10824,12 @@ where
 						recog.base.set_state(572);
 						let tmp = recog.pattern_rec(0)?;
 						if let PatternContextAll::PatternTupleContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-						ctx.pattern = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.pattern = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let PatternContextAll::PatternTupleContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
 						ctx.pattern.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let PatternContextAll::PatternTupleContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-						ctx.patterns.push(temp); } else {unreachable!("cant cast");}
+						ctx.patterns.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(577);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -10841,12 +10843,12 @@ where
 							recog.base.set_state(574);
 							let tmp = recog.pattern_rec(0)?;
 							if let PatternContextAll::PatternTupleContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-							ctx.pattern = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.pattern = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let PatternContextAll::PatternTupleContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
 							ctx.pattern.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let PatternContextAll::PatternTupleContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-							ctx.patterns.push(temp); } else {unreachable!("cant cast");}
+							ctx.patterns.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(579);
@@ -10880,12 +10882,12 @@ where
 						recog.base.set_state(584);
 						let tmp = recog.labelledPattern()?;
 						if let PatternContextAll::PatternRecordContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-						ctx.labelledPattern = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.labelledPattern = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let PatternContextAll::PatternRecordContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
 						ctx.labelledPattern.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let PatternContextAll::PatternRecordContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-						ctx.patterns.push(temp); } else {unreachable!("cant cast");}
+						ctx.patterns.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(589);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -10899,12 +10901,12 @@ where
 							recog.base.set_state(586);
 							let tmp = recog.labelledPattern()?;
 							if let PatternContextAll::PatternRecordContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-							ctx.labelledPattern = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.labelledPattern = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let PatternContextAll::PatternRecordContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
 							ctx.labelledPattern.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let PatternContextAll::PatternRecordContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-							ctx.patterns.push(temp); } else {unreachable!("cant cast");}
+							ctx.patterns.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(591);
@@ -10938,12 +10940,12 @@ where
 						recog.base.set_state(596);
 						let tmp = recog.pattern_rec(0)?;
 						if let PatternContextAll::PatternListContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-						ctx.pattern = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.pattern = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let PatternContextAll::PatternListContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
 						ctx.pattern.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let PatternContextAll::PatternListContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-						ctx.patterns.push(temp); } else {unreachable!("cant cast");}
+						ctx.patterns.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(601);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -10957,12 +10959,12 @@ where
 							recog.base.set_state(598);
 							let tmp = recog.pattern_rec(0)?;
 							if let PatternContextAll::PatternListContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-							ctx.pattern = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.pattern = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let PatternContextAll::PatternListContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
 							ctx.pattern.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let PatternContextAll::PatternListContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-							ctx.patterns.push(temp); } else {unreachable!("cant cast");}
+							ctx.patterns.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(603);
@@ -10994,7 +10996,7 @@ where
 					recog.base.set_state(609);
 					let tmp = recog.pattern_rec(0)?;
 					if let PatternContextAll::PatternConsContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-					ctx.head = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.head = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(610);
 					recog.base.match_token(Surrogate_id_SYMB_0,&mut recog.err_handler)?;
@@ -11003,7 +11005,7 @@ where
 					recog.base.set_state(611);
 					let tmp = recog.pattern_rec(0)?;
 					if let PatternContextAll::PatternConsContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-					ctx.tail = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.tail = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(612);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -11056,7 +11058,7 @@ where
 					recog.base.set_state(617);
 					let tmp = recog.base.match_token(INTEGER,&mut recog.err_handler)?;
 					if let PatternContextAll::PatternIntContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.n = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -11077,7 +11079,7 @@ where
 					recog.base.set_state(620);
 					let tmp = recog.pattern_rec(0)?;
 					if let PatternContextAll::PatternSuccContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-					ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(621);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -11094,7 +11096,7 @@ where
 					recog.base.set_state(623);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let PatternContextAll::PatternVarContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -11112,7 +11114,7 @@ where
 					recog.base.set_state(625);
 					let tmp = recog.pattern_rec(0)?;
 					if let PatternContextAll::ParenthesisedPatternContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-					ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.pattern_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(626);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
@@ -11156,7 +11158,7 @@ where
 							recog.base.set_state(632);
 							let tmp = recog.stellatype_rec(0)?;
 							if let PatternContextAll::PatternAscContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-							ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
@@ -11184,14 +11186,14 @@ where
 							recog.base.set_state(636);
 							let tmp = recog.stellatype_rec(0)?;
 							if let PatternContextAll::PatternCastAsContext(ctx) = cast_mut::<_,PatternContextAll >(&mut _localctx){
-							ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							}
 						}
 
 						_ => {}
 					}
-					}
+					} 
 				}
 				recog.base.set_state(641);
 				recog.err_handler.sync(&mut recog.base)?;
@@ -11250,8 +11252,8 @@ impl<'input> LabelledPatternContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<LabelledPatternContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,LabelledPatternContextExt{
-				label: None,
-				pattern_: None,
+				label: None, 
+				pattern_: None, 
 				ph:PhantomData
 			}),
 		)
@@ -11298,7 +11300,7 @@ where
 			recog.base.set_state(642);
 			let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 			 cast_mut::<_,LabelledPatternContext >(&mut _localctx).label = Some(tmp.clone());
-
+			  
 
 			recog.base.set_state(643);
 			recog.base.match_token(Surrogate_id_SYMB_6,&mut recog.err_handler)?;
@@ -11307,7 +11309,7 @@ where
 			recog.base.set_state(644);
 			let tmp = recog.pattern_rec(0)?;
 			 cast_mut::<_,LabelledPatternContext >(&mut _localctx).pattern_ = Some(tmp.clone());
-
+			  
 
 			}
 			Ok(())
@@ -11334,6 +11336,7 @@ pub enum StellatypeContextAll<'input>{
 	TypeBoolContext(TypeBoolContext<'input>),
 	TypeRefContext(TypeRefContext<'input>),
 	TypeRecContext(TypeRecContext<'input>),
+	TypeAutoContext(TypeAutoContext<'input>),
 	TypeSumContext(TypeSumContext<'input>),
 	TypeVarContext(TypeVarContext<'input>),
 	TypeVariantContext(TypeVariantContext<'input>),
@@ -11363,6 +11366,7 @@ impl<'input> Deref for StellatypeContextAll<'input>{
 			TypeBoolContext(inner) => inner,
 			TypeRefContext(inner) => inner,
 			TypeRecContext(inner) => inner,
+			TypeAutoContext(inner) => inner,
 			TypeSumContext(inner) => inner,
 			TypeVarContext(inner) => inner,
 			TypeVariantContext(inner) => inner,
@@ -11495,8 +11499,8 @@ impl<'input> TypeTupleContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeTupleContext(
 				BaseParserRuleContext::copy_from(ctx,TypeTupleContextExt{
-        			stellatype:None,
-        			types:Vec::new(),
+        			stellatype:None, 
+        			types:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -11672,7 +11676,7 @@ impl<'input> TypeRefContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeRefContext(
 				BaseParserRuleContext::copy_from(ctx,TypeRefContextExt{
-        			type_:None,
+        			type_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -11745,8 +11749,65 @@ impl<'input> TypeRecContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeRecContext(
 				BaseParserRuleContext::copy_from(ctx,TypeRecContextExt{
-					var:None,
-        			type_:None,
+					var:None, 
+        			type_:None, 
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
+
+pub type TypeAutoContext<'input> = BaseParserRuleContext<'input,TypeAutoContextExt<'input>>;
+
+pub trait TypeAutoContextAttrs<'input>: stellaParserContext<'input>{
+	/// Retrieves first TerminalNode corresponding to token AUTO_TYPE
+	/// Returns `None` if there is no child corresponding to token AUTO_TYPE
+	fn AUTO_TYPE(&self) -> Option<Rc<TerminalNode<'input,stellaParserContextType>>> where Self:Sized{
+		self.get_token(AUTO_TYPE, 0)
+	}
+}
+
+impl<'input> TypeAutoContextAttrs<'input> for TypeAutoContext<'input>{}
+
+pub struct TypeAutoContextExt<'input>{
+	base:StellatypeContextExt<'input>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{TypeAutoContextExt<'a>}
+
+impl<'input> stellaParserContext<'input> for TypeAutoContext<'input>{}
+
+impl<'input,'a> Listenable<dyn stellaParserListener<'input> + 'a> for TypeAutoContext<'input>{
+	fn enter(&self,listener: &mut (dyn stellaParserListener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_TypeAuto(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for TypeAutoContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = stellaParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_stellatype }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_stellatype }
+}
+
+impl<'input> Borrow<StellatypeContextExt<'input>> for TypeAutoContext<'input>{
+	fn borrow(&self) -> &StellatypeContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<StellatypeContextExt<'input>> for TypeAutoContext<'input>{
+	fn borrow_mut(&mut self) -> &mut StellatypeContextExt<'input> { &mut self.base }
+}
+
+impl<'input> StellatypeContextAttrs<'input> for TypeAutoContext<'input> {}
+
+impl<'input> TypeAutoContextExt<'input>{
+	fn new(ctx: &dyn StellatypeContextAttrs<'input>) -> Rc<StellatypeContextAll<'input>>  {
+		Rc::new(
+			StellatypeContextAll::TypeAutoContext(
+				BaseParserRuleContext::copy_from(ctx,TypeAutoContextExt{
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -11812,7 +11873,7 @@ impl<'input> TypeSumContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeSumContext(
 				BaseParserRuleContext::copy_from(ctx,TypeSumContextExt{
-        			left:None, right:None,
+        			left:None, right:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -11871,7 +11932,7 @@ impl<'input> TypeVarContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeVarContext(
 				BaseParserRuleContext::copy_from(ctx,TypeVarContextExt{
-					name:None,
+					name:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -11951,8 +12012,8 @@ impl<'input> TypeVariantContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeVariantContext(
 				BaseParserRuleContext::copy_from(ctx,TypeVariantContextExt{
-        			variantFieldType:None,
-        			fieldTypes:Vec::new(),
+        			variantFieldType:None, 
+        			fieldTypes:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -12190,7 +12251,7 @@ impl<'input> TypeParensContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeParensContext(
 				BaseParserRuleContext::copy_from(ctx,TypeParensContextExt{
-        			type_:None,
+        			type_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -12281,8 +12342,8 @@ impl<'input> TypeFunContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeFunContext(
 				BaseParserRuleContext::copy_from(ctx,TypeFunContextExt{
-        			stellatype:None, returnType:None,
-        			paramTypes:Vec::new(),
+        			stellatype:None, returnType:None, 
+        			paramTypes:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -12360,9 +12421,9 @@ impl<'input> TypeForAllContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeForAllContext(
 				BaseParserRuleContext::copy_from(ctx,TypeForAllContextExt{
-					StellaIdent:None,
-        			types:Vec::new(),
-        			type_:None,
+					StellaIdent:None, 
+        			types:Vec::new(), 
+        			type_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -12442,8 +12503,8 @@ impl<'input> TypeRecordContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeRecordContext(
 				BaseParserRuleContext::copy_from(ctx,TypeRecordContextExt{
-        			recordFieldType:None,
-        			fieldTypes:Vec::new(),
+        			recordFieldType:None, 
+        			fieldTypes:Vec::new(), 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -12510,7 +12571,7 @@ impl<'input> TypeListContextExt<'input>{
 		Rc::new(
 			StellatypeContextAll::TypeListContext(
 				BaseParserRuleContext::copy_from(ctx,TypeListContextExt{
-        			type_:None,
+        			type_:None, 
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -12545,7 +12606,7 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(726);
+			recog.base.set_state(727);
 			recog.err_handler.sync(&mut recog.base)?;
 			match  recog.interpreter.adaptive_predict(56,&mut recog.base)? {
 				1 =>{
@@ -12585,9 +12646,9 @@ where
 
 					/*InvokeRule stellatype*/
 					recog.base.set_state(650);
-					let tmp = recog.stellatype_rec(14)?;
+					let tmp = recog.stellatype_rec(15)?;
 					if let StellatypeContextAll::TypeRefContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -12607,18 +12668,18 @@ where
 					recog.base.set_state(661);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
-					if (((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << Surrogate_id_SYMB_2) | (1usize << Surrogate_id_SYMB_4) | (1usize << Surrogate_id_SYMB_11) | (1usize << Surrogate_id_SYMB_13))) != 0) || ((((_la - 33)) & !0x3f) == 0 && ((1usize << (_la - 33)) & ((1usize << (Surrogate_id_SYMB_32 - 33)) | (1usize << (Surrogate_id_SYMB_33 - 33)) | (1usize << (Surrogate_id_SYMB_34 - 33)) | (1usize << (Surrogate_id_SYMB_43 - 33)))) != 0) || ((((_la - 66)) & !0x3f) == 0 && ((1usize << (_la - 66)) & ((1usize << (Surrogate_id_SYMB_65 - 66)) | (1usize << (REF_TYPE - 66)) | (1usize << (TOP_TYPE - 66)) | (1usize << (BOTTOM_TYPE - 66)) | (1usize << (FORALL - 66)) | (1usize << (StellaIdent - 66)))) != 0) {
+					if (((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << Surrogate_id_SYMB_2) | (1usize << Surrogate_id_SYMB_4) | (1usize << Surrogate_id_SYMB_11) | (1usize << Surrogate_id_SYMB_13))) != 0) || ((((_la - 33)) & !0x3f) == 0 && ((1usize << (_la - 33)) & ((1usize << (Surrogate_id_SYMB_32 - 33)) | (1usize << (Surrogate_id_SYMB_33 - 33)) | (1usize << (Surrogate_id_SYMB_34 - 33)) | (1usize << (Surrogate_id_SYMB_43 - 33)))) != 0) || ((((_la - 66)) & !0x3f) == 0 && ((1usize << (_la - 66)) & ((1usize << (Surrogate_id_SYMB_65 - 66)) | (1usize << (REF_TYPE - 66)) | (1usize << (TOP_TYPE - 66)) | (1usize << (BOTTOM_TYPE - 66)) | (1usize << (AUTO_TYPE - 66)) | (1usize << (FORALL - 66)) | (1usize << (StellaIdent - 66)))) != 0) {
 						{
 						/*InvokeRule stellatype*/
 						recog.base.set_state(653);
 						let tmp = recog.stellatype_rec(0)?;
 						if let StellatypeContextAll::TypeFunContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-						ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let StellatypeContextAll::TypeFunContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
 						ctx.stellatype.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let StellatypeContextAll::TypeFunContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-						ctx.paramTypes.push(temp); } else {unreachable!("cant cast");}
+						ctx.paramTypes.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(658);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -12632,12 +12693,12 @@ where
 							recog.base.set_state(655);
 							let tmp = recog.stellatype_rec(0)?;
 							if let StellatypeContextAll::TypeFunContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-							ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let StellatypeContextAll::TypeFunContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
 							ctx.stellatype.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let StellatypeContextAll::TypeFunContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-							ctx.paramTypes.push(temp); } else {unreachable!("cant cast");}
+							ctx.paramTypes.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(660);
@@ -12655,9 +12716,9 @@ where
 
 					/*InvokeRule stellatype*/
 					recog.base.set_state(665);
-					let tmp = recog.stellatype_rec(12)?;
+					let tmp = recog.stellatype_rec(13)?;
 					if let StellatypeContextAll::TypeFunContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.returnType = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.returnType = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -12680,12 +12741,12 @@ where
 						recog.base.set_state(667);
 						let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 						if let StellatypeContextAll::TypeForAllContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-						ctx.StellaIdent = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.StellaIdent = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let StellatypeContextAll::TypeForAllContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
 						ctx.StellaIdent.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let StellatypeContextAll::TypeForAllContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-						ctx.types.push(temp); } else {unreachable!("cant cast");}
+						ctx.types.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(672);
@@ -12697,9 +12758,9 @@ where
 
 					/*InvokeRule stellatype*/
 					recog.base.set_state(674);
-					let tmp = recog.stellatype_rec(11)?;
+					let tmp = recog.stellatype_rec(12)?;
 					if let StellatypeContextAll::TypeForAllContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -12716,16 +12777,16 @@ where
 					recog.base.set_state(676);
 					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 					if let StellatypeContextAll::TypeRecContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.var = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.var = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(677);
 					recog.base.match_token(Surrogate_id_SYMB_25,&mut recog.err_handler)?;
 
 					/*InvokeRule stellatype*/
 					recog.base.set_state(678);
-					let tmp = recog.stellatype_rec(10)?;
+					let tmp = recog.stellatype_rec(11)?;
 					if let StellatypeContextAll::TypeRecContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
 				}
@@ -12742,18 +12803,18 @@ where
 					recog.base.set_state(688);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
-					if (((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << Surrogate_id_SYMB_2) | (1usize << Surrogate_id_SYMB_4) | (1usize << Surrogate_id_SYMB_11) | (1usize << Surrogate_id_SYMB_13))) != 0) || ((((_la - 33)) & !0x3f) == 0 && ((1usize << (_la - 33)) & ((1usize << (Surrogate_id_SYMB_32 - 33)) | (1usize << (Surrogate_id_SYMB_33 - 33)) | (1usize << (Surrogate_id_SYMB_34 - 33)) | (1usize << (Surrogate_id_SYMB_43 - 33)))) != 0) || ((((_la - 66)) & !0x3f) == 0 && ((1usize << (_la - 66)) & ((1usize << (Surrogate_id_SYMB_65 - 66)) | (1usize << (REF_TYPE - 66)) | (1usize << (TOP_TYPE - 66)) | (1usize << (BOTTOM_TYPE - 66)) | (1usize << (FORALL - 66)) | (1usize << (StellaIdent - 66)))) != 0) {
+					if (((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << Surrogate_id_SYMB_2) | (1usize << Surrogate_id_SYMB_4) | (1usize << Surrogate_id_SYMB_11) | (1usize << Surrogate_id_SYMB_13))) != 0) || ((((_la - 33)) & !0x3f) == 0 && ((1usize << (_la - 33)) & ((1usize << (Surrogate_id_SYMB_32 - 33)) | (1usize << (Surrogate_id_SYMB_33 - 33)) | (1usize << (Surrogate_id_SYMB_34 - 33)) | (1usize << (Surrogate_id_SYMB_43 - 33)))) != 0) || ((((_la - 66)) & !0x3f) == 0 && ((1usize << (_la - 66)) & ((1usize << (Surrogate_id_SYMB_65 - 66)) | (1usize << (REF_TYPE - 66)) | (1usize << (TOP_TYPE - 66)) | (1usize << (BOTTOM_TYPE - 66)) | (1usize << (AUTO_TYPE - 66)) | (1usize << (FORALL - 66)) | (1usize << (StellaIdent - 66)))) != 0) {
 						{
 						/*InvokeRule stellatype*/
 						recog.base.set_state(680);
 						let tmp = recog.stellatype_rec(0)?;
 						if let StellatypeContextAll::TypeTupleContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-						ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let StellatypeContextAll::TypeTupleContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
 						ctx.stellatype.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let StellatypeContextAll::TypeTupleContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-						ctx.types.push(temp); } else {unreachable!("cant cast");}
+						ctx.types.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(685);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -12767,12 +12828,12 @@ where
 							recog.base.set_state(682);
 							let tmp = recog.stellatype_rec(0)?;
 							if let StellatypeContextAll::TypeTupleContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-							ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.stellatype = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let StellatypeContextAll::TypeTupleContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
 							ctx.stellatype.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let StellatypeContextAll::TypeTupleContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-							ctx.types.push(temp); } else {unreachable!("cant cast");}
+							ctx.types.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(687);
@@ -12801,12 +12862,12 @@ where
 					recog.base.set_state(692);
 					let tmp = recog.recordFieldType()?;
 					if let StellatypeContextAll::TypeRecordContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.recordFieldType = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.recordFieldType = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					let temp = if let StellatypeContextAll::TypeRecordContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
 					ctx.recordFieldType.clone().unwrap() } else {unreachable!("cant cast");} ;
 					if let StellatypeContextAll::TypeRecordContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.fieldTypes.push(temp); } else {unreachable!("cant cast");}
+					ctx.fieldTypes.push(temp); } else {unreachable!("cant cast");}  
 					recog.base.set_state(697);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
@@ -12820,12 +12881,12 @@ where
 						recog.base.set_state(694);
 						let tmp = recog.recordFieldType()?;
 						if let StellatypeContextAll::TypeRecordContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-						ctx.recordFieldType = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.recordFieldType = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let StellatypeContextAll::TypeRecordContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
 						ctx.recordFieldType.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let StellatypeContextAll::TypeRecordContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-						ctx.fieldTypes.push(temp); } else {unreachable!("cant cast");}
+						ctx.fieldTypes.push(temp); } else {unreachable!("cant cast");}  
 						}
 						}
 						recog.base.set_state(699);
@@ -12856,12 +12917,12 @@ where
 						recog.base.set_state(703);
 						let tmp = recog.variantFieldType()?;
 						if let StellatypeContextAll::TypeVariantContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-						ctx.variantFieldType = Some(tmp.clone()); } else {unreachable!("cant cast");}
+						ctx.variantFieldType = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						let temp = if let StellatypeContextAll::TypeVariantContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
 						ctx.variantFieldType.clone().unwrap() } else {unreachable!("cant cast");} ;
 						if let StellatypeContextAll::TypeVariantContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-						ctx.fieldTypes.push(temp); } else {unreachable!("cant cast");}
+						ctx.fieldTypes.push(temp); } else {unreachable!("cant cast");}  
 						recog.base.set_state(708);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
@@ -12875,12 +12936,12 @@ where
 							recog.base.set_state(705);
 							let tmp = recog.variantFieldType()?;
 							if let StellatypeContextAll::TypeVariantContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-							ctx.variantFieldType = Some(tmp.clone()); } else {unreachable!("cant cast");}
+							ctx.variantFieldType = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 							let temp = if let StellatypeContextAll::TypeVariantContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
 							ctx.variantFieldType.clone().unwrap() } else {unreachable!("cant cast");} ;
 							if let StellatypeContextAll::TypeVariantContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-							ctx.fieldTypes.push(temp); } else {unreachable!("cant cast");}
+							ctx.fieldTypes.push(temp); } else {unreachable!("cant cast");}  
 							}
 							}
 							recog.base.set_state(710);
@@ -12909,7 +12970,7 @@ where
 					recog.base.set_state(715);
 					let tmp = recog.stellatype_rec(0)?;
 					if let StellatypeContextAll::TypeListContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(716);
 					recog.base.match_token(Surrogate_id_SYMB_14,&mut recog.err_handler)?;
@@ -12955,34 +13016,46 @@ where
 			,
 				14 =>{
 					{
-					let mut tmp = TypeVarContextExt::new(&**_localctx);
+					let mut tmp = TypeAutoContextExt::new(&**_localctx);
 					recog.ctx = Some(tmp.clone());
 					_localctx = tmp;
 					_prevctx = _localctx.clone();
 					recog.base.set_state(721);
-					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
-					if let StellatypeContextAll::TypeVarContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					recog.base.match_token(AUTO_TYPE,&mut recog.err_handler)?;
 
 					}
 				}
 			,
 				15 =>{
 					{
-					let mut tmp = TypeParensContextExt::new(&**_localctx);
+					let mut tmp = TypeVarContextExt::new(&**_localctx);
 					recog.ctx = Some(tmp.clone());
 					_localctx = tmp;
 					_prevctx = _localctx.clone();
 					recog.base.set_state(722);
+					let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
+					if let StellatypeContextAll::TypeVarContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
+					ctx.name = Some(tmp.clone()); } else {unreachable!("cant cast");}  
+
+					}
+				}
+			,
+				16 =>{
+					{
+					let mut tmp = TypeParensContextExt::new(&**_localctx);
+					recog.ctx = Some(tmp.clone());
+					_localctx = tmp;
+					_prevctx = _localctx.clone();
+					recog.base.set_state(723);
 					recog.base.match_token(Surrogate_id_SYMB_2,&mut recog.err_handler)?;
 
 					/*InvokeRule stellatype*/
-					recog.base.set_state(723);
+					recog.base.set_state(724);
 					let tmp = recog.stellatype_rec(0)?;
 					if let StellatypeContextAll::TypeParensContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.type_ = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
-					recog.base.set_state(724);
+					recog.base.set_state(725);
 					recog.base.match_token(Surrogate_id_SYMB_3,&mut recog.err_handler)?;
 
 					}
@@ -12993,7 +13066,7 @@ where
 
 			let tmp = recog.input.lt(-1).cloned();
 			recog.ctx.as_ref().unwrap().set_stop(tmp);
-			recog.base.set_state(733);
+			recog.base.set_state(734);
 			recog.err_handler.sync(&mut recog.base)?;
 			_alt = recog.interpreter.adaptive_predict(57,&mut recog.base)?;
 			while { _alt!=2 && _alt!=INVALID_ALT } {
@@ -13009,23 +13082,23 @@ where
 					} else {unreachable!("cant cast");}
 					recog.push_new_recursion_context(tmp.clone(), _startState, RULE_stellatype);
 					_localctx = tmp;
-					recog.base.set_state(728);
-					if !({recog.precpred(None, 13)}) {
-						Err(FailedPredicateError::new(&mut recog.base, Some("recog.precpred(None, 13)".to_owned()), None))?;
-					}
 					recog.base.set_state(729);
+					if !({recog.precpred(None, 14)}) {
+						Err(FailedPredicateError::new(&mut recog.base, Some("recog.precpred(None, 14)".to_owned()), None))?;
+					}
+					recog.base.set_state(730);
 					recog.base.match_token(Surrogate_id_SYMB_21,&mut recog.err_handler)?;
 
 					/*InvokeRule stellatype*/
-					recog.base.set_state(730);
-					let tmp = recog.stellatype_rec(14)?;
+					recog.base.set_state(731);
+					let tmp = recog.stellatype_rec(15)?;
 					if let StellatypeContextAll::TypeSumContext(ctx) = cast_mut::<_,StellatypeContextAll >(&mut _localctx){
-					ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}
+					ctx.right = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					}
-					}
+					} 
 				}
-				recog.base.set_state(735);
+				recog.base.set_state(736);
 				recog.err_handler.sync(&mut recog.base)?;
 				_alt = recog.interpreter.adaptive_predict(57,&mut recog.base)?;
 			}
@@ -13082,8 +13155,8 @@ impl<'input> RecordFieldTypeContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<RecordFieldTypeContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,RecordFieldTypeContextExt{
-				label: None,
-				type_: None,
+				label: None, 
+				type_: None, 
 				ph:PhantomData
 			}),
 		)
@@ -13127,19 +13200,19 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(736);
+			recog.base.set_state(737);
 			let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 			 cast_mut::<_,RecordFieldTypeContext >(&mut _localctx).label = Some(tmp.clone());
+			  
 
-
-			recog.base.set_state(737);
+			recog.base.set_state(738);
 			recog.base.match_token(Surrogate_id_SYMB_7,&mut recog.err_handler)?;
 
 			/*InvokeRule stellatype*/
-			recog.base.set_state(738);
+			recog.base.set_state(739);
 			let tmp = recog.stellatype_rec(0)?;
 			 cast_mut::<_,RecordFieldTypeContext >(&mut _localctx).type_ = Some(tmp.clone());
-
+			  
 
 			}
 			Ok(())
@@ -13195,8 +13268,8 @@ impl<'input> VariantFieldTypeContextExt<'input>{
 	fn new(parent: Option<Rc<dyn stellaParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<VariantFieldTypeContextAll<'input>> {
 		Rc::new(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,VariantFieldTypeContextExt{
-				label: None,
-				type_: None,
+				label: None, 
+				type_: None, 
 				ph:PhantomData
 			}),
 		)
@@ -13241,24 +13314,24 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(740);
+			recog.base.set_state(741);
 			let tmp = recog.base.match_token(StellaIdent,&mut recog.err_handler)?;
 			 cast_mut::<_,VariantFieldTypeContext >(&mut _localctx).label = Some(tmp.clone());
+			  
 
-
-			recog.base.set_state(743);
+			recog.base.set_state(744);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			if _la==Surrogate_id_SYMB_7 {
 				{
-				recog.base.set_state(741);
+				recog.base.set_state(742);
 				recog.base.match_token(Surrogate_id_SYMB_7,&mut recog.err_handler)?;
 
 				/*InvokeRule stellatype*/
-				recog.base.set_state(742);
+				recog.base.set_state(743);
 				let tmp = recog.stellatype_rec(0)?;
 				 cast_mut::<_,VariantFieldTypeContext >(&mut _localctx).type_ = Some(tmp.clone());
-
+				  
 
 				}
 			}
@@ -13302,7 +13375,7 @@ lazy_static! {
 
 const _serializedATN:&'static str =
 	"\x03\u{608b}\u{a72a}\u{8133}\u{b9ed}\u{417c}\u{3be7}\u{7786}\u{5964}\x03\
-	\x5a\u{2ec}\x04\x02\x09\x02\x04\x03\x09\x03\x04\x04\x09\x04\x04\x05\x09\
+	\x5b\u{2ed}\x04\x02\x09\x02\x04\x03\x09\x03\x04\x04\x09\x04\x04\x05\x09\
 	\x05\x04\x06\x09\x06\x04\x07\x09\x07\x04\x08\x09\x08\x04\x09\x09\x09\x04\
 	\x0a\x09\x0a\x04\x0b\x09\x0b\x04\x0c\x09\x0c\x04\x0d\x09\x0d\x04\x0e\x09\
 	\x0e\x04\x0f\x09\x0f\x04\x10\x09\x10\x04\x11\x09\x11\x04\x12\x09\x12\x04\
@@ -13389,86 +13462,86 @@ const _serializedATN:&'static str =
 	\x11\x07\x11\u{2ba}\x0a\x11\x0c\x11\x0e\x11\u{2bd}\x0b\x11\x03\x11\x03\x11\
 	\x03\x11\x03\x11\x03\x11\x03\x11\x07\x11\u{2c5}\x0a\x11\x0c\x11\x0e\x11\
 	\u{2c8}\x0b\x11\x05\x11\u{2ca}\x0a\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\
-	\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x05\
-	\x11\u{2d9}\x0a\x11\x03\x11\x03\x11\x03\x11\x07\x11\u{2de}\x0a\x11\x0c\x11\
-	\x0e\x11\u{2e1}\x0b\x11\x03\x12\x03\x12\x03\x12\x03\x12\x03\x13\x03\x13\
-	\x03\x13\x05\x13\u{2ea}\x0a\x13\x03\x13\x02\x05\x14\x1c\x20\x14\x02\x04\
-	\x06\x08\x0a\x0c\x0e\x10\x12\x14\x16\x18\x1a\x1c\x1e\x20\x22\x24\x02\x02\
-	\x02\u{367}\x02\x26\x03\x02\x02\x02\x04\x29\x03\x02\x02\x02\x06\x2c\x03\
-	\x02\x02\x02\x08\x2f\x03\x02\x02\x02\x0a\x3c\x03\x02\x02\x02\x0c\x40\x03\
-	\x02\x02\x02\x0e\u{c0}\x03\x02\x02\x02\x10\u{c2}\x03\x02\x02\x02\x12\u{c4}\
-	\x03\x02\x02\x02\x14\u{1c6}\x03\x02\x02\x02\x16\u{21f}\x03\x02\x02\x02\x18\
-	\u{223}\x03\x02\x02\x02\x1a\u{227}\x03\x02\x02\x02\x1c\u{276}\x03\x02\x02\
-	\x02\x1e\u{284}\x03\x02\x02\x02\x20\u{2d8}\x03\x02\x02\x02\x22\u{2e2}\x03\
-	\x02\x02\x02\x24\u{2e6}\x03\x02\x02\x02\x26\x27\x05\x08\x05\x02\x27\x28\
-	\x07\x02\x02\x03\x28\x03\x03\x02\x02\x02\x29\x2a\x05\x14\x0b\x02\x2a\x2b\
-	\x07\x02\x02\x03\x2b\x05\x03\x02\x02\x02\x2c\x2d\x05\x20\x11\x02\x2d\x2e\
-	\x07\x02\x02\x03\x2e\x07\x03\x02\x02\x02\x2f\x33\x05\x0a\x06\x02\x30\x32\
-	\x05\x0c\x07\x02\x31\x30\x03\x02\x02\x02\x32\x35\x03\x02\x02\x02\x33\x31\
-	\x03\x02\x02\x02\x33\x34\x03\x02\x02\x02\x34\x39\x03\x02\x02\x02\x35\x33\
-	\x03\x02\x02\x02\x36\x38\x05\x0e\x08\x02\x37\x36\x03\x02\x02\x02\x38\x3b\
-	\x03\x02\x02\x02\x39\x37\x03\x02\x02\x02\x39\x3a\x03\x02\x02\x02\x3a\x09\
-	\x03\x02\x02\x02\x3b\x39\x03\x02\x02\x02\x3c\x3d\x07\x35\x02\x02\x3d\x3e\
-	\x07\x29\x02\x02\x3e\x3f\x07\x04\x02\x02\x3f\x0b\x03\x02\x02\x02\x40\x41\
-	\x07\x2b\x02\x02\x41\x42\x07\x43\x02\x02\x42\x47\x07\x56\x02\x02\x43\x44\
-	\x07\x03\x02\x02\x44\x46\x07\x56\x02\x02\x45\x43\x03\x02\x02\x02\x46\x49\
-	\x03\x02\x02\x02\x47\x45\x03\x02\x02\x02\x47\x48\x03\x02\x02\x02\x48\x4a\
-	\x03\x02\x02\x02\x49\x47\x03\x02\x02\x02\x4a\x4b\x07\x04\x02\x02\x4b\x0d\
-	\x03\x02\x02\x02\x4c\x4e\x05\x10\x09\x02\x4d\x4c\x03\x02\x02\x02\x4e\x51\
-	\x03\x02\x02\x02\x4f\x4d\x03\x02\x02\x02\x4f\x50\x03\x02\x02\x02\x50\x52\
-	\x03\x02\x02\x02\x51\x4f\x03\x02\x02\x02\x52\x53\x07\x2e\x02\x02\x53\x54\
-	\x07\x55\x02\x02\x54\x5d\x07\x05\x02\x02\x55\x5a\x05\x12\x0a\x02\x56\x57\
-	\x07\x03\x02\x02\x57\x59\x05\x12\x0a\x02\x58\x56\x03\x02\x02\x02\x59\x5c\
-	\x03\x02\x02\x02\x5a\x58\x03\x02\x02\x02\x5a\x5b\x03\x02\x02\x02\x5b\x5e\
-	\x03\x02\x02\x02\x5c\x5a\x03\x02\x02\x02\x5d\x55\x03\x02\x02\x02\x5d\x5e\
-	\x03\x02\x02\x02\x5e\x5f\x03\x02\x02\x02\x5f\x62\x07\x06\x02\x02\x60\x61\
-	\x07\x0b\x02\x02\x61\x63\x05\x20\x11\x02\x62\x60\x03\x02\x02\x02\x62\x63\
-	\x03\x02\x02\x02\x63\x6d\x03\x02\x02\x02\x64\x65\x07\x3e\x02\x02\x65\x6a\
-	\x05\x20\x11\x02\x66\x67\x07\x03\x02\x02\x67\x69\x05\x20\x11\x02\x68\x66\
-	\x03\x02\x02\x02\x69\x6c\x03\x02\x02\x02\x6a\x68\x03\x02\x02\x02\x6a\x6b\
-	\x03\x02\x02\x02\x6b\x6e\x03\x02\x02\x02\x6c\x6a\x03\x02\x02\x02\x6d\x64\
-	\x03\x02\x02\x02\x6d\x6e\x03\x02\x02\x02\x6e\x6f\x03\x02\x02\x02\x6f\x73\
-	\x07\x07\x02\x02\x70\x72\x05\x0e\x08\x02\x71\x70\x03\x02\x02\x02\x72\x75\
-	\x03\x02\x02\x02\x73\x71\x03\x02\x02\x02\x73\x74\x03\x02\x02\x02\x74\x76\
-	\x03\x02\x02\x02\x75\x73\x03\x02\x02\x02\x76\x77\x07\x3b\x02\x02\x77\x78\
-	\x05\x14\x0b\x02\x78\x79\x07\x08\x02\x02\x79\u{c1}\x03\x02\x02\x02\x7a\x7c\
-	\x05\x10\x09\x02\x7b\x7a\x03\x02\x02\x02\x7c\x7f\x03\x02\x02\x02\x7d\x7b\
-	\x03\x02\x02\x02\x7d\x7e\x03\x02\x02\x02\x7e\u{80}\x03\x02\x02\x02\x7f\x7d\
-	\x03\x02\x02\x02\u{80}\u{81}\x07\x51\x02\x02\u{81}\u{82}\x07\x2e\x02\x02\
-	\u{82}\u{83}\x07\x55\x02\x02\u{83}\u{84}\x07\x10\x02\x02\u{84}\u{89}\x07\
-	\x55\x02\x02\u{85}\u{86}\x07\x03\x02\x02\u{86}\u{88}\x07\x55\x02\x02\u{87}\
-	\u{85}\x03\x02\x02\x02\u{88}\u{8b}\x03\x02\x02\x02\u{89}\u{87}\x03\x02\x02\
-	\x02\u{89}\u{8a}\x03\x02\x02\x02\u{8a}\u{8c}\x03\x02\x02\x02\u{8b}\u{89}\
-	\x03\x02\x02\x02\u{8c}\u{8d}\x07\x11\x02\x02\u{8d}\u{96}\x07\x05\x02\x02\
-	\u{8e}\u{93}\x05\x12\x0a\x02\u{8f}\u{90}\x07\x03\x02\x02\u{90}\u{92}\x05\
-	\x12\x0a\x02\u{91}\u{8f}\x03\x02\x02\x02\u{92}\u{95}\x03\x02\x02\x02\u{93}\
-	\u{91}\x03\x02\x02\x02\u{93}\u{94}\x03\x02\x02\x02\u{94}\u{97}\x03\x02\x02\
-	\x02\u{95}\u{93}\x03\x02\x02\x02\u{96}\u{8e}\x03\x02\x02\x02\u{96}\u{97}\
-	\x03\x02\x02\x02\u{97}\u{98}\x03\x02\x02\x02\u{98}\u{9b}\x07\x06\x02\x02\
-	\u{99}\u{9a}\x07\x0b\x02\x02\u{9a}\u{9c}\x05\x20\x11\x02\u{9b}\u{99}\x03\
-	\x02\x02\x02\u{9b}\u{9c}\x03\x02\x02\x02\u{9c}\u{a6}\x03\x02\x02\x02\u{9d}\
-	\u{9e}\x07\x3e\x02\x02\u{9e}\u{a3}\x05\x20\x11\x02\u{9f}\u{a0}\x07\x03\x02\
-	\x02\u{a0}\u{a2}\x05\x20\x11\x02\u{a1}\u{9f}\x03\x02\x02\x02\u{a2}\u{a5}\
-	\x03\x02\x02\x02\u{a3}\u{a1}\x03\x02\x02\x02\u{a3}\u{a4}\x03\x02\x02\x02\
-	\u{a4}\u{a7}\x03\x02\x02\x02\u{a5}\u{a3}\x03\x02\x02\x02\u{a6}\u{9d}\x03\
-	\x02\x02\x02\u{a6}\u{a7}\x03\x02\x02\x02\u{a7}\u{a8}\x03\x02\x02\x02\u{a8}\
-	\u{ac}\x07\x07\x02\x02\u{a9}\u{ab}\x05\x0e\x08\x02\u{aa}\u{a9}\x03\x02\x02\
-	\x02\u{ab}\u{ae}\x03\x02\x02\x02\u{ac}\u{aa}\x03\x02\x02\x02\u{ac}\u{ad}\
-	\x03\x02\x02\x02\u{ad}\u{af}\x03\x02\x02\x02\u{ae}\u{ac}\x03\x02\x02\x02\
-	\u{af}\u{b0}\x07\x3b\x02\x02\u{b0}\u{b1}\x05\x14\x0b\x02\u{b1}\u{b2}\x07\
-	\x08\x02\x02\u{b2}\u{c1}\x03\x02\x02\x02\u{b3}\u{b4}\x07\x40\x02\x02\u{b4}\
-	\u{b5}\x07\x55\x02\x02\u{b5}\u{b6}\x07\x09\x02\x02\u{b6}\u{c1}\x05\x20\x11\
-	\x02\u{b7}\u{b8}\x07\x45\x02\x02\u{b8}\u{b9}\x07\x40\x02\x02\u{b9}\u{ba}\
-	\x07\x09\x02\x02\u{ba}\u{c1}\x05\x20\x11\x02\u{bb}\u{bc}\x07\x45\x02\x02\
-	\u{bc}\u{bd}\x07\x46\x02\x02\u{bd}\u{be}\x07\x55\x02\x02\u{be}\u{bf}\x07\
-	\x0a\x02\x02\u{bf}\u{c1}\x05\x20\x11\x02\u{c0}\x4f\x03\x02\x02\x02\u{c0}\
+	\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\
+	\x11\x05\x11\u{2da}\x0a\x11\x03\x11\x03\x11\x03\x11\x07\x11\u{2df}\x0a\x11\
+	\x0c\x11\x0e\x11\u{2e2}\x0b\x11\x03\x12\x03\x12\x03\x12\x03\x12\x03\x13\
+	\x03\x13\x03\x13\x05\x13\u{2eb}\x0a\x13\x03\x13\x02\x05\x14\x1c\x20\x14\
+	\x02\x04\x06\x08\x0a\x0c\x0e\x10\x12\x14\x16\x18\x1a\x1c\x1e\x20\x22\x24\
+	\x02\x02\x02\u{369}\x02\x26\x03\x02\x02\x02\x04\x29\x03\x02\x02\x02\x06\
+	\x2c\x03\x02\x02\x02\x08\x2f\x03\x02\x02\x02\x0a\x3c\x03\x02\x02\x02\x0c\
+	\x40\x03\x02\x02\x02\x0e\u{c0}\x03\x02\x02\x02\x10\u{c2}\x03\x02\x02\x02\
+	\x12\u{c4}\x03\x02\x02\x02\x14\u{1c6}\x03\x02\x02\x02\x16\u{21f}\x03\x02\
+	\x02\x02\x18\u{223}\x03\x02\x02\x02\x1a\u{227}\x03\x02\x02\x02\x1c\u{276}\
+	\x03\x02\x02\x02\x1e\u{284}\x03\x02\x02\x02\x20\u{2d9}\x03\x02\x02\x02\x22\
+	\u{2e3}\x03\x02\x02\x02\x24\u{2e7}\x03\x02\x02\x02\x26\x27\x05\x08\x05\x02\
+	\x27\x28\x07\x02\x02\x03\x28\x03\x03\x02\x02\x02\x29\x2a\x05\x14\x0b\x02\
+	\x2a\x2b\x07\x02\x02\x03\x2b\x05\x03\x02\x02\x02\x2c\x2d\x05\x20\x11\x02\
+	\x2d\x2e\x07\x02\x02\x03\x2e\x07\x03\x02\x02\x02\x2f\x33\x05\x0a\x06\x02\
+	\x30\x32\x05\x0c\x07\x02\x31\x30\x03\x02\x02\x02\x32\x35\x03\x02\x02\x02\
+	\x33\x31\x03\x02\x02\x02\x33\x34\x03\x02\x02\x02\x34\x39\x03\x02\x02\x02\
+	\x35\x33\x03\x02\x02\x02\x36\x38\x05\x0e\x08\x02\x37\x36\x03\x02\x02\x02\
+	\x38\x3b\x03\x02\x02\x02\x39\x37\x03\x02\x02\x02\x39\x3a\x03\x02\x02\x02\
+	\x3a\x09\x03\x02\x02\x02\x3b\x39\x03\x02\x02\x02\x3c\x3d\x07\x35\x02\x02\
+	\x3d\x3e\x07\x29\x02\x02\x3e\x3f\x07\x04\x02\x02\x3f\x0b\x03\x02\x02\x02\
+	\x40\x41\x07\x2b\x02\x02\x41\x42\x07\x43\x02\x02\x42\x47\x07\x57\x02\x02\
+	\x43\x44\x07\x03\x02\x02\x44\x46\x07\x57\x02\x02\x45\x43\x03\x02\x02\x02\
+	\x46\x49\x03\x02\x02\x02\x47\x45\x03\x02\x02\x02\x47\x48\x03\x02\x02\x02\
+	\x48\x4a\x03\x02\x02\x02\x49\x47\x03\x02\x02\x02\x4a\x4b\x07\x04\x02\x02\
+	\x4b\x0d\x03\x02\x02\x02\x4c\x4e\x05\x10\x09\x02\x4d\x4c\x03\x02\x02\x02\
+	\x4e\x51\x03\x02\x02\x02\x4f\x4d\x03\x02\x02\x02\x4f\x50\x03\x02\x02\x02\
+	\x50\x52\x03\x02\x02\x02\x51\x4f\x03\x02\x02\x02\x52\x53\x07\x2e\x02\x02\
+	\x53\x54\x07\x56\x02\x02\x54\x5d\x07\x05\x02\x02\x55\x5a\x05\x12\x0a\x02\
+	\x56\x57\x07\x03\x02\x02\x57\x59\x05\x12\x0a\x02\x58\x56\x03\x02\x02\x02\
+	\x59\x5c\x03\x02\x02\x02\x5a\x58\x03\x02\x02\x02\x5a\x5b\x03\x02\x02\x02\
+	\x5b\x5e\x03\x02\x02\x02\x5c\x5a\x03\x02\x02\x02\x5d\x55\x03\x02\x02\x02\
+	\x5d\x5e\x03\x02\x02\x02\x5e\x5f\x03\x02\x02\x02\x5f\x62\x07\x06\x02\x02\
+	\x60\x61\x07\x0b\x02\x02\x61\x63\x05\x20\x11\x02\x62\x60\x03\x02\x02\x02\
+	\x62\x63\x03\x02\x02\x02\x63\x6d\x03\x02\x02\x02\x64\x65\x07\x3e\x02\x02\
+	\x65\x6a\x05\x20\x11\x02\x66\x67\x07\x03\x02\x02\x67\x69\x05\x20\x11\x02\
+	\x68\x66\x03\x02\x02\x02\x69\x6c\x03\x02\x02\x02\x6a\x68\x03\x02\x02\x02\
+	\x6a\x6b\x03\x02\x02\x02\x6b\x6e\x03\x02\x02\x02\x6c\x6a\x03\x02\x02\x02\
+	\x6d\x64\x03\x02\x02\x02\x6d\x6e\x03\x02\x02\x02\x6e\x6f\x03\x02\x02\x02\
+	\x6f\x73\x07\x07\x02\x02\x70\x72\x05\x0e\x08\x02\x71\x70\x03\x02\x02\x02\
+	\x72\x75\x03\x02\x02\x02\x73\x71\x03\x02\x02\x02\x73\x74\x03\x02\x02\x02\
+	\x74\x76\x03\x02\x02\x02\x75\x73\x03\x02\x02\x02\x76\x77\x07\x3b\x02\x02\
+	\x77\x78\x05\x14\x0b\x02\x78\x79\x07\x08\x02\x02\x79\u{c1}\x03\x02\x02\x02\
+	\x7a\x7c\x05\x10\x09\x02\x7b\x7a\x03\x02\x02\x02\x7c\x7f\x03\x02\x02\x02\
+	\x7d\x7b\x03\x02\x02\x02\x7d\x7e\x03\x02\x02\x02\x7e\u{80}\x03\x02\x02\x02\
+	\x7f\x7d\x03\x02\x02\x02\u{80}\u{81}\x07\x52\x02\x02\u{81}\u{82}\x07\x2e\
+	\x02\x02\u{82}\u{83}\x07\x56\x02\x02\u{83}\u{84}\x07\x10\x02\x02\u{84}\u{89}\
+	\x07\x56\x02\x02\u{85}\u{86}\x07\x03\x02\x02\u{86}\u{88}\x07\x56\x02\x02\
+	\u{87}\u{85}\x03\x02\x02\x02\u{88}\u{8b}\x03\x02\x02\x02\u{89}\u{87}\x03\
+	\x02\x02\x02\u{89}\u{8a}\x03\x02\x02\x02\u{8a}\u{8c}\x03\x02\x02\x02\u{8b}\
+	\u{89}\x03\x02\x02\x02\u{8c}\u{8d}\x07\x11\x02\x02\u{8d}\u{96}\x07\x05\x02\
+	\x02\u{8e}\u{93}\x05\x12\x0a\x02\u{8f}\u{90}\x07\x03\x02\x02\u{90}\u{92}\
+	\x05\x12\x0a\x02\u{91}\u{8f}\x03\x02\x02\x02\u{92}\u{95}\x03\x02\x02\x02\
+	\u{93}\u{91}\x03\x02\x02\x02\u{93}\u{94}\x03\x02\x02\x02\u{94}\u{97}\x03\
+	\x02\x02\x02\u{95}\u{93}\x03\x02\x02\x02\u{96}\u{8e}\x03\x02\x02\x02\u{96}\
+	\u{97}\x03\x02\x02\x02\u{97}\u{98}\x03\x02\x02\x02\u{98}\u{9b}\x07\x06\x02\
+	\x02\u{99}\u{9a}\x07\x0b\x02\x02\u{9a}\u{9c}\x05\x20\x11\x02\u{9b}\u{99}\
+	\x03\x02\x02\x02\u{9b}\u{9c}\x03\x02\x02\x02\u{9c}\u{a6}\x03\x02\x02\x02\
+	\u{9d}\u{9e}\x07\x3e\x02\x02\u{9e}\u{a3}\x05\x20\x11\x02\u{9f}\u{a0}\x07\
+	\x03\x02\x02\u{a0}\u{a2}\x05\x20\x11\x02\u{a1}\u{9f}\x03\x02\x02\x02\u{a2}\
+	\u{a5}\x03\x02\x02\x02\u{a3}\u{a1}\x03\x02\x02\x02\u{a3}\u{a4}\x03\x02\x02\
+	\x02\u{a4}\u{a7}\x03\x02\x02\x02\u{a5}\u{a3}\x03\x02\x02\x02\u{a6}\u{9d}\
+	\x03\x02\x02\x02\u{a6}\u{a7}\x03\x02\x02\x02\u{a7}\u{a8}\x03\x02\x02\x02\
+	\u{a8}\u{ac}\x07\x07\x02\x02\u{a9}\u{ab}\x05\x0e\x08\x02\u{aa}\u{a9}\x03\
+	\x02\x02\x02\u{ab}\u{ae}\x03\x02\x02\x02\u{ac}\u{aa}\x03\x02\x02\x02\u{ac}\
+	\u{ad}\x03\x02\x02\x02\u{ad}\u{af}\x03\x02\x02\x02\u{ae}\u{ac}\x03\x02\x02\
+	\x02\u{af}\u{b0}\x07\x3b\x02\x02\u{b0}\u{b1}\x05\x14\x0b\x02\u{b1}\u{b2}\
+	\x07\x08\x02\x02\u{b2}\u{c1}\x03\x02\x02\x02\u{b3}\u{b4}\x07\x40\x02\x02\
+	\u{b4}\u{b5}\x07\x56\x02\x02\u{b5}\u{b6}\x07\x09\x02\x02\u{b6}\u{c1}\x05\
+	\x20\x11\x02\u{b7}\u{b8}\x07\x45\x02\x02\u{b8}\u{b9}\x07\x40\x02\x02\u{b9}\
+	\u{ba}\x07\x09\x02\x02\u{ba}\u{c1}\x05\x20\x11\x02\u{bb}\u{bc}\x07\x45\x02\
+	\x02\u{bc}\u{bd}\x07\x46\x02\x02\u{bd}\u{be}\x07\x56\x02\x02\u{be}\u{bf}\
+	\x07\x0a\x02\x02\u{bf}\u{c1}\x05\x20\x11\x02\u{c0}\x4f\x03\x02\x02\x02\u{c0}\
 	\x7d\x03\x02\x02\x02\u{c0}\u{b3}\x03\x02\x02\x02\u{c0}\u{b7}\x03\x02\x02\
 	\x02\u{c0}\u{bb}\x03\x02\x02\x02\u{c1}\x0f\x03\x02\x02\x02\u{c2}\u{c3}\x07\
-	\x33\x02\x02\u{c3}\x11\x03\x02\x02\x02\u{c4}\u{c5}\x07\x55\x02\x02\u{c5}\
+	\x33\x02\x02\u{c3}\x11\x03\x02\x02\x02\u{c4}\u{c5}\x07\x56\x02\x02\u{c5}\
 	\u{c6}\x07\x0a\x02\x02\u{c6}\u{c7}\x05\x20\x11\x02\u{c7}\x13\x03\x02\x02\
 	\x02\u{c8}\u{c9}\x08\x0b\x01\x02\u{c9}\u{1c7}\x07\x3f\x02\x02\u{ca}\u{1c7}\
-	\x07\x2c\x02\x02\u{cb}\u{1c7}\x07\x42\x02\x02\u{cc}\u{1c7}\x07\x58\x02\x02\
-	\u{cd}\u{1c7}\x07\x57\x02\x02\u{ce}\u{1c7}\x07\x55\x02\x02\u{cf}\u{1c7}\
+	\x07\x2c\x02\x02\u{cb}\u{1c7}\x07\x42\x02\x02\u{cc}\u{1c7}\x07\x59\x02\x02\
+	\u{cd}\u{1c7}\x07\x58\x02\x02\u{ce}\u{1c7}\x07\x56\x02\x02\u{cf}\u{1c7}\
 	\x07\x4b\x02\x02\u{d0}\u{d1}\x07\x4c\x02\x02\u{d1}\u{d2}\x07\x05\x02\x02\
 	\u{d2}\u{d3}\x05\x14\x0b\x02\u{d3}\u{d4}\x07\x06\x02\x02\u{d4}\u{1c7}\x03\
 	\x02\x02\x02\u{d5}\u{d6}\x07\x4d\x02\x02\u{d6}\u{d7}\x07\x07\x02\x02\u{d7}\
@@ -13539,7 +13612,7 @@ const _serializedATN:&'static str =
 	\u{170}\u{16e}\x03\x02\x02\x02\u{170}\u{171}\x03\x02\x02\x02\u{171}\u{173}\
 	\x03\x02\x02\x02\u{172}\u{170}\x03\x02\x02\x02\u{173}\u{174}\x07\x08\x02\
 	\x02\u{174}\u{1c7}\x03\x02\x02\x02\u{175}\u{176}\x07\x0e\x02\x02\u{176}\
-	\u{179}\x07\x55\x02\x02\u{177}\u{178}\x07\x09\x02\x02\u{178}\u{17a}\x05\
+	\u{179}\x07\x56\x02\x02\u{177}\u{178}\x07\x09\x02\x02\u{178}\u{17a}\x05\
 	\x14\x0b\x02\u{179}\u{177}\x03\x02\x02\x02\u{179}\u{17a}\x03\x02\x02\x02\
 	\u{17a}\u{17b}\x03\x02\x02\x02\u{17b}\u{1c7}\x07\x0f\x02\x02\u{17c}\u{17d}\
 	\x07\x38\x02\x02\u{17d}\u{17e}\x05\x14\x0b\x02\u{17e}\u{187}\x07\x07\x02\
@@ -13568,9 +13641,9 @@ const _serializedATN:&'static str =
 	\x02\x02\x02\u{1af}\u{1b2}\x03\x02\x02\x02\u{1b0}\u{1ae}\x03\x02\x02\x02\
 	\u{1b0}\u{1b1}\x03\x02\x02\x02\u{1b1}\u{1b3}\x03\x02\x02\x02\u{1b2}\u{1b0}\
 	\x03\x02\x02\x02\u{1b3}\u{1b4}\x07\x31\x02\x02\u{1b4}\u{1b5}\x05\x14\x0b\
-	\x06\u{1b5}\u{1c7}\x03\x02\x02\x02\u{1b6}\u{1b7}\x07\x51\x02\x02\u{1b7}\
-	\u{1b8}\x07\x10\x02\x02\u{1b8}\u{1bd}\x07\x55\x02\x02\u{1b9}\u{1ba}\x07\
-	\x03\x02\x02\u{1ba}\u{1bc}\x07\x55\x02\x02\u{1bb}\u{1b9}\x03\x02\x02\x02\
+	\x06\u{1b5}\u{1c7}\x03\x02\x02\x02\u{1b6}\u{1b7}\x07\x52\x02\x02\u{1b7}\
+	\u{1b8}\x07\x10\x02\x02\u{1b8}\u{1bd}\x07\x56\x02\x02\u{1b9}\u{1ba}\x07\
+	\x03\x02\x02\u{1ba}\u{1bc}\x07\x56\x02\x02\u{1bb}\u{1b9}\x03\x02\x02\x02\
 	\u{1bc}\u{1bf}\x03\x02\x02\x02\u{1bd}\u{1bb}\x03\x02\x02\x02\u{1bd}\u{1be}\
 	\x03\x02\x02\x02\u{1be}\u{1c0}\x03\x02\x02\x02\u{1bf}\u{1bd}\x03\x02\x02\
 	\x02\u{1c0}\u{1c1}\x07\x11\x02\x02\u{1c1}\u{1c7}\x05\x14\x0b\x05\u{1c2}\
@@ -13610,8 +13683,8 @@ const _serializedATN:&'static str =
 	\x02\u{1ed}\u{1ee}\x07\x48\x02\x02\u{1ee}\u{21b}\x05\x14\x0b\x0b\u{1ef}\
 	\u{1f0}\x0c\x08\x02\x02\u{1f0}\u{1f1}\x07\x04\x02\x02\u{1f1}\u{21b}\x05\
 	\x14\x0b\x09\u{1f2}\u{1f3}\x0c\x3d\x02\x02\u{1f3}\u{1f4}\x07\x1c\x02\x02\
-	\u{1f4}\u{21b}\x07\x55\x02\x02\u{1f5}\u{1f6}\x0c\x3c\x02\x02\u{1f6}\u{1f7}\
-	\x07\x1c\x02\x02\u{1f7}\u{21b}\x07\x58\x02\x02\u{1f8}\u{1f9}\x0c\x22\x02\
+	\u{1f4}\u{21b}\x07\x56\x02\x02\u{1f5}\u{1f6}\x0c\x3c\x02\x02\u{1f6}\u{1f7}\
+	\x07\x1c\x02\x02\u{1f7}\u{21b}\x07\x59\x02\x02\u{1f8}\u{1f9}\x0c\x22\x02\
 	\x02\u{1f9}\u{202}\x07\x05\x02\x02\u{1fa}\u{1ff}\x05\x14\x0b\x02\u{1fb}\
 	\u{1fc}\x07\x03\x02\x02\u{1fc}\u{1fe}\x05\x14\x0b\x02\u{1fd}\u{1fb}\x03\
 	\x02\x02\x02\u{1fe}\u{201}\x03\x02\x02\x02\u{1ff}\u{1fd}\x03\x02\x02\x02\
@@ -13639,11 +13712,11 @@ const _serializedATN:&'static str =
 	\x03\x02\x02\x02\u{21c}\u{21a}\x03\x02\x02\x02\u{21c}\u{21d}\x03\x02\x02\
 	\x02\u{21d}\x15\x03\x02\x02\x02\u{21e}\u{21c}\x03\x02\x02\x02\u{21f}\u{220}\
 	\x05\x1c\x0f\x02\u{220}\u{221}\x07\x09\x02\x02\u{221}\u{222}\x05\x14\x0b\
-	\x02\u{222}\x17\x03\x02\x02\x02\u{223}\u{224}\x07\x55\x02\x02\u{224}\u{225}\
+	\x02\u{222}\x17\x03\x02\x02\x02\u{223}\u{224}\x07\x56\x02\x02\u{224}\u{225}\
 	\x07\x09\x02\x02\u{225}\u{226}\x05\x14\x0b\x02\u{226}\x19\x03\x02\x02\x02\
 	\u{227}\u{228}\x05\x1c\x0f\x02\u{228}\u{229}\x07\x0c\x02\x02\u{229}\u{22a}\
 	\x05\x14\x0b\x02\u{22a}\x1b\x03\x02\x02\x02\u{22b}\u{22c}\x08\x0f\x01\x02\
-	\u{22c}\u{22d}\x07\x0e\x02\x02\u{22d}\u{230}\x07\x55\x02\x02\u{22e}\u{22f}\
+	\u{22c}\u{22d}\x07\x0e\x02\x02\u{22d}\u{230}\x07\x56\x02\x02\u{22e}\u{22f}\
 	\x07\x09\x02\x02\u{22f}\u{231}\x05\x1c\x0f\x02\u{230}\u{22e}\x03\x02\x02\
 	\x02\u{230}\u{231}\x03\x02\x02\x02\u{231}\u{232}\x03\x02\x02\x02\u{232}\
 	\u{277}\x07\x0f\x02\x02\u{233}\u{234}\x07\x32\x02\x02\u{234}\u{235}\x07\
@@ -13672,9 +13745,9 @@ const _serializedATN:&'static str =
 	\x05\x1c\x0f\x02\u{264}\u{265}\x07\x03\x02\x02\u{265}\u{266}\x05\x1c\x0f\
 	\x02\u{266}\u{267}\x07\x06\x02\x02\u{267}\u{277}\x03\x02\x02\x02\u{268}\
 	\u{277}\x07\x2c\x02\x02\u{269}\u{277}\x07\x3f\x02\x02\u{26a}\u{277}\x07\
-	\x42\x02\x02\u{26b}\u{277}\x07\x58\x02\x02\u{26c}\u{26d}\x07\x3c\x02\x02\
+	\x42\x02\x02\u{26b}\u{277}\x07\x59\x02\x02\u{26c}\u{26d}\x07\x3c\x02\x02\
 	\u{26d}\u{26e}\x07\x05\x02\x02\u{26e}\u{26f}\x05\x1c\x0f\x02\u{26f}\u{270}\
-	\x07\x06\x02\x02\u{270}\u{277}\x03\x02\x02\x02\u{271}\u{277}\x07\x55\x02\
+	\x07\x06\x02\x02\u{270}\u{277}\x03\x02\x02\x02\u{271}\u{277}\x07\x56\x02\
 	\x02\u{272}\u{273}\x07\x05\x02\x02\u{273}\u{274}\x05\x1c\x0f\x02\u{274}\
 	\u{275}\x07\x06\x02\x02\u{275}\u{277}\x03\x02\x02\x02\u{276}\u{22b}\x03\
 	\x02\x02\x02\u{276}\u{233}\x03\x02\x02\x02\u{276}\u{238}\x03\x02\x02\x02\
@@ -13689,62 +13762,63 @@ const _serializedATN:&'static str =
 	\u{278}\x03\x02\x02\x02\u{27f}\u{27b}\x03\x02\x02\x02\u{280}\u{283}\x03\
 	\x02\x02\x02\u{281}\u{27f}\x03\x02\x02\x02\u{281}\u{282}\x03\x02\x02\x02\
 	\u{282}\x1d\x03\x02\x02\x02\u{283}\u{281}\x03\x02\x02\x02\u{284}\u{285}\
-	\x07\x55\x02\x02\u{285}\u{286}\x07\x09\x02\x02\u{286}\u{287}\x05\x1c\x0f\
-	\x02\u{287}\x1f\x03\x02\x02\x02\u{288}\u{289}\x08\x11\x01\x02\u{289}\u{2d9}\
-	\x07\x23\x02\x02\u{28a}\u{2d9}\x07\x24\x02\x02\u{28b}\u{28c}\x07\x49\x02\
-	\x02\u{28c}\u{2d9}\x05\x20\x11\x10\u{28d}\u{28e}\x07\x2e\x02\x02\u{28e}\
+	\x07\x56\x02\x02\u{285}\u{286}\x07\x09\x02\x02\u{286}\u{287}\x05\x1c\x0f\
+	\x02\u{287}\x1f\x03\x02\x02\x02\u{288}\u{289}\x08\x11\x01\x02\u{289}\u{2da}\
+	\x07\x23\x02\x02\u{28a}\u{2da}\x07\x24\x02\x02\u{28b}\u{28c}\x07\x49\x02\
+	\x02\u{28c}\u{2da}\x05\x20\x11\x11\u{28d}\u{28e}\x07\x2e\x02\x02\u{28e}\
 	\u{297}\x07\x05\x02\x02\u{28f}\u{294}\x05\x20\x11\x02\u{290}\u{291}\x07\
 	\x03\x02\x02\u{291}\u{293}\x05\x20\x11\x02\u{292}\u{290}\x03\x02\x02\x02\
 	\u{293}\u{296}\x03\x02\x02\x02\u{294}\u{292}\x03\x02\x02\x02\u{294}\u{295}\
 	\x03\x02\x02\x02\u{295}\u{298}\x03\x02\x02\x02\u{296}\u{294}\x03\x02\x02\
 	\x02\u{297}\u{28f}\x03\x02\x02\x02\u{297}\u{298}\x03\x02\x02\x02\u{298}\
 	\u{299}\x03\x02\x02\x02\u{299}\u{29a}\x07\x06\x02\x02\u{29a}\u{29b}\x07\
-	\x0b\x02\x02\u{29b}\u{2d9}\x05\x20\x11\x0e\u{29c}\u{2a0}\x07\x52\x02\x02\
-	\u{29d}\u{29f}\x07\x55\x02\x02\u{29e}\u{29d}\x03\x02\x02\x02\u{29f}\u{2a2}\
+	\x0b\x02\x02\u{29b}\u{2da}\x05\x20\x11\x0f\u{29c}\u{2a0}\x07\x53\x02\x02\
+	\u{29d}\u{29f}\x07\x56\x02\x02\u{29e}\u{29d}\x03\x02\x02\x02\u{29f}\u{2a2}\
 	\x03\x02\x02\x02\u{2a0}\u{29e}\x03\x02\x02\x02\u{2a0}\u{2a1}\x03\x02\x02\
 	\x02\u{2a1}\u{2a3}\x03\x02\x02\x02\u{2a2}\u{2a0}\x03\x02\x02\x02\u{2a3}\
-	\u{2a4}\x07\x1c\x02\x02\u{2a4}\u{2d9}\x05\x20\x11\x0d\u{2a5}\u{2a6}\x07\
-	\x44\x02\x02\u{2a6}\u{2a7}\x07\x55\x02\x02\u{2a7}\u{2a8}\x07\x1c\x02\x02\
-	\u{2a8}\u{2d9}\x05\x20\x11\x0c\u{2a9}\u{2b2}\x07\x07\x02\x02\u{2aa}\u{2af}\
+	\u{2a4}\x07\x1c\x02\x02\u{2a4}\u{2da}\x05\x20\x11\x0e\u{2a5}\u{2a6}\x07\
+	\x44\x02\x02\u{2a6}\u{2a7}\x07\x56\x02\x02\u{2a7}\u{2a8}\x07\x1c\x02\x02\
+	\u{2a8}\u{2da}\x05\x20\x11\x0d\u{2a9}\u{2b2}\x07\x07\x02\x02\u{2aa}\u{2af}\
 	\x05\x20\x11\x02\u{2ab}\u{2ac}\x07\x03\x02\x02\u{2ac}\u{2ae}\x05\x20\x11\
 	\x02\u{2ad}\u{2ab}\x03\x02\x02\x02\u{2ae}\u{2b1}\x03\x02\x02\x02\u{2af}\
 	\u{2ad}\x03\x02\x02\x02\u{2af}\u{2b0}\x03\x02\x02\x02\u{2b0}\u{2b3}\x03\
 	\x02\x02\x02\u{2b1}\u{2af}\x03\x02\x02\x02\u{2b2}\u{2aa}\x03\x02\x02\x02\
-	\u{2b2}\u{2b3}\x03\x02\x02\x02\u{2b3}\u{2b4}\x03\x02\x02\x02\u{2b4}\u{2d9}\
+	\u{2b2}\u{2b3}\x03\x02\x02\x02\u{2b3}\u{2b4}\x03\x02\x02\x02\u{2b4}\u{2da}\
 	\x07\x08\x02\x02\u{2b5}\u{2b6}\x07\x07\x02\x02\u{2b6}\u{2bb}\x05\x22\x12\
 	\x02\u{2b7}\u{2b8}\x07\x03\x02\x02\u{2b8}\u{2ba}\x05\x22\x12\x02\u{2b9}\
 	\u{2b7}\x03\x02\x02\x02\u{2ba}\u{2bd}\x03\x02\x02\x02\u{2bb}\u{2b9}\x03\
 	\x02\x02\x02\u{2bb}\u{2bc}\x03\x02\x02\x02\u{2bc}\u{2be}\x03\x02\x02\x02\
-	\u{2bd}\u{2bb}\x03\x02\x02\x02\u{2be}\u{2bf}\x07\x08\x02\x02\u{2bf}\u{2d9}\
+	\u{2bd}\u{2bb}\x03\x02\x02\x02\u{2be}\u{2bf}\x07\x08\x02\x02\u{2bf}\u{2da}\
 	\x03\x02\x02\x02\u{2c0}\u{2c9}\x07\x0e\x02\x02\u{2c1}\u{2c6}\x05\x24\x13\
 	\x02\u{2c2}\u{2c3}\x07\x03\x02\x02\u{2c3}\u{2c5}\x05\x24\x13\x02\u{2c4}\
 	\u{2c2}\x03\x02\x02\x02\u{2c5}\u{2c8}\x03\x02\x02\x02\u{2c6}\u{2c4}\x03\
 	\x02\x02\x02\u{2c6}\u{2c7}\x03\x02\x02\x02\u{2c7}\u{2ca}\x03\x02\x02\x02\
 	\u{2c8}\u{2c6}\x03\x02\x02\x02\u{2c9}\u{2c1}\x03\x02\x02\x02\u{2c9}\u{2ca}\
-	\x03\x02\x02\x02\u{2ca}\u{2cb}\x03\x02\x02\x02\u{2cb}\u{2d9}\x07\x0f\x02\
+	\x03\x02\x02\x02\u{2ca}\u{2cb}\x03\x02\x02\x02\u{2cb}\u{2da}\x07\x0f\x02\
 	\x02\u{2cc}\u{2cd}\x07\x10\x02\x02\u{2cd}\u{2ce}\x05\x20\x11\x02\u{2ce}\
-	\u{2cf}\x07\x11\x02\x02\u{2cf}\u{2d9}\x03\x02\x02\x02\u{2d0}\u{2d9}\x07\
-	\x25\x02\x02\u{2d1}\u{2d9}\x07\x4f\x02\x02\u{2d2}\u{2d9}\x07\x50\x02\x02\
-	\u{2d3}\u{2d9}\x07\x55\x02\x02\u{2d4}\u{2d5}\x07\x05\x02\x02\u{2d5}\u{2d6}\
-	\x05\x20\x11\x02\u{2d6}\u{2d7}\x07\x06\x02\x02\u{2d7}\u{2d9}\x03\x02\x02\
-	\x02\u{2d8}\u{288}\x03\x02\x02\x02\u{2d8}\u{28a}\x03\x02\x02\x02\u{2d8}\
-	\u{28b}\x03\x02\x02\x02\u{2d8}\u{28d}\x03\x02\x02\x02\u{2d8}\u{29c}\x03\
-	\x02\x02\x02\u{2d8}\u{2a5}\x03\x02\x02\x02\u{2d8}\u{2a9}\x03\x02\x02\x02\
-	\u{2d8}\u{2b5}\x03\x02\x02\x02\u{2d8}\u{2c0}\x03\x02\x02\x02\u{2d8}\u{2cc}\
-	\x03\x02\x02\x02\u{2d8}\u{2d0}\x03\x02\x02\x02\u{2d8}\u{2d1}\x03\x02\x02\
-	\x02\u{2d8}\u{2d2}\x03\x02\x02\x02\u{2d8}\u{2d3}\x03\x02\x02\x02\u{2d8}\
-	\u{2d4}\x03\x02\x02\x02\u{2d9}\u{2df}\x03\x02\x02\x02\u{2da}\u{2db}\x0c\
-	\x0f\x02\x02\u{2db}\u{2dc}\x07\x18\x02\x02\u{2dc}\u{2de}\x05\x20\x11\x10\
-	\u{2dd}\u{2da}\x03\x02\x02\x02\u{2de}\u{2e1}\x03\x02\x02\x02\u{2df}\u{2dd}\
-	\x03\x02\x02\x02\u{2df}\u{2e0}\x03\x02\x02\x02\u{2e0}\x21\x03\x02\x02\x02\
-	\u{2e1}\u{2df}\x03\x02\x02\x02\u{2e2}\u{2e3}\x07\x55\x02\x02\u{2e3}\u{2e4}\
-	\x07\x0a\x02\x02\u{2e4}\u{2e5}\x05\x20\x11\x02\u{2e5}\x23\x03\x02\x02\x02\
-	\u{2e6}\u{2e9}\x07\x55\x02\x02\u{2e7}\u{2e8}\x07\x0a\x02\x02\u{2e8}\u{2ea}\
-	\x05\x20\x11\x02\u{2e9}\u{2e7}\x03\x02\x02\x02\u{2e9}\u{2ea}\x03\x02\x02\
-	\x02\u{2ea}\x25\x03\x02\x02\x02\x3d\x33\x39\x47\x4f\x5a\x5d\x62\x6a\x6d\
-	\x73\x7d\u{89}\u{93}\u{96}\u{9b}\u{a3}\u{a6}\u{ac}\u{c0}\u{153}\u{156}\u{164}\
-	\u{167}\u{170}\u{179}\u{184}\u{187}\u{191}\u{194}\u{1a4}\u{1b0}\u{1bd}\u{1c6}\
-	\u{1ff}\u{202}\u{20c}\u{21a}\u{21c}\u{230}\u{243}\u{246}\u{24f}\u{252}\u{25b}\
-	\u{25e}\u{276}\u{27f}\u{281}\u{294}\u{297}\u{2a0}\u{2af}\u{2b2}\u{2bb}\u{2c6}\
-	\u{2c9}\u{2d8}\u{2df}\u{2e9}";
+	\u{2cf}\x07\x11\x02\x02\u{2cf}\u{2da}\x03\x02\x02\x02\u{2d0}\u{2da}\x07\
+	\x25\x02\x02\u{2d1}\u{2da}\x07\x4f\x02\x02\u{2d2}\u{2da}\x07\x50\x02\x02\
+	\u{2d3}\u{2da}\x07\x51\x02\x02\u{2d4}\u{2da}\x07\x56\x02\x02\u{2d5}\u{2d6}\
+	\x07\x05\x02\x02\u{2d6}\u{2d7}\x05\x20\x11\x02\u{2d7}\u{2d8}\x07\x06\x02\
+	\x02\u{2d8}\u{2da}\x03\x02\x02\x02\u{2d9}\u{288}\x03\x02\x02\x02\u{2d9}\
+	\u{28a}\x03\x02\x02\x02\u{2d9}\u{28b}\x03\x02\x02\x02\u{2d9}\u{28d}\x03\
+	\x02\x02\x02\u{2d9}\u{29c}\x03\x02\x02\x02\u{2d9}\u{2a5}\x03\x02\x02\x02\
+	\u{2d9}\u{2a9}\x03\x02\x02\x02\u{2d9}\u{2b5}\x03\x02\x02\x02\u{2d9}\u{2c0}\
+	\x03\x02\x02\x02\u{2d9}\u{2cc}\x03\x02\x02\x02\u{2d9}\u{2d0}\x03\x02\x02\
+	\x02\u{2d9}\u{2d1}\x03\x02\x02\x02\u{2d9}\u{2d2}\x03\x02\x02\x02\u{2d9}\
+	\u{2d3}\x03\x02\x02\x02\u{2d9}\u{2d4}\x03\x02\x02\x02\u{2d9}\u{2d5}\x03\
+	\x02\x02\x02\u{2da}\u{2e0}\x03\x02\x02\x02\u{2db}\u{2dc}\x0c\x10\x02\x02\
+	\u{2dc}\u{2dd}\x07\x18\x02\x02\u{2dd}\u{2df}\x05\x20\x11\x11\u{2de}\u{2db}\
+	\x03\x02\x02\x02\u{2df}\u{2e2}\x03\x02\x02\x02\u{2e0}\u{2de}\x03\x02\x02\
+	\x02\u{2e0}\u{2e1}\x03\x02\x02\x02\u{2e1}\x21\x03\x02\x02\x02\u{2e2}\u{2e0}\
+	\x03\x02\x02\x02\u{2e3}\u{2e4}\x07\x56\x02\x02\u{2e4}\u{2e5}\x07\x0a\x02\
+	\x02\u{2e5}\u{2e6}\x05\x20\x11\x02\u{2e6}\x23\x03\x02\x02\x02\u{2e7}\u{2ea}\
+	\x07\x56\x02\x02\u{2e8}\u{2e9}\x07\x0a\x02\x02\u{2e9}\u{2eb}\x05\x20\x11\
+	\x02\u{2ea}\u{2e8}\x03\x02\x02\x02\u{2ea}\u{2eb}\x03\x02\x02\x02\u{2eb}\
+	\x25\x03\x02\x02\x02\x3d\x33\x39\x47\x4f\x5a\x5d\x62\x6a\x6d\x73\x7d\u{89}\
+	\u{93}\u{96}\u{9b}\u{a3}\u{a6}\u{ac}\u{c0}\u{153}\u{156}\u{164}\u{167}\u{170}\
+	\u{179}\u{184}\u{187}\u{191}\u{194}\u{1a4}\u{1b0}\u{1bd}\u{1c6}\u{1ff}\u{202}\
+	\u{20c}\u{21a}\u{21c}\u{230}\u{243}\u{246}\u{24f}\u{252}\u{25b}\u{25e}\u{276}\
+	\u{27f}\u{281}\u{294}\u{297}\u{2a0}\u{2af}\u{2b2}\u{2bb}\u{2c6}\u{2c9}\u{2d9}\
+	\u{2e0}\u{2ea}";
 
