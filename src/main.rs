@@ -5,11 +5,11 @@ use clap::Parser;
 mod ast;
 mod build;
 mod eval;
+mod extensions;
 mod stellalexer;
 mod stellaparser;
 mod stellaparserlistener;
 mod typecheck;
-mod extensions;
 
 #[derive(clap::Parser)]
 struct Args {
@@ -72,10 +72,17 @@ fn main() {
 
     println!("\nParsing the program...");
     let program = parse_program(&input_program).expect("Parse Error");
-
+    // let extensions =
     dbg!(&program);
-
-    match extensions::check_program(&program) {
+    let extensions = match extensions::parse_extensions(&program) {
+        Ok(extensions) => extensions,
+        Err(err) => {
+            println!("Extension Error: {}", err);
+            std::process::exit(1);
+        }
+    };
+    
+    match { extensions::check_extensions(&program, &extensions) } {
         Ok(_) => {
             println!("\nExtensions look fine!");
         }
@@ -85,7 +92,7 @@ fn main() {
         }
     }
 
-    match typecheck::typecheck_program(&program) {
+    match typecheck::typecheck_program(&program, &extensions) {
         Ok(_) => {
             println!("\nProgram looks fine!");
             std::process::exit(0);
