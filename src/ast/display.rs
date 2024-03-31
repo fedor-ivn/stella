@@ -607,6 +607,7 @@ impl Display for Type {
             Self::Bottom => write!(formatter, "Bot"),
             Self::Auto => write!(formatter, "auto"),
             Self::Var(name) => write!(formatter, "{name}"),
+            Self::TypeVar(id) => write!(formatter, "t{}", id),
         }
     }
 }

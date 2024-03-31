@@ -1,8 +1,11 @@
+use std::cell::RefCell;
 use std::collections::HashMap;
+use std::rc::Rc;
 use thiserror::Error;
 
 use crate::ast::*;
 use crate::extensions::Extensions;
+use crate::type_reconstruction::*;
 
 #[derive(Error, Debug)]
 pub enum TypeError {
@@ -115,36 +118,40 @@ pub enum TypeError {
     UnexpectedMemoryAddress,
     #[error("[ERROR_UNEXPECTED_SUBTYPE]")]
     UnexpectedSubtype,
+    #[error("[ERROR_OCCURS_CHECK_INFINITE_TYPE]")]
+    InfiniteType(TypeVarID),
 }
 
 #[derive(Clone)]
-struct Context {
+pub struct Context {
     variables: HashMap<String, Type>,
     extensions: Extensions,
     exception: Option<Type>,
+    pub constraints: Rc<RefCell<Constraints>>,
 }
 
 impl Context {
-    fn new(extensions: Extensions) -> Self {
+    pub fn new(extensions: Extensions) -> Self {
         Self {
             extensions,
             variables: HashMap::new(),
             exception: None,
+            constraints: Rc::new(RefCell::new(Constraints::new())),
         }
     }
 
-    fn add(&mut self, name: &str, type_: Type) {
+    pub fn add(&mut self, name: &str, type_: Type) {
         self.variables.insert(name.to_owned(), type_);
     }
 
-    fn get(&self, name: &str) -> Result<&Type, TypeError> {
+    pub fn get(&self, name: &str) -> Result<&Type, TypeError> {
         match self.variables.get(name) {
             Some(type_) => Ok(type_),
             None => Err(TypeError::UndefinedVariable(name.to_owned())),
         }
     }
 
-    fn with_params(&self, param_decls: &[ParamDecl]) -> Self {
+    pub fn with_params(&self, param_decls: &[ParamDecl]) -> Self {
         let mut new_context = self.clone();
         param_decls
             .iter()
@@ -1046,7 +1053,11 @@ fn typecheck_decl(decl: &Decl, context: &Context) -> Result<(), TypeError> {
                 typecheck_decl(decl, &context)?;
                 context.add_decl(decl);
             }
-            match_type(expected, return_expr, &context)?;
+            if context.extensions.type_reconstruction {
+                collect_constraints(return_expr, expected, &context)?;
+            } else {
+                match_type(expected, return_expr, &context)?;
+            }
             Ok(())
         }
         Decl::DeclTypeAlias { name: _, type_: _ } => {
@@ -1061,14 +1072,28 @@ fn typecheck_decl(decl: &Decl, context: &Context) -> Result<(), TypeError> {
 
 pub fn typecheck_program(program: &Program, extensions: &Extensions) -> Result<(), TypeError> {
     let mut global_context = Context::new(extensions.clone());
-    for decl in &program.decls {
+    
+    let decls = if global_context.extensions.type_reconstruction {
+        program
+            .decls
+            .iter()
+            .map(|decl| decl_with_type_variables(decl, &global_context))
+            .collect()
+    } else {
+        program.decls.clone()
+    };
+
+    for decl in &decls {
         global_context.add_decl(decl);
     }
 
-    program
-        .decls
+    dbg!(&decls);
+
+    decls
         .iter()
         .try_for_each(|decl| typecheck_decl(decl, &global_context))?;
+
+    dbg!(&global_context.constraints.borrow());
 
     match global_context.get("main") {
         Ok(Type::Fun(params, _)) if params.len() == 1 => Ok(()),
