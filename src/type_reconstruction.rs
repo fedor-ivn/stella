@@ -1,5 +1,5 @@
 use crate::ast::*;
-use crate::typecheck::{Context, TypeError};
+use crate::typecheck::{get_exception_type, Context, TypeError};
 use std::collections::HashMap;
 use std::vec;
 
@@ -166,6 +166,7 @@ fn replace_auto_with_vars_in_expr(expr: &Expr, context: &Context) -> Expr {
         | Expr::ConstTrue
         | Expr::ConstInt(_)
         | Expr::Var(_)
+        | Expr::ConstMemory(_)
         | Expr::Panic => expr.clone(),
         Expr::Sequence(preceding, following) => Expr::Sequence(
             Box::new(replace_auto_with_vars_in_expr(preceding, context)),
@@ -261,8 +262,7 @@ fn replace_auto_with_vars_in_expr(expr: &Expr, context: &Context) -> Expr {
                     })
                     .collect(),
                 Box::new(replace_auto_with_vars_in_expr(expr, context)),
-            );
-            todo!()
+            )
         }
         // replace_auto_with_vars_in_pattern(&binding.pattern, context)
         Expr::LetRec(bindings, expr) => Expr::LetRec(
@@ -295,14 +295,11 @@ fn replace_auto_with_vars_in_expr(expr: &Expr, context: &Context) -> Expr {
             Box::new(replace_auto_with_vars_in_expr(try_, context)),
             Box::new(replace_auto_with_vars_in_expr(catch, context)),
         ),
-        Expr::TryCatch(try_, pattern, catch) => {
-            Expr::TryCatch(
-                Box::new(replace_auto_with_vars_in_expr(try_, context)),
-                pattern.clone(),
-                Box::new(replace_auto_with_vars_in_expr(catch, context)),
-            );
-            todo!()
-        }
+        Expr::TryCatch(try_, pattern, catch) => Expr::TryCatch(
+            Box::new(replace_auto_with_vars_in_expr(try_, context)),
+            pattern.clone(),
+            Box::new(replace_auto_with_vars_in_expr(catch, context)),
+        ),
         Expr::TypeCast(expr, type_) => Expr::TypeCast(
             Box::new(replace_auto_with_vars_in_expr(expr, context)),
             replace_auto_with_vars_in_type(type_, context),
@@ -323,10 +320,16 @@ fn replace_auto_with_vars_in_expr(expr: &Expr, context: &Context) -> Expr {
             };
             todo!()
         }
-        Expr::Assignment(_, _) => todo!(),
-        Expr::Reference(_) => todo!(),
-        Expr::Dereference(_) => todo!(),
-        Expr::ConstMemory(_) => todo!(),
+        Expr::Reference(expr) => {
+            Expr::Reference(Box::new(replace_auto_with_vars_in_expr(expr, context)))
+        }
+        Expr::Dereference(expr) => {
+            Expr::Dereference(Box::new(replace_auto_with_vars_in_expr(expr, context)))
+        }
+        Expr::Assignment(ref_, value) => Expr::Assignment(
+            Box::new(replace_auto_with_vars_in_expr(ref_, context)),
+            Box::new(replace_auto_with_vars_in_expr(value, context)),
+        ),
         _ => unreachable!("{:?}", expr),
     }
 }
@@ -505,6 +508,22 @@ fn unify(actual: &Type, expected: &Type, context: &Context) -> Result<(), TypeEr
             unify(actual_left, expected_left, context)?;
             unify(actual_right, expected_right, context)
         }
+        // (Type::Variant(expected_fields), Type::Variant(actual_fields)) => {
+        //     expected_fields.iter().try_for_each(|expected| {
+        //         let actual = actual_fields
+        //             .iter()
+        //             .find(|actual| actual.label == expected.label)
+        //             .ok_or(TypeError::UnexpectedVariantLabel)?;
+        //         if let (Some(expected), Some(actual)) = (&expected.type_, &actual.type_) {
+        //             unify(expected, actual, context)
+        //         } else {
+        //             Ok(())
+        //         }
+        //     })
+        // }
+        (Type::Ref(expected_inner), Type::Ref(actual_inner)) => {
+            unify(actual_inner, expected_inner, context)
+        }
         _ => {
             dbg!(&actual, &expected);
 
@@ -675,17 +694,23 @@ pub fn collect_constraints(
             unify(&inner, expected, context)?;
             collect_constraints(expr, &list, context)
         }
-        Expr::ListTail(expr) => {
-            let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
-            let list = Type::List(Box::new(inner.clone()));
-            unify(&list, expected, context)?;
-            collect_constraints(expr, &list, context)
-        }
+        Expr::ListTail(expr) => collect_constraints(expr, expected, context),
         Expr::ListIsEmpty(expr) => {
             let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
             let list = Type::List(Box::new(inner.clone()));
             unify(&Type::Bool, expected, context)?;
             collect_constraints(expr, &list, context)
+        }
+        Expr::Let(bindings, expr) => {
+            let local = bindings.iter().try_fold(
+                context.clone(),
+                |context, PatternBinding { pattern, rhs }| {
+                    let local = collect_constraints_for_pattern(pattern, expected, &context)?;
+                    collect_constraints(rhs, expected, &local)?;
+                    Ok(local.clone())
+                },
+            )?;
+            collect_constraints(expr, expected, &local)
         }
         Expr::Match(_, cases) if cases.is_empty() => Err(TypeError::IllegalEmptyMatching),
         Expr::Match(matched_expr, cases) => {
@@ -709,6 +734,50 @@ pub fn collect_constraints(
             let sum = Type::Sum(Box::new(left.clone()), Box::new(right.clone()));
             unify(&sum, expected, context)?;
             collect_constraints(expr, &right, context)
+        }
+        Expr::Reference(expr) => {
+            let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let ref_ = Type::Ref(Box::new(inner.clone()));
+            unify(&ref_, expected, context)?;
+            collect_constraints(expr, &inner, context)
+        }
+        Expr::Dereference(expr) => {
+            let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let ref_ = Type::Ref(Box::new(inner.clone()));
+            unify(&inner, expected, context)?;
+            collect_constraints(expr, &ref_, context)
+        }
+        Expr::Assignment(ref_, value) => {
+            let value_type = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let ref_type = Type::Ref(Box::new(value_type.clone()));
+            unify(&Type::Unit, expected, context)?;
+            collect_constraints(ref_, &ref_type, context)?;
+            collect_constraints(value, &value_type, context)
+        }
+        Expr::ConstMemory(_) => {
+            let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let ref_ = Type::Ref(Box::new(inner.clone()));
+            unify(&ref_, expected, context)
+        }
+        Expr::Throw(expr) => {
+            let exception = get_exception_type(context)?;
+            let return_type = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            unify(&return_type, expected, context)?;
+            collect_constraints(expr, &exception, context)
+        }
+        Expr::TryWith(try_, catch) => {
+            collect_constraints(try_, expected, context)?;
+            collect_constraints(catch, expected, context)
+        }
+        Expr::TryCatch(try_, pattern, catch) => {
+            collect_constraints(try_, expected, context)?;
+            let exception = get_exception_type(context)?;
+            let local = collect_constraints_for_pattern(pattern, &exception, context)?;
+            collect_constraints(catch, expected, &local)
+        }
+        Expr::Panic => {
+            let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            unify(&inner, expected, context)
         }
         _ => unimplemented!("{:?}", actual),
     }

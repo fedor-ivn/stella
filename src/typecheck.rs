@@ -439,7 +439,7 @@ fn check_exhaustiveness(matched: &Type, cases: &Vec<MatchCase>) -> Result<(), Ty
     }
 }
 
-fn get_exception_type(context: &Context) -> Result<&Type, TypeError> {
+pub fn get_exception_type(context: &Context) -> Result<&Type, TypeError> {
     context
         .exception
         .as_ref()
@@ -471,7 +471,6 @@ fn infer(expr: &Expr, context: &Context) -> Result<Type, TypeError> {
             match_type(&then, else_, context)?;
             Ok(then)
         }
-
         Expr::Tuple(exprs) => Ok(Type::Tuple(
             exprs
                 .iter()
