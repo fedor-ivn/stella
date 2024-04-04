@@ -1,6 +1,7 @@
 use crate::ast::*;
 use crate::typecheck::{Context, TypeError};
 use std::collections::HashMap;
+use std::vec;
 
 #[derive(Debug)]
 pub struct Constraints {
@@ -53,6 +54,49 @@ fn substitute_type_var(type_: &Type, id: &TypeVarID, value: &Type) -> Type {
             let return_ = substitute_type_var(return_, id, value);
             Type::Fun(args, Box::new(return_))
         }
+        Type::Tuple(fields) => {
+            let fields = fields
+                .into_iter()
+                .map(|field| substitute_type_var(field, id, value))
+                .collect();
+            Type::Tuple(fields)
+        }
+        Type::Record(fields) => {
+            let fields = fields
+                .into_iter()
+                .map(|field| RecordFieldType {
+                    label: field.label.clone(),
+                    type_: substitute_type_var(&field.type_, id, value),
+                })
+                .collect();
+            Type::Record(fields)
+        }
+        Type::List(inner) => {
+            let inner = Box::new(substitute_type_var(inner, id, value));
+            Type::List(inner)
+        }
+        Type::Sum(left, right) => {
+            let left = Box::new(substitute_type_var(left, id, value));
+            let right = Box::new(substitute_type_var(right, id, value));
+            Type::Sum(left, right)
+        }
+        Type::Variant(fields) => {
+            let fields = fields
+                .into_iter()
+                .map(|field| VariantFieldType {
+                    label: field.label.clone(),
+                    type_: field
+                        .type_
+                        .as_ref()
+                        .map(|type_| substitute_type_var(type_, id, value)),
+                })
+                .collect();
+            Type::Variant(fields)
+        }
+        Type::Ref(inner) => {
+            let inner = Box::new(substitute_type_var(inner, id, value));
+            Type::Ref(inner)
+        }
         Type::TypeVar(id_) => {
             if id == id_ {
                 value.clone()
@@ -60,7 +104,9 @@ fn substitute_type_var(type_: &Type, id: &TypeVarID, value: &Type) -> Type {
                 type_.clone()
             }
         }
-        _ => unreachable!("{:?}", type_),
+        Type::ForAll(_, _) | Type::Rec(_, _) | Type::Top | Type::Bottom | Type::Auto => {
+            unimplemented!("{:?}", type_)
+        }
     }
 }
 
@@ -218,33 +264,27 @@ fn replace_auto_with_vars_in_expr(expr: &Expr, context: &Context) -> Expr {
             );
             todo!()
         }
-        Expr::LetRec(bindings, expr) => {
-            Expr::LetRec(
-                bindings
-                    .iter()
-                    .map(|binding| PatternBinding {
-                        // todo: replace_auto_with_vars_in_pattern
-                        pattern: binding.pattern.clone(),
-                        rhs: replace_auto_with_vars_in_expr(&binding.rhs, context),
-                    })
-                    .collect(),
-                Box::new(replace_auto_with_vars_in_expr(expr, context)),
-            );
-            todo!()
-        }
-        Expr::Match(expr, cases) => {
-            Expr::Match(
-                Box::new(replace_auto_with_vars_in_expr(expr, context)),
-                cases
-                    .iter()
-                    .map(|MatchCase { pattern, expr }| MatchCase {
-                        pattern: pattern.clone(),
-                        expr: replace_auto_with_vars_in_expr(expr, context),
-                    })
-                    .collect(),
-            );
-            todo!()
-        }
+        // replace_auto_with_vars_in_pattern(&binding.pattern, context)
+        Expr::LetRec(bindings, expr) => Expr::LetRec(
+            bindings
+                .iter()
+                .map(|binding| PatternBinding {
+                    pattern: binding.pattern.clone(),
+                    rhs: replace_auto_with_vars_in_expr(&binding.rhs, context),
+                })
+                .collect(),
+            Box::new(replace_auto_with_vars_in_expr(expr, context)),
+        ),
+        Expr::Match(expr, cases) => Expr::Match(
+            Box::new(replace_auto_with_vars_in_expr(expr, context)),
+            cases
+                .iter()
+                .map(|MatchCase { pattern, expr }| MatchCase {
+                    pattern: pattern.clone(),
+                    expr: replace_auto_with_vars_in_expr(expr, context),
+                })
+                .collect(),
+        ),
         Expr::TypeAscription(expr, type_) => Expr::TypeAscription(
             Box::new(replace_auto_with_vars_in_expr(expr, context)),
             replace_auto_with_vars_in_type(type_, context),
@@ -290,6 +330,22 @@ fn replace_auto_with_vars_in_expr(expr: &Expr, context: &Context) -> Expr {
         _ => unreachable!("{:?}", expr),
     }
 }
+
+// fn replace_auto_with_vars_in_pattern(pattern: &Pattern, context: &Context) -> Pattern {
+//     match pattern {
+//         Pattern::Unit | Pattern::False | Pattern::True | Pattern::Int(_) => pattern.clone(),
+//         Pattern::Succ(pattern) => replace_auto_with_vars_in_pattern(pattern, context),
+//         Pattern::Var(_) => todo!(),
+//         Pattern::Inl(_) => todo!(),
+//         Pattern::Inr(_) => todo!(),
+//         Pattern::Tuple(_) => todo!(),
+//         Pattern::Record(_) => todo!(),
+//         Pattern::List(_) => todo!(),
+//         Pattern::Cons(_, _) => todo!(),
+//         Pattern::Variant(_,_) => todo!(),
+//         Pattern::Ascription(_, _) | Pattern::CastAs(_, _) => unreachable!("{:?}", pattern),
+//     }
+// }
 
 fn replace_auto_with_vars_in_type(type_: &Type, context: &Context) -> Type {
     match type_ {
@@ -354,16 +410,34 @@ fn check_infinite_type(id: &TypeVarID, type_: &Type, context: &Context) -> Resul
                 .try_for_each(|arg| check_infinite_type(id, arg, context))?;
             check_infinite_type(id, return_, context)
         }
+        Type::Tuple(fields) => fields
+            .iter()
+            .try_for_each(|field| check_infinite_type(id, field, context)),
+        Type::Record(fields) => fields
+            .iter()
+            .try_for_each(|field| check_infinite_type(id, &field.type_, context)),
+        Type::List(inner) => check_infinite_type(id, inner, context),
+        Type::Sum(left, right) => {
+            check_infinite_type(id, left, context)?;
+            check_infinite_type(id, right, context)
+        }
+        Type::Variant(fields) => fields.iter().try_for_each(|field| {
+            if let Some(type_) = &field.type_ {
+                check_infinite_type(id, type_, context)
+            } else {
+                Ok(())
+            }
+        }),
         Type::TypeVar(id_) => {
             if id == id_ {
-                Err(TypeError::InfiniteType(*id))
+                Err(TypeError::InfiniteType(*id, type_.clone()))
             } else {
                 Ok(())
             }
         }
-        _ => {
-            dbg!(id, type_);
-            unimplemented!()
+        Type::Ref(inner) => check_infinite_type(id, inner, context),
+        Type::ForAll(_, _) | Type::Rec(_, _) | Type::Top | Type::Bottom | Type::Auto => {
+            unimplemented!("{:?} {:?}", id, type_)
         }
     }
 }
@@ -373,7 +447,9 @@ fn unify(actual: &Type, expected: &Type, context: &Context) -> Result<(), TypeEr
     let expected = context.constraints.borrow().substitute(expected);
 
     match (&expected, &actual) {
+        (Type::TypeVar(id), Type::TypeVar(id_)) if id == id_ => Ok(()),
         (Type::TypeVar(id), type_) | (type_, Type::TypeVar(id)) => {
+            dbg!(&actual, &expected);
             check_infinite_type(id, type_, context)?;
             context.constraints.borrow_mut().update(*id, type_);
             Ok(())
@@ -394,6 +470,40 @@ fn unify(actual: &Type, expected: &Type, context: &Context) -> Result<(), TypeEr
                     actual: actual_args.len(),
                 })
             }
+        }
+        (Type::Tuple(expected_fields), Type::Tuple(actual_fields)) => {
+            if actual_fields.len() != expected_fields.len() {
+                return Err(TypeError::UnexpectedTupleLength(
+                    expected_fields.len(),
+                    actual_fields.len(),
+                ));
+            }
+            actual_fields
+                .iter()
+                .zip(expected_fields.iter())
+                .try_for_each(|(actual_field, expected_field)| {
+                    unify(actual_field, expected_field, context)
+                })
+        }
+        (Type::Record(expected_fields), Type::Record(actual_fields)) => {
+            expected_fields.iter().try_for_each(|expected| {
+                let actual = actual_fields
+                    .iter()
+                    .find(|actual| actual.label == expected.label)
+                    .ok_or(if actual_fields.len() == 1 {
+                        TypeError::UnexpectedFieldAccess
+                    } else {
+                        TypeError::MissingRecordFields
+                    })?;
+                unify(&actual.type_, &expected.type_, context)
+            })
+        }
+        (Type::List(expected_inner), Type::List(actual_inner)) => {
+            unify(actual_inner, expected_inner, context)
+        }
+        (Type::Sum(expected_left, expected_right), Type::Sum(actual_left, actual_right)) => {
+            unify(actual_left, expected_left, context)?;
+            unify(actual_right, expected_right, context)
         }
         _ => {
             dbg!(&actual, &expected);
@@ -433,7 +543,6 @@ pub fn collect_constraints(
             collect_constraints(following, expected, context)
         }
         Expr::If(condition, then_, else_) => {
-            // dbg!(actual, expected);
             collect_constraints(condition, &Type::Bool, context)?;
             collect_constraints(then_, expected, context)?;
             collect_constraints(else_, expected, context)
@@ -473,8 +582,8 @@ pub fn collect_constraints(
                     .collect(),
                 Box::new(expected.clone()),
             );
-            // dbg!(fun_actual, &fun_expected);
             collect_constraints(fun_actual, &fun_expected, context)
+            // unify(fun_expected, some_new_type_var, context, from=fun_application)
         }
         Expr::NatRec(n, z, s) => {
             let fun = Type::Fun(
@@ -488,6 +597,169 @@ pub fn collect_constraints(
             collect_constraints(z, expected, context)?;
             collect_constraints(s, &fun, context)
         }
-        _ => unimplemented!(),
+        Expr::Tuple(field_exprs) => {
+            let field_types: Vec<Type> = field_exprs
+                .iter()
+                .map(|_| Type::TypeVar(context.constraints.borrow_mut().new_var()))
+                .collect();
+
+            let tuple = Type::Tuple(field_types.clone());
+            unify(&tuple, expected, context)?;
+            field_exprs
+                .iter()
+                .zip(field_types)
+                .try_for_each(|(expr, type_)| collect_constraints(expr, &type_, context))
+        }
+        Expr::DotTuple(expr, index) => {
+            let a = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let b = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let fields = vec![a, b];
+            let field = fields.get(index - 1);
+            match field {
+                Some(field) => unify(field, expected, context),
+                None => Err(TypeError::TupleIndexOutOfBounds(2, *index)),
+            }?;
+            collect_constraints(expr, &Type::Tuple(fields), context)
+        }
+        Expr::Record(fields) => {
+            let field_types: Vec<Type> = fields
+                .iter()
+                .map(|_| Type::TypeVar(context.constraints.borrow_mut().new_var()))
+                .collect();
+
+            let record = Type::Record(
+                fields
+                    .iter()
+                    .zip(&field_types)
+                    .map(|(field, type_)| RecordFieldType {
+                        label: field.name.clone(),
+                        type_: type_.clone(),
+                    })
+                    .collect(),
+            );
+            unify(&record, expected, context)?;
+            fields
+                .iter()
+                .zip(field_types)
+                .try_for_each(|(binding, type_)| {
+                    collect_constraints(&binding.expr, &type_, context)
+                })
+        }
+        Expr::DotRecord(expr, label) => {
+            let type_ = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let fields = vec![RecordFieldType {
+                label: label.clone(),
+                type_: type_.clone(),
+            }];
+            unify(&type_, expected, context)?;
+            collect_constraints(expr, &Type::Record(fields), context)
+        }
+        Expr::List(exprs) => {
+            let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let list = Type::List(Box::new(inner.clone()));
+            unify(&list, expected, context)?;
+            exprs
+                .iter()
+                .try_for_each(|expr| collect_constraints(expr, &inner, context))
+        }
+        Expr::Cons(head, tail) => {
+            let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let list = Type::List(Box::new(inner.clone()));
+            unify(&list, expected, context)?;
+            collect_constraints(head, &inner, context)?;
+            collect_constraints(tail, &list, context)
+        }
+        Expr::ListHead(expr) => {
+            let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let list = Type::List(Box::new(inner.clone()));
+            unify(&inner, expected, context)?;
+            collect_constraints(expr, &list, context)
+        }
+        Expr::ListTail(expr) => {
+            let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let list = Type::List(Box::new(inner.clone()));
+            unify(&list, expected, context)?;
+            collect_constraints(expr, &list, context)
+        }
+        Expr::ListIsEmpty(expr) => {
+            let inner = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let list = Type::List(Box::new(inner.clone()));
+            unify(&Type::Bool, expected, context)?;
+            collect_constraints(expr, &list, context)
+        }
+        Expr::Match(_, cases) if cases.is_empty() => Err(TypeError::IllegalEmptyMatching),
+        Expr::Match(matched_expr, cases) => {
+            let matched_type = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            collect_constraints(matched_expr, &matched_type, context)?;
+            cases.iter().try_for_each(|MatchCase { pattern, expr }| {
+                let local = collect_constraints_for_pattern(pattern, &matched_type, context)?;
+                collect_constraints(expr, expected, &local)
+            })
+        }
+        Expr::Inl(expr) => {
+            let left = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let right = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let sum = Type::Sum(Box::new(left.clone()), Box::new(right.clone()));
+            unify(&sum, expected, context)?;
+            collect_constraints(expr, &left, context)
+        }
+        Expr::Inr(expr) => {
+            let left = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let right = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let sum = Type::Sum(Box::new(left.clone()), Box::new(right.clone()));
+            unify(&sum, expected, context)?;
+            collect_constraints(expr, &right, context)
+        }
+        _ => unimplemented!("{:?}", actual),
+    }
+}
+
+fn collect_constraints_for_pattern<'a>(
+    pattern: &Pattern,
+    matched_type: &Type,
+    context: &Context,
+) -> Result<Context, TypeError> {
+    dbg!(pattern, matched_type);
+    match pattern {
+        Pattern::False | Pattern::True => {
+            unify(&Type::Bool, matched_type, context)?;
+            Ok(context.clone())
+        }
+        Pattern::Unit => {
+            unify(&Type::Unit, matched_type, context)?;
+            Ok(context.clone())
+        }
+        Pattern::Int(_) => {
+            unify(&Type::Nat, matched_type, context)?;
+            Ok(context.clone())
+        }
+        Pattern::Succ(inner) => {
+            unify(&Type::Nat, matched_type, context)?;
+            collect_constraints_for_pattern(inner, &Type::Nat, context)
+        }
+        Pattern::Var(name) => {
+            let local = context.with(name, &matched_type);
+            Ok(local)
+        }
+        Pattern::Tuple(_) => todo!(),
+        Pattern::Record(_) => todo!(),
+        Pattern::Inl(inner) => {
+            let left = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let right = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let sum = Type::Sum(Box::new(left.clone()), Box::new(right.clone()));
+            unify(&sum, matched_type, context)?;
+            collect_constraints_for_pattern(inner, &left, context)
+        }
+        Pattern::Inr(inner) => {
+            let left = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let right = Type::TypeVar(context.constraints.borrow_mut().new_var());
+            let sum = Type::Sum(Box::new(left.clone()), Box::new(right.clone()));
+            unify(&sum, matched_type, context)?;
+            collect_constraints_for_pattern(inner, &right, context)
+        }
+        Pattern::Variant(_, _) => todo!(),
+        Pattern::List(_) => todo!(),
+        Pattern::Cons(_, _) => todo!(),
+        Pattern::Ascription(_, _) | Pattern::CastAs(_, _) => unimplemented!("{:?}", pattern),
     }
 }

@@ -118,8 +118,8 @@ pub enum TypeError {
     UnexpectedMemoryAddress,
     #[error("[ERROR_UNEXPECTED_SUBTYPE]")]
     UnexpectedSubtype,
-    #[error("[ERROR_OCCURS_CHECK_INFINITE_TYPE]")]
-    InfiniteType(TypeVarID),
+    #[error("[ERROR_OCCURS_CHECK_INFINITE_TYPE] (TypeVarID {0:?} found in {1:?})")]
+    InfiniteType(TypeVarID, Type),
 }
 
 #[derive(Clone)]
@@ -144,6 +144,12 @@ impl Context {
         self.variables.insert(name.to_owned(), type_);
     }
 
+    pub fn with(&self, name: &str, type_: &Type) -> Self {
+        let mut new_context = self.clone();
+        new_context.add(name, type_.clone());
+        new_context
+    }
+
     pub fn get(&self, name: &str) -> Result<&Type, TypeError> {
         match self.variables.get(name) {
             Some(type_) => Ok(type_),
@@ -159,7 +165,7 @@ impl Context {
         new_context
     }
 
-    fn add_pattern(&mut self, pattern: &Pattern, type_: &Type) -> Result<(), TypeError> {
+    pub fn add_pattern(&mut self, pattern: &Pattern, type_: &Type) -> Result<(), TypeError> {
         match (type_, pattern) {
             (Type::Nat, Pattern::Int(_)) => Ok(()),
             (Type::Nat, Pattern::Succ(nat)) => self.add_pattern(nat, &Type::Nat),
@@ -228,7 +234,7 @@ impl Context {
         }
     }
 
-    fn with_pattern(&self, matched: &Type, pattern: &Pattern) -> Result<Context, TypeError> {
+    pub fn with_pattern(&self, matched: &Type, pattern: &Pattern) -> Result<Context, TypeError> {
         let mut new_context = self.clone();
         new_context.add_pattern(pattern, matched)?;
         Ok(new_context)
@@ -1072,7 +1078,7 @@ fn typecheck_decl(decl: &Decl, context: &Context) -> Result<(), TypeError> {
 
 pub fn typecheck_program(program: &Program, extensions: &Extensions) -> Result<(), TypeError> {
     let mut global_context = Context::new(extensions.clone());
-    
+
     let decls = if global_context.extensions.type_reconstruction {
         program
             .decls
