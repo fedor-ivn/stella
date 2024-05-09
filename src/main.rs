@@ -10,6 +10,7 @@ mod stellalexer;
 mod stellaparser;
 mod stellaparserlistener;
 mod typecheck;
+mod type_reconstruction;
 
 #[derive(clap::Parser)]
 struct Args {

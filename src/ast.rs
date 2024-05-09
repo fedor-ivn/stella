@@ -155,6 +155,8 @@ pub struct VariantFieldType {
     pub type_: Option<Type>,
 }
 
+pub type TypeVarID = usize;
+
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub enum Type {
     Bool,
@@ -171,7 +173,9 @@ pub enum Type {
     Unit,
     Top,
     Bottom,
+    Auto,
     Var(String),
+    TypeVar(TypeVarID),
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]

@@ -98,6 +98,11 @@ pub enum ExtensionError {
     TryCastAsNotEnabled,
     #[error("Type cast patterns not enabled. Consider adding `extend with #type-cast-patterns`.")]
     TypeCastPatternsNotEnabled,
+
+    #[error(
+        "Type reconstruction not enabled. Consider adding `extend with #type-reconstruction`."
+    )]
+    TypeReconstructionNotEnabled,
 }
 
 #[derive(Default, Clone)]
@@ -133,6 +138,7 @@ pub struct Extensions {
     bottom_type: bool,
     try_cast_as: bool,
     type_cast_patterns: bool,
+    pub type_reconstruction: bool,
 }
 
 pub fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError> {
@@ -240,6 +246,9 @@ pub fn parse_extensions(program: &Program) -> Result<Extensions, ExtensionError>
                 "#type-cast-patterns" => {
                     extensions.type_cast_patterns = true;
                     extensions.structural_patterns = true;
+                }
+                "#type-reconstruction" => {
+                    extensions.type_reconstruction = true;
                 }
                 name => return Err(ExtensionError::UnsupportedExtension(name.to_owned())),
             };

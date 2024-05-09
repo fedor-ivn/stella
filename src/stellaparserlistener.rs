@@ -1151,6 +1151,18 @@ fn enter_TypeRec(&mut self, _ctx: &TypeRecContext<'input>) { }
  */
 fn exit_TypeRec(&mut self, _ctx: &TypeRecContext<'input>) { }
 /**
+ * Enter a parse tree produced by the {@code TypeAuto}
+ * labeled alternative in {@link stellaParser#stellatype}.
+ * @param ctx the parse tree
+ */
+fn enter_TypeAuto(&mut self, _ctx: &TypeAutoContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code TypeAuto}
+ * labeled alternative in {@link stellaParser#stellatype}.
+ * @param ctx the parse tree
+ */
+fn exit_TypeAuto(&mut self, _ctx: &TypeAutoContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code TypeSum}
  * labeled alternative in {@link stellaParser#stellatype}.
  * @param ctx the parse tree
